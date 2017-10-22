@@ -12,6 +12,7 @@
 		7EFBA2671F9C4B480011007E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA2651F9C4B480011007E /* Main.storyboard */; };
 		7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA2681F9C4B480011007E /* Assets.xcassets */; };
 		7EFBA26C1F9C4B480011007E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */; };
+		7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2731F9C4D670011007E /* MapMananger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		7EFBA2681F9C4B480011007E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7EFBA26B1F9C4B480011007E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7EFBA26D1F9C4B480011007E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7EFBA2731F9C4D670011007E /* MapMananger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMananger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 		7EFBA2601F9C4B480011007E /* SalesTraveling */ = {
 			isa = PBXGroup;
 			children = (
+				7EFBA2751F9C4D6E0011007E /* Managers */,
 				7EFBA2611F9C4B480011007E /* AppDelegate.swift */,
 				7EFBA2631F9C4B480011007E /* ViewController.swift */,
 				7EFBA2651F9C4B480011007E /* Main.storyboard */,
@@ -62,6 +65,14 @@
 				7EFBA26D1F9C4B480011007E /* Info.plist */,
 			);
 			path = SalesTraveling;
+			sourceTree = "<group>";
+		};
+		7EFBA2751F9C4D6E0011007E /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				7EFBA2731F9C4D670011007E /* MapMananger.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,6 +149,7 @@
 			files = (
 				7EFBA2641F9C4B480011007E /* ViewController.swift in Sources */,
 				7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */,
+				7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
