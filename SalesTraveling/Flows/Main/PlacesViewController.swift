@@ -14,15 +14,23 @@ class PlacesViewController: UIViewController {
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var buttonCalculate: UIButton!
 	
-	var annotations: [MKAnnotation] = [] {
+	var placemarks: [MKPlacemark] = [] {
 		didSet {
-			self.tableView.reloadData()
+			tableView.reloadData()
+			buttonCalculate.isEnabled = placemarks.count > 1
+		}
+	}
+	
+	var responseResults: [[MKDirectionsResponse]] = [] {
+		didSet {
+			if responseResults.count >= (placemarks.count - 1) {
+				self.performSegue(withIdentifier: "segueShowDirections", sender: responseResults)
+			}
 		}
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 	}
 	
 	// MARK: - Navigation
@@ -30,6 +38,13 @@ class PlacesViewController: UIViewController {
 		if let nvc = segue.destination as? UINavigationController,
 			let vc = nvc.viewControllers.first as? LocateViewController {
 			vc.delegate = self
+		}
+		
+		if let nvc = segue.destination as? UINavigationController,
+		let vc = nvc.viewControllers.first as? DirectionsViewController,
+		let responseResults = sender as? [[MKDirectionsResponse]] {
+			vc.responseResults = responseResults
+			vc.placemarks = placemarks
 		}
 	}
 	
@@ -40,25 +55,33 @@ class PlacesViewController: UIViewController {
 	}
 	
 	@IBAction func buttonCalculateDidPressed(_ sender: Any) {
-		
+		if let begin = placemarks.first, let destination = placemarks.last, placemarks.count > 1 {
+			MapMananger.showRoute(from: begin.coordinate, to: destination.coordinate, completion: { (status) in
+				switch status {
+				case .success(let response):
+					self.responseResults.append([response])
+					break
+				case .failure(let error):
+					print("Can't calculate route with \(error)")
+					break
+				}
+			})
+		}
 	}
 }
 
 //MARK: - UITableViewDataSource, UITableViewDelegate
 extension PlacesViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return annotations.count
+		return placemarks.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
-		let annotation = annotations[indexPath.row]
-		guard let title = annotation.title,
-			let subtitle = annotation.subtitle else { return cell }
-		
-		cell.textLabel?.text = title
-		cell.detailTextLabel?.text = subtitle
+		let placemark = placemarks[indexPath.row]
+		cell.textLabel?.text = placemark.name
+		cell.detailTextLabel?.text = MapMananger.parseAddress(placemark: placemark)
 		
 		return cell
 	}
@@ -66,7 +89,7 @@ extension PlacesViewController: UITableViewDataSource, UITableViewDelegate {
 
 //MARK: - LocateViewControllerProtocol
 extension PlacesViewController: LocateViewControllerProtocol {
-	func locateViewController(_ locateViewController: LocateViewController, didSelect annotation: MKAnnotation) {
-		annotations.append(annotation)
+	func locateViewController(_ locateViewController: LocateViewController, didSelect placemark: MKPlacemark) {
+		placemarks.append(placemark)
 	}
 }

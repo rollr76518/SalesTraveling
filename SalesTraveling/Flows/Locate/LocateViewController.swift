@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 protocol LocateViewControllerProtocol {
-	func locateViewController(_ locateViewController: LocateViewController, didSelect annotation: MKAnnotation)
+	func locateViewController(_ locateViewController: LocateViewController, didSelect placemark: MKPlacemark)
 }
 
 class LocateViewController: UIViewController {
@@ -18,6 +18,7 @@ class LocateViewController: UIViewController {
 	lazy var addressResultTableViewController = makeAddressResultTableViewController()
 	var searchController: UISearchController!
 	var delegate: LocateViewControllerProtocol?
+	var selectedPlacemark: MKPlacemark?
 	
 	@IBOutlet weak var mapView: MKMapView!
 	
@@ -36,6 +37,7 @@ extension LocateViewController {
 				fatalError("AddressResultTableViewController doesn't exist")
 		}
 		vc.delegate = self
+		vc.mapView = mapView
 		return vc
 	}
 
@@ -95,9 +97,9 @@ extension LocateViewController: MKMapViewDelegate {
 	}
 	
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-		if let annotation = view.annotation,
-			let delegate = delegate{
-			delegate.locateViewController(self, didSelect: annotation)
+		if let selectedPlacemark = selectedPlacemark,
+			let delegate = delegate {
+			delegate.locateViewController(self, didSelect: selectedPlacemark)
 			dismiss(animated: true, completion: nil)
 		}
 	}
@@ -105,7 +107,9 @@ extension LocateViewController: MKMapViewDelegate {
 
 //MARK: - AddressResultTableViewControllerProtocol
 extension LocateViewController: AddressResultTableViewControllerProtocol {
-	func dropPinZoomIn(placemark: MKPlacemark){
+	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, dropPinZoomIn placemark: MKPlacemark) {
+		selectedPlacemark = placemark
+		
 		mapView.removeAnnotations(mapView.annotations)
 		
 		let annotation = MKPointAnnotation()

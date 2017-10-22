@@ -10,11 +10,12 @@ import UIKit
 import MapKit
 
 protocol AddressResultTableViewControllerProtocol {
-	func dropPinZoomIn(placemark:MKPlacemark)
+	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, dropPinZoomIn placemark: MKPlacemark)
 }
 
 class AddressResultTableViewController: UITableViewController {
 	var matchingItems: [MKMapItem] = []
+	var mapView: MKMapView?
 	var delegate: AddressResultTableViewControllerProtocol?
 	
     override func viewDidLoad() {
@@ -38,7 +39,7 @@ extension AddressResultTableViewController {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let placemark = matchingItems[indexPath.row].placemark
-		delegate?.dropPinZoomIn(placemark: placemark)
+		delegate?.addressResultTableViewController(self, dropPinZoomIn: placemark)
 		dismiss(animated: true, completion: nil)
 	}
 }
@@ -46,15 +47,19 @@ extension AddressResultTableViewController {
 // MARK: - UISearchResultsUpdating
 extension AddressResultTableViewController: UISearchResultsUpdating {
 	func updateSearchResults(for searchController: UISearchController) {
-		guard let searchBarText = searchController.searchBar.text else { return }
-		let request = MKLocalSearchRequest()
-		request.naturalLanguageQuery = searchBarText
-		let search = MKLocalSearch(request: request)
-		search.start { response, _ in
-			guard let response = response else {
-				return
+		guard let keywords = searchController.searchBar.text,
+			let mapView = mapView else { return }
+		
+		MapMananger.fetchLocalSearch(with: keywords, region: mapView.region) { (status) in
+			switch status {
+			case .success(let response):
+				self.matchingItems = response.mapItems
+				break
+			case .failure(let error):
+				print("fetch local search \(error)")
+				self.matchingItems = []
+				break
 			}
-			self.matchingItems = response.mapItems
 			self.tableView.reloadData()
 		}
 	}
