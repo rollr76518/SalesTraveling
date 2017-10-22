@@ -9,5 +9,18 @@
 import MapKit
 
 class MapMananger {
-
+	class func parseAddress(placemark: MKPlacemark) -> String {
+		let addressLine = String (
+			format:"%@%@%@%@",
+			// state
+			placemark.administrativeArea ?? "",
+			// city
+			placemark.locality ?? "",
+			// street name
+			placemark.thoroughfare ?? "",
+			// street number
+			(placemark.subThoroughfare != nil) ? String.init(format: "%@號", placemark.subThoroughfare!):""
+		)
+		return addressLine
+	}
 }
