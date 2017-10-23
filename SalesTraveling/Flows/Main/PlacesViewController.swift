@@ -81,7 +81,7 @@ extension PlacesViewController: UITableViewDataSource, UITableViewDelegate {
 		
 		let placemark = placemarks[indexPath.row]
 		cell.textLabel?.text = placemark.name
-		cell.detailTextLabel?.text = MapMananger.parseAddress(placemark: placemark)
+		cell.detailTextLabel?.text = placemark.title
 		
 		return cell
 	}

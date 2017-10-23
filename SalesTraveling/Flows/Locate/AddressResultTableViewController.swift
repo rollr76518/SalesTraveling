@@ -30,10 +30,10 @@ extension AddressResultTableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		let placemark = matchingItems[indexPath.row].placemark
 		cell.textLabel?.text = placemark.name
-		cell.detailTextLabel?.text = MapMananger.parseAddress(placemark: placemark)
+		cell.detailTextLabel?.text = placemark.title
 		return cell
 	}
 	

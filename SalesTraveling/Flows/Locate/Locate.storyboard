@@ -60,7 +60,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell2" textLabel="vUF-PQ-qAB" detailTextLabel="gTF-qT-vPW" style="IBUITableViewCellStyleSubtitle" id="17w-we-dTo">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="vUF-PQ-qAB" detailTextLabel="gTF-qT-vPW" style="IBUITableViewCellStyleSubtitle" id="17w-we-dTo">
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="17w-we-dTo" id="Eiv-B5-3SH">

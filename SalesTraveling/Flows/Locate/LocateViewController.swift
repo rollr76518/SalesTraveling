@@ -115,7 +115,7 @@ extension LocateViewController: AddressResultTableViewControllerProtocol {
 		let annotation = MKPointAnnotation()
 		annotation.coordinate = placemark.coordinate
 		annotation.title = placemark.name
-		annotation.subtitle = MapMananger.parseAddress(placemark: placemark)
+		annotation.subtitle = placemark.title
 		
 		mapView.addAnnotation(annotation)
 		mapView.selectAnnotation(annotation, animated: true)

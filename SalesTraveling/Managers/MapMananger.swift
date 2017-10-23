@@ -19,21 +19,6 @@ enum DirectResponseStatus {
 }
 
 class MapMananger {
-	class func parseAddress(placemark: MKPlacemark) -> String {
-		let addressLine = String (
-			format:"%@%@%@%@",
-			// state
-			placemark.administrativeArea ?? "",
-			// city
-			placemark.locality ?? "",
-			// street name
-			placemark.thoroughfare ?? "",
-			// street number
-			(placemark.subThoroughfare != nil) ? String.init(format: "%@號", placemark.subThoroughfare!):""
-		)
-		return addressLine
-	}
-
 	class func fetchLocalSearch(with keywords: String, region: MKCoordinateRegion,  completion: @escaping (_ status: LocalSearchStatus) -> ()) {
 		let request = MKLocalSearchRequest()
 		request.naturalLanguageQuery = keywords
@@ -79,7 +64,7 @@ class MapMananger {
 		let annotation = MKPointAnnotation()
 		annotation.coordinate = placemark.coordinate
 		annotation.title = placemark.name
-		annotation.subtitle = parseAddress(placemark: placemark)
+		annotation.subtitle = placemark.title
 		return annotation
 	}
 }
