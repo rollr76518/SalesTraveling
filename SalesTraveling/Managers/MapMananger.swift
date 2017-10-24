@@ -8,17 +8,13 @@
 
 import MapKit
 
-enum LocalSearchStatus {
-	case success(MKLocalSearchResponse)
-	case failure(Error)
-}
-
-enum DirectResponseStatus {
-	case success(MKDirectionsResponse)
-	case failure(Error)
-}
-
 class MapMananger {
+	
+	enum LocalSearchStatus {
+		case success(MKLocalSearchResponse)
+		case failure(Error)
+	}
+	
 	class func fetchLocalSearch(with keywords: String, region: MKCoordinateRegion,  completion: @escaping (_ status: LocalSearchStatus) -> ()) {
 		let request = MKLocalSearchRequest()
 		request.naturalLanguageQuery = keywords
@@ -34,6 +30,11 @@ class MapMananger {
 				completion(.failure(error))
 			}
 		}
+	}
+	
+	enum DirectResponseStatus {
+		case success(MKDirectionsResponse)
+		case failure(Error)
 	}
 	
 	class func showRoute(from begin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
@@ -60,11 +61,54 @@ class MapMananger {
 		}
 	}
 	
+	class func pointAnnotation(mapItem: MKMapItem) -> MKPointAnnotation {
+		return pointAnnotation(placemark: mapItem.placemark)
+	}
+	
 	class func pointAnnotation(placemark: MKPlacemark) -> MKPointAnnotation {
 		let annotation = MKPointAnnotation()
 		annotation.coordinate = placemark.coordinate
 		annotation.title = placemark.name
 		annotation.subtitle = placemark.title
 		return annotation
+	}
+	
+	class func addPolyline(_ mapView: MKMapView, route: MKRoute) {
+		mapView.add(route.polyline, level: .aboveRoads)
+		let rect = route.polyline.boundingMapRect
+		mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
+	}
+	
+	class func showRegion(_ mapView: MKMapView, spanDegrees: Double,  coordinate: CLLocationCoordinate2D) {
+		let span = MKCoordinateSpanMake(spanDegrees, spanDegrees)
+		let region = MKCoordinateRegionMake(coordinate, span)
+		mapView.setRegion(region, animated: true)
+	}
+	
+	enum ReverseGeocodeLocationStatus {
+		case success([MKPlacemark])
+		case failure(Error)
+	}
+	
+	class func reverseCoordinate(_ coordinate: CLLocationCoordinate2D, completion: @escaping (_ status: ReverseGeocodeLocationStatus) -> ())  {
+		let location = CLLocation.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+		let geocoder = CLGeocoder.init()
+		geocoder.reverseGeocodeLocation(location) { (clPlacemarks, error) in
+			if let clPlacemarks = clPlacemarks {
+				completion(.success(transfer(clPlacemarks: clPlacemarks)))
+			}
+			
+			if let error = error {
+				completion(.failure(error))
+			}
+		}
+	}
+	
+	class func transfer(clPlacemarks: [CLPlacemark]) -> [MKPlacemark] {
+		return clPlacemarks.map { (clPlacemark) -> MKPlacemark in
+			let location = clPlacemark.location!
+			let dic = clPlacemark.addressDictionary as! [String: Any]
+			return MKPlacemark.init(coordinate: location.coordinate, addressDictionary: dic)
+		}
 	}
 }

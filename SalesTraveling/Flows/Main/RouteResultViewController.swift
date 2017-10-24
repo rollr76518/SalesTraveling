@@ -12,25 +12,25 @@ import MapKit
 class RouteResultViewController: UIViewController {
 
 	var placemarks: [MKPlacemark] = []
-	var responses: [MKDirectionsResponse] = []
+	var tourModel: TourModel!
 	@IBOutlet weak var mapView: MKMapView!
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
 
-		if let firstObject = responses.first,
-			let route = firstObject.routes.first {
-			print("routes: \(firstObject.routes)")
-			print("expectedTravelTime: \(route.expectedTravelTime)")
-			print("distance: \(route.distance)")
-			//南港車站 - 台北101
-			//expectedTravelTime: 961.0
-			//distance: 7692.0
-			
-			mapView.add(route.polyline, level: .aboveRoads)
-			let rect = route.polyline.boundingMapRect
-			mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
-		}
+//		if let firstObject = responses.first,
+//			let route = firstObject.routes.first {
+//			print("routes: \(firstObject.routes)")
+//			print("expectedTravelTime: \(route.expectedTravelTime)")
+//			print("distance: \(route.distance)")
+//			//南港車站 - 台北101
+//			//expectedTravelTime: 961.0
+//			//distance: 7692.0
+//			
+//			mapView.add(route.polyline, level: .aboveRoads)
+//			let rect = route.polyline.boundingMapRect
+//			mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
+//		}
 		
 		if let sourcePlacemark = placemarks.first,
 			let destinationPlacemark = placemarks.last {

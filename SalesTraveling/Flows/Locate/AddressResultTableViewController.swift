@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 protocol AddressResultTableViewControllerProtocol {
-	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, dropPinZoomIn placemark: MKPlacemark)
+	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, placemark: MKPlacemark)
 }
 
 class AddressResultTableViewController: UITableViewController {
@@ -39,7 +39,7 @@ extension AddressResultTableViewController {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let placemark = matchingItems[indexPath.row].placemark
-		delegate?.addressResultTableViewController(self, dropPinZoomIn: placemark)
+		delegate?.addressResultTableViewController(self, placemark: placemark)
 		dismiss(animated: true, completion: nil)
 	}
 }

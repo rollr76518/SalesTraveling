@@ -21,10 +21,10 @@ class PlacesViewController: UIViewController {
 		}
 	}
 	
-	var responseResults: [[MKDirectionsResponse]] = [] {
+	var tourModels: [TourModel] = [] {
 		didSet {
-			if responseResults.count >= (placemarks.count - 1) {
-				self.performSegue(withIdentifier: "segueShowDirections", sender: responseResults)
+			if tourModels.count >= (placemarks.count - 1) {
+				self.performSegue(withIdentifier: "segueShowDirections", sender: tourModels)
 			}
 		}
 	}
@@ -42,8 +42,8 @@ class PlacesViewController: UIViewController {
 		
 		if let nvc = segue.destination as? UINavigationController,
 		let vc = nvc.viewControllers.first as? DirectionsViewController,
-		let responseResults = sender as? [[MKDirectionsResponse]] {
-			vc.responseResults = responseResults
+		let tourModels = sender as? [TourModel] {
+			vc.tourModels = tourModels
 			vc.placemarks = placemarks
 		}
 	}
@@ -59,7 +59,7 @@ class PlacesViewController: UIViewController {
 			MapMananger.showRoute(from: begin.coordinate, to: destination.coordinate, completion: { (status) in
 				switch status {
 				case .success(let response):
-					self.responseResults.append([response])
+//					self.responseResults.append([response])
 					break
 				case .failure(let error):
 					print("Can't calculate route with \(error)")

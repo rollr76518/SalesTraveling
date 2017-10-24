@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -33,7 +34,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="s2S-m2-016"/>
                     </view>
-                    <navigationItem key="navigationItem" id="y3x-SB-3E3"/>
+                    <navigationItem key="navigationItem" id="y3x-SB-3E3">
+                        <barButtonItem key="rightBarButtonItem" systemItem="stop" id="ohb-2v-gCj">
+                            <connections>
+                                <action selector="barButtonItemCloseDidPressed:" destination="XIw-E3-7Oe" id="5zB-b4-m1M"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="2Wo-jj-HAz" id="Tbd-Jw-u4p"/>
                         <segue destination="Phh-23-sgb" kind="presentation" identifier="segueSearchResult" id="goX-t6-dNi"/>

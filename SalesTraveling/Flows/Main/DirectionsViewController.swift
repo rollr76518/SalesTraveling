@@ -12,7 +12,7 @@ import MapKit
 class DirectionsViewController: UIViewController {
 
 	var placemarks: [MKPlacemark] = []
-	var responseResults: [[MKDirectionsResponse]] = []
+	var tourModels: [TourModel] = []
 
 	@IBOutlet weak var tableView: UITableView!
 	
@@ -23,8 +23,8 @@ class DirectionsViewController: UIViewController {
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {		
 		if let vc = segue.destination as? RouteResultViewController,
-			let responses = sender as? [MKDirectionsResponse] {
-			vc.responses = responses
+			let tourModel = sender as? TourModel {
+			vc.tourModel = tourModel
 			vc.placemarks = placemarks
 		}
     }
@@ -36,15 +36,15 @@ class DirectionsViewController: UIViewController {
 
 extension DirectionsViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return responseResults.count
+		return tourModels.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
-		guard let object = responseResults[indexPath.row].first,
-			let route = object.routes.first else { return cell }
-		cell.textLabel?.text = "Time:" + "\(route.expectedTravelTime)" + ", " + "Distance" + "\(route.distance)"
+		let tourModel = tourModels[indexPath.row]
+		cell.textLabel?.text = "Time:" + "\(tourModel.sumOfExpectedTravelTime)" + ", " + "Distance" + "\(tourModel.distances)"
+		
 		if let sourceName = placemarks.first?.name,
 			let destinationName = placemarks.last?.name {
 			cell.detailTextLabel?.text = sourceName + "->" + destinationName
@@ -54,7 +54,7 @@ extension DirectionsViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let responses = responseResults[indexPath.row]
+		let responses = tourModels[indexPath.row]
 		performSegue(withIdentifier: "segueShowDirectionResult", sender: responses)
 	}
 }

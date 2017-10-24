@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,7 +13,7 @@
         <!--Places View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="ViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="PlacesViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="PlacesViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -98,7 +99,7 @@
         <!--Directions View Controller-->
         <scene sceneID="NFq-d0-IaY">
             <objects>
-                <viewController storyboardIdentifier="DirectionsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UxO-G5-wxr" customClass="DirectionsViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DirectionsViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UxO-G5-wxr" customClass="DirectionsViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0ha-1q-hqP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -149,7 +150,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="B34-7c-4B1">
                         <barButtonItem key="backBarButtonItem" title=" " id="vx4-dB-eMO"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="aF3-H9-RAM">
+                        <barButtonItem key="rightBarButtonItem" systemItem="stop" id="aF3-H9-RAM">
                             <connections>
                                 <action selector="barButtonItemDoneDidPressed:" destination="UxO-G5-wxr" id="hS5-FU-Muz"/>
                             </connections>

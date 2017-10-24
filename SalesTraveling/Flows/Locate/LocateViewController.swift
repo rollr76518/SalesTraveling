@@ -19,6 +19,7 @@ class LocateViewController: UIViewController {
 	var searchController: UISearchController!
 	var delegate: LocateViewControllerProtocol?
 	var selectedPlacemark: MKPlacemark?
+	var tappedPoint: CGPoint?
 	
 	@IBOutlet weak var mapView: MKMapView!
 	
@@ -27,6 +28,13 @@ class LocateViewController: UIViewController {
 		
 		setupLocationManager()
 		setupUISearchController()
+		setupSingleTapRecognizer()
+	}
+	
+	@IBAction func barButtonItemCloseDidPressed(_ sender: Any) {
+		if let navigationController = navigationController {
+			navigationController.dismiss(animated: true, completion: nil)
+		}
 	}
 }
 
@@ -61,6 +69,41 @@ extension LocateViewController {
 		searchController.dimsBackgroundDuringPresentation = true
 		definesPresentationContext = true
 	}
+	
+	fileprivate func setupSingleTapRecognizer() {
+		let singleTapRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(tapMap))
+		singleTapRecognizer.numberOfTapsRequired = 1
+		singleTapRecognizer.numberOfTouchesRequired = 1
+		singleTapRecognizer.delaysTouchesBegan = true
+		singleTapRecognizer.delegate = self
+		mapView.addGestureRecognizer(singleTapRecognizer)
+	}
+	
+	@objc func tapMap(sender: Any) {
+		if let recognizer = sender as? UITapGestureRecognizer {
+			tappedPoint = recognizer.location(in: view)
+			//Call deselect annotation
+		}
+	}
+	
+	fileprivate func addAnnotation(_ coordinate: CLLocationCoordinate2D) {
+		MapMananger.reverseCoordinate(coordinate, completion: { (status) in
+			switch status {
+			case .success(let placemarks):
+				if let placemark = placemarks.first {
+					self.selectedPlacemark = placemark
+					self.mapView.removeAnnotations(self.mapView.annotations)
+					let newAnnotation = MapMananger.pointAnnotation(placemark: placemark)
+					self.mapView.addAnnotation(newAnnotation)
+					self.mapView.selectAnnotation(newAnnotation, animated: true)
+				}
+				break
+			case .failure(let error):
+				print("reverseCoordinate: \(error)")
+				break
+			}
+		})
+	}
 }
 
 //MARK: - CLLocationManagerDelegate
@@ -72,16 +115,22 @@ extension LocateViewController: CLLocationManagerDelegate {
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		
+		//required
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		print("error:: (error)")
+		print("manager didFailWithError: \(error)")
 	}
 }
 
 //MARK: - MKMapViewDelegate
 extension LocateViewController: MKMapViewDelegate {
+	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+		print("didUpdate userLocation")
+		MapMananger.showRegion(mapView, spanDegrees: 0.05, coordinate: userLocation.coordinate)
+		addAnnotation(userLocation.coordinate)
+	}
+	
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		if annotation is MKUserLocation {
 			return nil
@@ -91,9 +140,23 @@ extension LocateViewController: MKMapViewDelegate {
 		pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
 		pinView?.pinTintColor = .orange
 		pinView?.canShowCallout = true
+		pinView?.animatesDrop = false
 		pinView?.isDraggable = true
 		pinView?.rightCalloutAccessoryView = UIButton.init(type: .contactAdd)
 		return pinView
+	}
+	
+	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+		switch newState {
+		case .ending:
+			view.dragState = .none
+			if let annotation = view.annotation {
+				addAnnotation(annotation.coordinate)
+			}
+			break
+		default:
+			break
+		}
 	}
 	
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
@@ -103,25 +166,42 @@ extension LocateViewController: MKMapViewDelegate {
 			dismiss(animated: true, completion: nil)
 		}
 	}
+	
+	func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+		if let point = tappedPoint {
+			let coordinateTapped = mapView.convert(point, toCoordinateFrom: self.view)
+			addAnnotation(coordinateTapped)
+			tappedPoint = nil
+		}
+	}
+	
+	func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+		print("didSelect MKAnnotationView")
+	}
 }
 
 //MARK: - AddressResultTableViewControllerProtocol
 extension LocateViewController: AddressResultTableViewControllerProtocol {
-	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, dropPinZoomIn placemark: MKPlacemark) {
+	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, placemark: MKPlacemark) {
 		selectedPlacemark = placemark
 		
+		let annotation = MapMananger.pointAnnotation(placemark: placemark)
 		mapView.removeAnnotations(mapView.annotations)
-		
-		let annotation = MKPointAnnotation()
-		annotation.coordinate = placemark.coordinate
-		annotation.title = placemark.name
-		annotation.subtitle = placemark.title
-		
 		mapView.addAnnotation(annotation)
 		mapView.selectAnnotation(annotation, animated: true)
 		
-		let span = MKCoordinateSpanMake(0.05, 0.05)
-		let region = MKCoordinateRegionMake(placemark.coordinate, span)
-		mapView.setRegion(region, animated: true)
+		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
+	}
+}
+
+//MAKR: - UIGestureRecognizerDelegate
+extension LocateViewController: UIGestureRecognizerDelegate {
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+		if touch.view is MKPinAnnotationView {
+			print("false")
+			return false
+		}
+		print("true")
+		return true
 	}
 }
