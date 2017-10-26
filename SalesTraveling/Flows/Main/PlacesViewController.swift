@@ -21,10 +21,10 @@ class PlacesViewController: UIViewController {
 		}
 	}
 	
-	var tourModels: [TourModel] = [] {
+	var tourModel: TourModel = TourModel() {
 		didSet {
-			if tourModels.count >= (placemarks.count - 1) {
-				self.performSegue(withIdentifier: "segueShowDirections", sender: tourModels)
+			if tourModel.responses.count >= (placemarks.count - 1) {
+				self.performSegue(withIdentifier: "segueShowDirections", sender: tourModel)
 			}
 		}
 	}
@@ -42,8 +42,8 @@ class PlacesViewController: UIViewController {
 		
 		if let nvc = segue.destination as? UINavigationController,
 		let vc = nvc.viewControllers.first as? DirectionsViewController,
-		let tourModels = sender as? [TourModel] {
-			vc.tourModels = tourModels
+		let tourModel = sender as? TourModel {
+			vc.tourModel = tourModel
 			vc.placemarks = placemarks
 		}
 	}
@@ -55,15 +55,32 @@ class PlacesViewController: UIViewController {
 	}
 	
 	@IBAction func buttonCalculateDidPressed(_ sender: Any) {
-		if let begin = placemarks.first, let destination = placemarks.last, placemarks.count > 1 {
-			MapMananger.showRoute(from: begin.coordinate, to: destination.coordinate, completion: { (status) in
+		if placemarks.count >= 2 {
+			MapMananger.calculateDirections(from: placemarks[0].coordinate, to: placemarks[1].coordinate, completion: { (status) in
 				switch status {
 				case .success(let response):
-//					self.responseResults.append([response])
+					self.tourModel.responses.append(response)
 					break
 				case .failure(let error):
 					print("Can't calculate route with \(error)")
 					break
+				}
+				if self.tourModel.responses.count >= (self.placemarks.count - 1) {
+					self.performSegue(withIdentifier: "segueShowDirections", sender: self.tourModel)
+				}
+			})
+			
+			MapMananger.calculateDirections(from: placemarks[1].coordinate, to: placemarks[2].coordinate, completion: { (status) in
+				switch status {
+				case .success(let response):
+					self.tourModel.responses.append(response)
+					break
+				case .failure(let error):
+					print("Can't calculate route with \(error)")
+					break
+				}
+				if self.tourModel.responses.count >= (self.placemarks.count - 1) {
+					self.performSegue(withIdentifier: "segueShowDirections", sender: self.tourModel)
 				}
 			})
 		}

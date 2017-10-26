@@ -14,6 +14,7 @@ class TourModel {
 	
 	var placemarks: [MKPlacemark] {
 		return responses.map{ $0.source.placemark }
+		//TODO: destination 也要
 	}
 	
 	var routes: [MKRoute] {
@@ -22,6 +23,40 @@ class TourModel {
 	
 	var polylines: [MKPolyline] {
 		return responses.map{ ($0.routes.first?.polyline)! }
+	}
+	
+	var boundingMapRect: MKMapRect {
+		var westPoint: Double?
+		var northPoint: Double?
+		var eastPoint: Double?
+		var southPoint: Double?
+		
+		for polyline in polylines {
+			if let west = westPoint, let north = northPoint, let east = eastPoint, let south = southPoint {
+				
+				if polyline.boundingMapRect.origin.x < west {
+					westPoint = polyline.boundingMapRect.origin.x
+				}
+				if polyline.boundingMapRect.origin.y < north {
+					northPoint = polyline.boundingMapRect.origin.y
+				}
+				if polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width > east {
+					eastPoint = polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width
+				}
+				if polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height > south {
+					southPoint = polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height
+				}
+			}
+			else {
+				westPoint = polyline.boundingMapRect.origin.x
+				northPoint = polyline.boundingMapRect.origin.y
+				eastPoint = polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width
+				southPoint = polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height
+			}
+		}
+		
+		return MKMapRect.init(origin: MKMapPointMake(westPoint!, northPoint!), size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
+		
 	}
 	
 	var distances: CLLocationDistance {

@@ -126,8 +126,11 @@ extension LocateViewController: CLLocationManagerDelegate {
 //MARK: - MKMapViewDelegate
 extension LocateViewController: MKMapViewDelegate {
 	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-		print("didUpdate userLocation")
-		MapMananger.showRegion(mapView, spanDegrees: 0.05, coordinate: userLocation.coordinate)
+		if let _ = selectedPlacemark {
+			return
+		}
+
+		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: userLocation.coordinate)
 		addAnnotation(userLocation.coordinate)
 	}
 	
@@ -173,10 +176,6 @@ extension LocateViewController: MKMapViewDelegate {
 			addAnnotation(coordinateTapped)
 			tappedPoint = nil
 		}
-	}
-	
-	func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-		print("didSelect MKAnnotationView")
 	}
 }
 

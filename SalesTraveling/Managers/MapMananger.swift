@@ -37,7 +37,7 @@ class MapMananger {
 		case failure(Error)
 	}
 	
-	class func showRoute(from begin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
+	class func calculateDirections(from begin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
 		let beginMark = MKPlacemark.init(coordinate: begin, addressDictionary: nil)
 		let destinationMark = MKPlacemark.init(coordinate: destination, addressDictionary: nil)
 		
@@ -110,5 +110,20 @@ class MapMananger {
 			let dic = clPlacemark.addressDictionary as! [String: Any]
 			return MKPlacemark.init(coordinate: location.coordinate, addressDictionary: dic)
 		}
+	}
+	
+	class func placemarkNames(_ placemarks: [MKPlacemark]) -> String {
+		let names = placemarks.reduce("") { (result, placemark) -> String in
+			return result + "\(placemark.name!) ->"
+		}
+		
+		return names
+	}
+	
+	class func routeInfomation(_ tourModal: TourModel) -> String {
+		let time = String.init(format: "Time: %2f min", tourModal.sumOfExpectedTravelTime/60)
+		let distance = String.init(format: "Distance: %2f km", tourModal.distances/1000)
+		
+		return time  + ", " + distance
 	}
 }
