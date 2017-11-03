@@ -17,11 +17,6 @@ class RouteResultViewController: UIViewController {
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
-
-//			mapView.add(route.polyline, level: .aboveRoads)
-//			let rect = route.polyline.boundingMapRect
-//			mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
-
 		
 		for polyline in tourModel.polylines {
 			mapView.add(polyline, level: .aboveRoads)

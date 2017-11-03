@@ -8,9 +8,15 @@
 
 import MapKit
 
+struct DirectionsModel {
+    var source: MKMapItem
+    var destination: MKMapItem
+    var routes: [MKRoute]
+}
+
 class TourModel {
 	
-	var responses: [MKDirectionsResponse] = []
+	var responses: [DirectionsModel] = []
 	
 	var placemarks: [MKPlacemark] {
 		return responses.map{ $0.source.placemark }

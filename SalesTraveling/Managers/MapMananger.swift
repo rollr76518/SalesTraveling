@@ -37,16 +37,11 @@ class MapMananger {
 		case failure(Error)
 	}
 	
-	class func calculateDirections(from begin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
-		let beginMark = MKPlacemark.init(coordinate: begin, addressDictionary: nil)
-		let destinationMark = MKPlacemark.init(coordinate: destination, addressDictionary: nil)
-		
-		let beginItem = MKMapItem.init(placemark: beginMark)
-		let destinationItem = MKMapItem.init(placemark: destinationMark)
-		
+	class func calculateDirections(from sourcePlacemark: MKPlacemark, to destinationPlacemark: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
+
 		let request = MKDirectionsRequest.init()
-		request.source = beginItem
-		request.destination = destinationItem
+		request.source = sourcePlacemark.toMapItem
+		request.destination = destinationPlacemark.toMapItem
 		request.transportType = .automobile
 		
 		let directions = MKDirections.init(request: request)
@@ -126,4 +121,10 @@ class MapMananger {
 		
 		return time  + ", " + distance
 	}
+}
+
+extension MKPlacemark {
+    var toMapItem: MKMapItem {
+        return MKMapItem.init(placemark: self)
+    }
 }

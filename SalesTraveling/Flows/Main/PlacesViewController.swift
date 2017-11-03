@@ -56,10 +56,13 @@ class PlacesViewController: UIViewController {
 	
 	@IBAction func buttonCalculateDidPressed(_ sender: Any) {
 		if placemarks.count >= 2 {
-			MapMananger.calculateDirections(from: placemarks[0].coordinate, to: placemarks[1].coordinate, completion: { (status) in
+			MapMananger.calculateDirections(from: placemarks[0], to: placemarks[1], completion: { (status) in
 				switch status {
 				case .success(let response):
-					self.tourModel.responses.append(response)
+                    let directions = DirectionsModel.init(source: self.placemarks[0].toMapItem,
+                                                          destination: self.placemarks[1].toMapItem,
+                                                          routes: response.routes)
+					self.tourModel.responses.append(directions)
 					break
 				case .failure(let error):
 					print("Can't calculate route with \(error)")
@@ -70,10 +73,13 @@ class PlacesViewController: UIViewController {
 				}
 			})
 			
-			MapMananger.calculateDirections(from: placemarks[1].coordinate, to: placemarks[2].coordinate, completion: { (status) in
+			MapMananger.calculateDirections(from: placemarks[1], to: placemarks[2], completion: { (status) in
 				switch status {
 				case .success(let response):
-					self.tourModel.responses.append(response)
+                    let directions = DirectionsModel.init(source: self.placemarks[0].toMapItem,
+                                                          destination: self.placemarks[1].toMapItem,
+                                                          routes: response.routes)
+                    self.tourModel.responses.append(directions)
 					break
 				case .failure(let error):
 					print("Can't calculate route with \(error)")
