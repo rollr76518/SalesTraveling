@@ -20,6 +20,8 @@
 		7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA27E1F9C82B10011007E /* Locate.storyboard */; };
 		7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2801F9C8D090011007E /* PlacesViewController.swift */; };
 		7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */; };
+		94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB42881FB6E663005039B7 /* Array+Extension.swift */; };
+		94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		7EFBA27E1F9C82B10011007E /* Locate.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Locate.storyboard; sourceTree = "<group>"; };
 		7EFBA2801F9C8D090011007E /* PlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewController.swift; sourceTree = "<group>"; };
 		7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteResultViewController.swift; sourceTree = "<group>"; };
+		94FB42881FB6E663005039B7 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermutationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,7 @@
 				7EFBA2751F9C4D6E0011007E /* Managers */,
 				7EFBA2841F9C8D8D0011007E /* Flows */,
 				7EB0D60B1F9E342100268E3B /* Models */,
+				94FB428A1FB6E668005039B7 /* Extensions */,
 				7EFBA2611F9C4B480011007E /* AppDelegate.swift */,
 				7EFBA2681F9C4B480011007E /* Assets.xcassets */,
 				7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */,
@@ -93,6 +98,7 @@
 		7EFBA2751F9C4D6E0011007E /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */,
 				7EFBA2731F9C4D670011007E /* MapMananger.swift */,
 			);
 			path = Managers;
@@ -126,6 +132,14 @@
 				7EFBA2821F9C8D730011007E /* Locate */,
 			);
 			path = Flows;
+			sourceTree = "<group>";
+		};
+		94FB428A1FB6E668005039B7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				94FB42881FB6E663005039B7 /* Array+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,9 +216,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */,
 				7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */,
 				7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */,
 				7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */,
+				94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */,
 				7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */,
 				7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */,
 				7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */,

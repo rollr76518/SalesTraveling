@@ -19,8 +19,11 @@ class TourModel {
 	var responses: [DirectionsModel] = []
 	
 	var placemarks: [MKPlacemark] {
-		return responses.map{ $0.source.placemark }
-		//TODO: destination 也要
+        var placemarks = responses.map{ $0.source.placemark }
+        if let last = responses.last {
+            placemarks.append(last.destination.placemark)
+        }
+        return placemarks
 	}
 	
 	var routes: [MKRoute] {

@@ -11,8 +11,7 @@ import MapKit
 
 class DirectionsViewController: UIViewController {
 
-	var placemarks: [MKPlacemark] = []
-	var tourModel: TourModel!
+	var tourModels: [TourModel]!
 
 	@IBOutlet weak var tableView: UITableView!
 	
@@ -25,7 +24,6 @@ class DirectionsViewController: UIViewController {
 		if let vc = segue.destination as? RouteResultViewController,
 			let tourModel = sender as? TourModel {
 			vc.tourModel = tourModel
-			vc.placemarks = placemarks
 		}
     }
 	
@@ -36,19 +34,22 @@ class DirectionsViewController: UIViewController {
 
 extension DirectionsViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 1
+		return tourModels.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		
+        let tourModel = tourModels[indexPath.row]
+        
 		cell.textLabel?.text = MapMananger.routeInfomation(tourModel)
-		cell.detailTextLabel?.text = MapMananger.placemarkNames(placemarks)
+        cell.detailTextLabel?.text = MapMananger.placemarkNames(tourModel.placemarks)
 		
 		return cell
 	}
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let tourModel = tourModels[indexPath.row]
 		performSegue(withIdentifier: "segueShowDirectionResult", sender: tourModel)
 	}
 }

@@ -11,7 +11,6 @@ import MapKit
 
 class RouteResultViewController: UIViewController {
 
-	var placemarks: [MKPlacemark] = []
 	var tourModel: TourModel!
 	@IBOutlet weak var mapView: MKMapView!
 	
@@ -22,7 +21,7 @@ class RouteResultViewController: UIViewController {
 			mapView.add(polyline, level: .aboveRoads)
 		}
 		
-		for placemark in placemarks {
+		for placemark in tourModel.placemarks {
 			mapView.addAnnotation(MapMananger.pointAnnotation(placemark: placemark))
 		}
 		

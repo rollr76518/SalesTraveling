@@ -109,15 +109,16 @@ class MapMananger {
 	
 	class func placemarkNames(_ placemarks: [MKPlacemark]) -> String {
 		let names = placemarks.reduce("") { (result, placemark) -> String in
-			return result + "\(placemark.name!) ->"
+            guard let name = placemark.name else { return "" }
+			return result + "\(name) ->"
 		}
 		
 		return names
 	}
 	
 	class func routeInfomation(_ tourModal: TourModel) -> String {
-		let time = String.init(format: "Time: %2f min", tourModal.sumOfExpectedTravelTime/60)
-		let distance = String.init(format: "Distance: %2f km", tourModal.distances/1000)
+		let time = String.init(format: "Time: %.2f min", tourModal.sumOfExpectedTravelTime/60)
+		let distance = String.init(format: "Distance: %.2f km", tourModal.distances/1000)
 		
 		return time  + ", " + distance
 	}

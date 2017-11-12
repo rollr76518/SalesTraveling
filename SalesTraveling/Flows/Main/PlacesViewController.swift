@@ -21,14 +21,9 @@ class PlacesViewController: UIViewController {
 		}
 	}
 	
-	var tourModel: TourModel = TourModel() {
-		didSet {
-			if tourModel.responses.count >= (placemarks.count - 1) {
-				self.performSegue(withIdentifier: "segueShowDirections", sender: tourModel)
-			}
-		}
-	}
-	
+	var tourModels: [TourModel] = []
+    var responeTimes: Int = 0
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 	}
@@ -42,9 +37,8 @@ class PlacesViewController: UIViewController {
 		
 		if let nvc = segue.destination as? UINavigationController,
 		let vc = nvc.viewControllers.first as? DirectionsViewController,
-		let tourModel = sender as? TourModel {
-			vc.tourModel = tourModel
-			vc.placemarks = placemarks
+		let tourModels = sender as? [TourModel] {
+			vc.tourModels = tourModels
 		}
 	}
 	
@@ -56,41 +50,43 @@ class PlacesViewController: UIViewController {
 	
 	@IBAction func buttonCalculateDidPressed(_ sender: Any) {
 		if placemarks.count >= 2 {
-			MapMananger.calculateDirections(from: placemarks[0], to: placemarks[1], completion: { (status) in
-				switch status {
-				case .success(let response):
-                    let directions = DirectionsModel.init(source: self.placemarks[0].toMapItem,
-                                                          destination: self.placemarks[1].toMapItem,
-                                                          routes: response.routes)
-					self.tourModel.responses.append(directions)
-					break
-				case .failure(let error):
-					print("Can't calculate route with \(error)")
-					break
-				}
-				if self.tourModel.responses.count >= (self.placemarks.count - 1) {
-					self.performSegue(withIdentifier: "segueShowDirections", sender: self.tourModel)
-				}
-			})
-			
-			MapMananger.calculateDirections(from: placemarks[1], to: placemarks[2], completion: { (status) in
-				switch status {
-				case .success(let response):
-                    let directions = DirectionsModel.init(source: self.placemarks[0].toMapItem,
-                                                          destination: self.placemarks[1].toMapItem,
-                                                          routes: response.routes)
-                    self.tourModel.responses.append(directions)
-					break
-				case .failure(let error):
-					print("Can't calculate route with \(error)")
-					break
-				}
-				if self.tourModel.responses.count >= (self.placemarks.count - 1) {
-					self.performSegue(withIdentifier: "segueShowDirections", sender: self.tourModel)
-				}
-			})
+            abc()
 		}
 	}
+    
+    func abc() {
+        let permutations = PermutationManager.permutations(placemarks)
+        let tuplesCollection = permutations.map { (placemarks) -> [(MKPlacemark, MKPlacemark)] in
+            return PermutationManager.toTuple(placemarks)
+        }
+        for (index, tuples) in tuplesCollection.enumerated() {
+            let tourModel = TourModel.init()
+            self.tourModels.append(tourModel)
+            
+            for tuple in tuples {
+                let source = tuple.0
+                let destination = tuple.1
+                MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
+                    switch status {
+                    case .success(let response):
+                        let directions = DirectionsModel.init(source: source.toMapItem,
+                                                              destination: destination.toMapItem,
+                                                              routes: response.routes)
+                        self.tourModels[index].responses.append(directions)
+                        self.responeTimes += 1
+                        break
+                    case .failure(let error):
+                        print("Can't calculate route with \(error)")
+                        break
+                    }
+                    if self.responeTimes >= PermutationManager.factorial(self.placemarks.count) * (self.placemarks.count - 1) {
+                        self.responeTimes = 0
+                        self.performSegue(withIdentifier: "segueShowDirections", sender: self.tourModels)
+                    }
+                })
+            }
+        }
+    }
 }
 
 //MARK: - UITableViewDataSource, UITableViewDelegate
