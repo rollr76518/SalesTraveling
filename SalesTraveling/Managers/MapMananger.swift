@@ -109,8 +109,12 @@ class MapMananger {
 	
 	class func placemarkNames(_ placemarks: [MKPlacemark]) -> String {
 		let names = placemarks.reduce("") { (result, placemark) -> String in
-            guard let name = placemark.name else { return "" }
-			return result + "\(name) ->"
+            guard let name = placemark.name else { return result }
+            var append = ""
+            if placemark != placemarks.first {
+               append = "->"
+            }
+			return result + "\(append)" + "\(name)"
 		}
 		
 		return names
@@ -126,6 +130,8 @@ class MapMananger {
 
 extension MKPlacemark {
     var toMapItem: MKMapItem {
-        return MKMapItem.init(placemark: self)
+        let item = MKMapItem.init(placemark: self)
+        item.name = name
+        return item
     }
 }
