@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c1I-Xv-waU">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c1I-Xv-waU">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -78,7 +78,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="eyE-K3-QF6">
                         <barButtonItem key="backBarButtonItem" title=" " id="Azt-iq-BaB"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="6BD-DM-gR5"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="471-aI-oTy">
                             <connections>
                                 <action selector="barButtonItemAddDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
@@ -86,6 +85,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="barButtonItemDone" destination="s4n-oh-aRc" id="hiQ-lZ-nFz"/>
+                        <outlet property="barButtonItemEdit" destination="6BD-DM-gR5" id="qt6-WY-OHV"/>
                         <outlet property="buttonCalculate" destination="X5l-Za-ssy" id="Bhh-ec-0jK"/>
                         <outlet property="tableView" destination="2u4-Jb-Yfp" id="Mzt-Dr-Ocn"/>
                         <segue destination="9qX-1u-wGR" kind="presentation" identifier="segueSetLocation" id="HzF-X0-wfA"/>
@@ -93,6 +94,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <barButtonItem style="plain" systemItem="done" id="s4n-oh-aRc">
+                    <connections>
+                        <action selector="leftBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="PDE-9u-fpi"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem style="plain" systemItem="edit" id="6BD-DM-gR5">
+                    <connections>
+                        <action selector="leftBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="SSd-S4-VaD"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="-388" y="976"/>
         </scene>

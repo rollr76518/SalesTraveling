@@ -13,19 +13,20 @@ class PlacesViewController: UIViewController {
 
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var buttonCalculate: UIButton!
-	
-	var placemarks: [MKPlacemark] = [] {
-		didSet {
-			tableView.reloadData()
-			buttonCalculate.isEnabled = placemarks.count > 1
-		}
-	}
-	
+    @IBOutlet var barButtonItemDone: UIBarButtonItem!
+    @IBOutlet var barButtonItemEdit: UIBarButtonItem!
+    
+    var placemarks: [MKPlacemark] = [] {
+        didSet {
+            buttonCalculate.isEnabled = placemarks.count > 1
+        }
+    }
 	var tourModels: [TourModel] = []
     var responeTimes: Int = 0
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        layoutLeftBarButtonItem()
 	}
 	
 	// MARK: - Navigation
@@ -48,13 +49,25 @@ class PlacesViewController: UIViewController {
 		performSegue(withIdentifier: "segueSetLocation", sender: nil)
 	}
 	
-	@IBAction func buttonCalculateDidPressed(_ sender: Any) {
+    @IBAction func leftBarButtonItemDidPressed(_ sender: Any) {
+        tableView.setEditing(!tableView.isEditing, animated: true)
+        perform(#selector(layoutLeftBarButtonItem), with: nil, afterDelay: 0.25)
+    }
+    
+    @IBAction func buttonCalculateDidPressed(_ sender: Any) {
 		if placemarks.count >= 2 {
-            abc()
+            fetchRoutes()
 		}
 	}
+}
+
+//MARK: - Private func
+extension PlacesViewController {
+    @objc fileprivate func layoutLeftBarButtonItem() {
+        navigationItem.leftBarButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
+    }
     
-    func abc() {
+    fileprivate func fetchRoutes() {
         let permutations = PermutationManager.permutations(placemarks)
         let tuplesCollection = permutations.map { (placemarks) -> [(MKPlacemark, MKPlacemark)] in
             return PermutationManager.toTuple(placemarks)
@@ -89,8 +102,8 @@ class PlacesViewController: UIViewController {
     }
 }
 
-//MARK: - UITableViewDataSource, UITableViewDelegate
-extension PlacesViewController: UITableViewDataSource, UITableViewDelegate {
+//MARK: - UITableViewDataSource
+extension PlacesViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return placemarks.count
 	}
@@ -106,9 +119,28 @@ extension PlacesViewController: UITableViewDataSource, UITableViewDelegate {
 	}
 }
 
+//MARK: - UITableViewDelegate
+extension PlacesViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            placemarks.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+}
+
 //MARK: - LocateViewControllerProtocol
 extension PlacesViewController: LocateViewControllerProtocol {
 	func locateViewController(_ locateViewController: LocateViewController, didSelect placemark: MKPlacemark) {
 		placemarks.append(placemark)
+        tableView.reloadData()
 	}
 }
