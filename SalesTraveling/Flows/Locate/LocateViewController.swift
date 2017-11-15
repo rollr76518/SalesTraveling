@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 protocol LocateViewControllerProtocol {
-	func locateViewController(_ locateViewController: LocateViewController, didSelect placemark: MKPlacemark)
+	func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage)
 }
 
 class LocateViewController: UIViewController {
@@ -163,9 +163,14 @@ extension LocateViewController: MKMapViewDelegate {
 	}
 	
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        mapView.deselectAnnotation(view.annotation, animated: false)
+        let width: CGFloat = 100
 		if let selectedPlacemark = selectedPlacemark,
-			let delegate = delegate {
-			delegate.locateViewController(self, didSelect: selectedPlacemark)
+			let delegate = delegate,
+            let image = UIImage.imageFromView(mapView).crop(rect: CGRect.init(x: view.frame.midX - view.centerOffset.x - width/2,
+                                                                              y: view.frame.midY - view.centerOffset.y - width/2,
+                                                                              width: width, height: width)) {
+			delegate.locateViewController(self, didSelect: selectedPlacemark, inRegion: image)
 			dismiss(animated: true, completion: nil)
 		}
 	}

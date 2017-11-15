@@ -10,7 +10,6 @@
 		7E076E7A1F9CCAFC0013E8B4 /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */; };
 		7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB0D6091F9E341B00268E3B /* TourModel.swift */; };
 		7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2611F9C4B480011007E /* AppDelegate.swift */; };
-		7EFBA2671F9C4B480011007E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA2651F9C4B480011007E /* Main.storyboard */; };
 		7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA2681F9C4B480011007E /* Assets.xcassets */; };
 		7EFBA26C1F9C4B480011007E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */; };
 		7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2731F9C4D670011007E /* MapMananger.swift */; };
@@ -20,6 +19,8 @@
 		7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA27E1F9C82B10011007E /* Locate.storyboard */; };
 		7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2801F9C8D090011007E /* PlacesViewController.swift */; };
 		7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */; };
+		945352B61FBC9F7A00176195 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 945352B51FBC9F7A00176195 /* Main.storyboard */; };
+		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
 		94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB42881FB6E663005039B7 /* Array+Extension.swift */; };
 		94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */; };
 /* End PBXBuildFile section */
@@ -29,7 +30,6 @@
 		7EB0D6091F9E341B00268E3B /* TourModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourModel.swift; sourceTree = "<group>"; };
 		7EFBA25E1F9C4B480011007E /* SalesTraveling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalesTraveling.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EFBA2611F9C4B480011007E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7EFBA2661F9C4B480011007E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7EFBA2681F9C4B480011007E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7EFBA26B1F9C4B480011007E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7EFBA26D1F9C4B480011007E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -40,6 +40,8 @@
 		7EFBA27E1F9C82B10011007E /* Locate.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Locate.storyboard; sourceTree = "<group>"; };
 		7EFBA2801F9C8D090011007E /* PlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewController.swift; sourceTree = "<group>"; };
 		7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteResultViewController.swift; sourceTree = "<group>"; };
+		945352B51FBC9F7A00176195 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		94FB42881FB6E663005039B7 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermutationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -117,7 +119,7 @@
 		7EFBA2831F9C8D870011007E /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				7EFBA2651F9C4B480011007E /* Main.storyboard */,
+				945352B51FBC9F7A00176195 /* Main.storyboard */,
 				7EFBA2801F9C8D090011007E /* PlacesViewController.swift */,
 				7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */,
 				7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */,
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				94FB42881FB6E663005039B7 /* Array+Extension.swift */,
+				945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -204,7 +207,7 @@
 				7EFBA26C1F9C4B480011007E /* LaunchScreen.storyboard in Resources */,
 				7EFBA2771F9C53080011007E /* taipei 101.gpx in Resources */,
 				7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */,
-				7EFBA2671F9C4B480011007E /* Main.storyboard in Resources */,
+				945352B61FBC9F7A00176195 /* Main.storyboard in Resources */,
 				7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,6 +228,7 @@
 				7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */,
 				7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */,
 				7E076E7A1F9CCAFC0013E8B4 /* DirectionsViewController.swift in Sources */,
+				945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */,
 				7EFBA27D1F9C55490011007E /* AddressResultTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,14 +236,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		7EFBA2651F9C4B480011007E /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7EFBA2661F9C4B480011007E /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -255,6 +251,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -312,6 +309,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

@@ -21,6 +21,8 @@ class PlacesViewController: UIViewController {
             buttonCalculate.isEnabled = placemarks.count > 1
         }
     }
+    
+    var regionImages: [UIImage] = []
 	var tourModels: [TourModel] = []
     var responeTimes: Int = 0
     
@@ -114,7 +116,8 @@ extension PlacesViewController: UITableViewDataSource {
 		let placemark = placemarks[indexPath.row]
 		cell.textLabel?.text = placemark.name
 		cell.detailTextLabel?.text = placemark.title
-		
+		cell.imageView?.image = regionImages[indexPath.row]
+        
 		return cell
 	}
 }
@@ -139,8 +142,9 @@ extension PlacesViewController: UITableViewDelegate {
 
 //MARK: - LocateViewControllerProtocol
 extension PlacesViewController: LocateViewControllerProtocol {
-	func locateViewController(_ locateViewController: LocateViewController, didSelect placemark: MKPlacemark) {
-		placemarks.append(placemark)
+    func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage) {
+        placemarks.append(placemark)
+        regionImages.append(image)
         tableView.reloadData()
-	}
+    }
 }
