@@ -165,11 +165,12 @@ extension LocateViewController: MKMapViewDelegate {
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         mapView.deselectAnnotation(view.annotation, animated: false)
         let width: CGFloat = 100
+        let rect = CGRect.init(x: view.frame.midX - view.centerOffset.x - width/2,
+                               y: view.frame.midY - view.centerOffset.y - width/2,
+                               width: width, height: width)
 		if let selectedPlacemark = selectedPlacemark,
 			let delegate = delegate,
-            let image = UIImage.imageFromView(mapView).crop(rect: CGRect.init(x: view.frame.midX - view.centerOffset.x - width/2,
-                                                                              y: view.frame.midY - view.centerOffset.y - width/2,
-                                                                              width: width, height: width)) {
+            let image = UIImage.imageFromView(mapView).crop(rect: rect)  {
 			delegate.locateViewController(self, didSelect: selectedPlacemark, inRegion: image)
 			dismiss(animated: true, completion: nil)
 		}

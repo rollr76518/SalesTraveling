@@ -88,6 +88,8 @@
                         <outlet property="barButtonItemDone" destination="s4n-oh-aRc" id="hiQ-lZ-nFz"/>
                         <outlet property="barButtonItemEdit" destination="6BD-DM-gR5" id="qt6-WY-OHV"/>
                         <outlet property="buttonCalculate" destination="X5l-Za-ssy" id="Bhh-ec-0jK"/>
+                        <outlet property="labelProgressPercentage" destination="iwx-uf-NE8" id="tkF-3o-l7G"/>
+                        <outlet property="loadingView" destination="3Dg-cv-Ubr" id="z97-VF-LBp"/>
                         <outlet property="tableView" destination="2u4-Jb-Yfp" id="Mzt-Dr-Ocn"/>
                         <segue destination="9qX-1u-wGR" kind="presentation" identifier="segueSetLocation" id="HzF-X0-wfA"/>
                         <segue destination="bY9-7S-bmG" kind="presentation" identifier="segueShowDirections" id="Acq-5e-2wv"/>
@@ -104,6 +106,32 @@
                         <action selector="leftBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="SSd-S4-VaD"/>
                     </connections>
                 </barButtonItem>
+                <view contentMode="scaleToFill" id="3Dg-cv-Ubr">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fetching..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BBZ-ay-IRl">
+                            <rect key="frame" x="74" y="54" width="92.5" height="21"/>
+                            <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Percentage" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iwx-uf-NE8">
+                            <rect key="frame" x="82" y="77" width="77.5" height="17"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="BBZ-ay-IRl" firstAttribute="centerX" secondItem="CEJ-6z-XAw" secondAttribute="centerX" id="YFT-jg-usL"/>
+                        <constraint firstItem="iwx-uf-NE8" firstAttribute="centerX" secondItem="BBZ-ay-IRl" secondAttribute="centerX" id="kJV-T3-pau"/>
+                        <constraint firstItem="BBZ-ay-IRl" firstAttribute="centerY" secondItem="CEJ-6z-XAw" secondAttribute="centerY" id="mdb-w9-uj2"/>
+                        <constraint firstItem="iwx-uf-NE8" firstAttribute="top" secondItem="BBZ-ay-IRl" secondAttribute="bottom" constant="2" id="nLH-Lp-hI4"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="CEJ-6z-XAw"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="-388" y="976"/>
         </scene>
