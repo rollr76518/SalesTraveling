@@ -26,12 +26,6 @@ class PlacesViewController: UIViewController {
 	
 	var regionImages: [UIImage] = []
 	var tourModels: [TourModel] = []
-	var requestTimes: Int = 0
-	var responeTimes: Int = 0 {
-		didSet {
-			labelProgressPercentage.text = "\(responeTimes)/\(possibilities)"
-		}
-	}
 	var possibilities: Int = 0
 	
 	override func viewDidLoad() {
@@ -78,10 +72,7 @@ extension PlacesViewController {
 	}
 	
 	fileprivate func fetchRoutes() {
-		responeTimes = 0
 		tourModels = []
-		loadingView.frame = view.frame
-		view.addSubview(loadingView)
 		
 		let permutations = PermutationManager.permutations(placemarks)
 		let tuplesCollection = permutations.map { (placemarks) -> [(MKPlacemark, MKPlacemark)] in
@@ -95,36 +86,13 @@ extension PlacesViewController {
 			for tuple in tuples {
 				let source = tuple.0
 				let destination = tuple.1
-				
-				requestTimes += 1
-
-				if requestTimes % 50 == 0 {
-
-				}
-				
-				MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
-					switch status {
-					case .success(let response):
-						let directions = DirectionsModel.init(source: source.toMapItem,
-															  destination: destination.toMapItem,
-															  routes: response.routes)
-						self.tourModels[index].responses.append(directions)
-						self.responeTimes += 1
-						print("get")
-						break
-					case .failure(let error):
-						print("Can't calculate route with \(error)")
-						break
-					}
-					if self.responeTimes >= self.possibilities {
-						self.loadingView.removeFromSuperview()
-						self.responeTimes = 0
-						self.possibilities = 0
-						self.performSegue(withIdentifier: "segueShowDirections", sender: self.tourModels)
-					}
-				})
+				let key = "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
+				guard let json = UserDefaults.standard.object(forKey: key) as? Data else { break }
+				let directions = try! JSONDecoder().decode(DirectionsModel.self, from: json)
+				tourModels[index].responses.append(directions)
 			}
 		}
+		performSegue(withIdentifier: "segueShowDirections", sender: tourModels)
 	}
 }
 
@@ -167,6 +135,25 @@ extension PlacesViewController: UITableViewDelegate {
 //MARK: - LocateViewControllerProtocol
 extension PlacesViewController: LocateViewControllerProtocol {
 	func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage) {
+		for Oldplacemark in placemarks {
+			for tuple in [(Oldplacemark, placemark), (placemark, Oldplacemark)] {
+				let source = tuple.0
+				let destination = tuple.1
+				MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
+					switch status {
+					case .success(let response):
+						let directions = DirectionsModel.init(source: source, destination: destination, routes: response.routes)
+						let key = "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
+						let json = try! JSONEncoder().encode(directions)
+						UserDefaults.standard.set(json, forKey: key)
+						break
+					case .failure(let error):
+						print("Can't calculate route with \(error)")
+						break
+					}
+				})
+			}
+		}
 		placemarks.append(placemark)
 		regionImages.append(image)
 		tableView.reloadData()
