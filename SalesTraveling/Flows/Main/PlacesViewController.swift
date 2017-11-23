@@ -15,8 +15,6 @@ class PlacesViewController: UIViewController {
 	@IBOutlet weak var buttonCalculate: UIButton!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
-	@IBOutlet var loadingView: UIView!
-	@IBOutlet var labelProgressPercentage: UILabel!
 	
 	var placemarks: [MKPlacemark] = [] {
 		didSet {
@@ -49,7 +47,7 @@ class PlacesViewController: UIViewController {
 	
 	//MARK: - IBActions
 	@IBAction func barButtonItemAddDidPressed(_ sender: Any) {
-		performSegue(withIdentifier: "segueSetLocation", sender: nil)
+		performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
 	}
 	
 	@IBAction func leftBarButtonItemDidPressed(_ sender: Any) {
@@ -92,7 +90,7 @@ extension PlacesViewController {
 				tourModels[index].responses.append(directions)
 			}
 		}
-		performSegue(withIdentifier: "segueShowDirections", sender: tourModels)
+		performSegue(withIdentifier: DirectionsViewController.identifier, sender: tourModels)
 	}
 }
 

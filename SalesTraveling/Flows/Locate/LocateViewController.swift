@@ -41,9 +41,11 @@ class LocateViewController: UIViewController {
 //MARK: - Private API
 extension LocateViewController {
 	fileprivate func makeAddressResultTableViewController() -> AddressResultTableViewController {
-		guard let vc = UIStoryboard.init(name: "Locate", bundle: nil).instantiateViewController(withIdentifier: "AddressResultTableViewController") as? AddressResultTableViewController else {
+		guard let vc = UIStoryboard.init(name: "Locate", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController
+			else {
 				fatalError("AddressResultTableViewController doesn't exist")
 		}
+		
 		vc.delegate = self
 		vc.mapView = mapView
 		return vc
@@ -62,7 +64,7 @@ extension LocateViewController {
 		
 		let searchBar = searchController.searchBar
 		searchBar.sizeToFit()
-		searchBar.placeholder = "Search"
+		searchBar.placeholder = "Search".localized
 		navigationItem.titleView = searchController.searchBar
 		
 		searchController.hidesNavigationBarDuringPresentation = false
@@ -82,7 +84,6 @@ extension LocateViewController {
 	@objc func tapMap(sender: Any) {
 		if let recognizer = sender as? UITapGestureRecognizer {
 			tappedPoint = recognizer.location(in: view)
-			//Call deselect annotation
 		}
 	}
 	
@@ -187,7 +188,7 @@ extension LocateViewController: MKMapViewDelegate {
 
 //MARK: - AddressResultTableViewControllerProtocol
 extension LocateViewController: AddressResultTableViewControllerProtocol {
-	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, placemark: MKPlacemark) {
+	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
 		selectedPlacemark = placemark
 		
 		let annotation = MapMananger.pointAnnotation(placemark: placemark)

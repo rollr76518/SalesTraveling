@@ -56,11 +56,6 @@ class RouteResultViewController: UIViewController {
 				southPoint = polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height
 			}
 		}
-		
-		print("westPoint\(westPoint)")
-		print("northPoint\(northPoint)")
-		print("eastPoint\(eastPoint)")
-		print("southPoint\(southPoint)")
 
 		return MKMapRect.init(origin: MKMapPointMake(westPoint!, northPoint!), size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
 	}

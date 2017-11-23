@@ -50,6 +50,6 @@ extension DirectionsViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let tourModel = tourModels[indexPath.row]
-		performSegue(withIdentifier: "segueShowDirectionResult", sender: tourModel)
+		performSegue(withIdentifier: RouteResultViewController.identifier, sender: tourModel)
 	}
 }

@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 protocol AddressResultTableViewControllerProtocol {
-	func addressResultTableViewController(_ addressResultTableViewController: AddressResultTableViewController, placemark: MKPlacemark)
+	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark)
 }
 
 class AddressResultTableViewController: UITableViewController {

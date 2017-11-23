@@ -121,8 +121,8 @@ class MapMananger {
 	}
 	
 	class func routeInfomation(_ tourModal: TourModel) -> String {
-		let time = String.init(format: "Time: %.2f min", tourModal.sumOfExpectedTravelTime/60)
-		let distance = String.init(format: "Distance: %.2f km", tourModal.distances/1000)
+		let time = String.init(format: "Time".localized + ": %.2f " + "min".localized, tourModal.sumOfExpectedTravelTime/60)
+		let distance = String.init(format: "Distance".localized + ": %.2f " + "km".localized, tourModal.distances/1000)
 		
 		return time  + ", " + distance
 	}
