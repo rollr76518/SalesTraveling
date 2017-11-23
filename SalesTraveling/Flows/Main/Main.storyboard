@@ -52,15 +52,26 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="9B3-AI-ee1"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5l-Za-ssy">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5l-Za-ssy" customClass="DynamicColorButton" customModule="SalesTraveling" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <color key="backgroundColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="Ojz-yQ-uH9"/>
                                 </constraints>
-                                <state key="normal" title="Calculate"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <state key="normal" title="Show Routes"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="enableBackgroundColor">
+                                        <color key="value" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="highlightedBackgroundColor">
+                                        <color key="value" red="1" green="0.50196081400000003" blue="0.0" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="disableBackgroundColor">
+                                        <color key="value" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="buttonCalculateDidPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2rn-pt-61J"/>
+                                    <action selector="buttonShowRoutesDidPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2rn-pt-61J"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -87,7 +98,7 @@
                     <connections>
                         <outlet property="barButtonItemDone" destination="s4n-oh-aRc" id="hiQ-lZ-nFz"/>
                         <outlet property="barButtonItemEdit" destination="6BD-DM-gR5" id="qt6-WY-OHV"/>
-                        <outlet property="buttonCalculate" destination="X5l-Za-ssy" id="Bhh-ec-0jK"/>
+                        <outlet property="buttonShowRoutes" destination="X5l-Za-ssy" id="cG5-Oy-c81"/>
                         <outlet property="tableView" destination="2u4-Jb-Yfp" id="Mzt-Dr-Ocn"/>
                         <segue destination="9qX-1u-wGR" kind="presentation" identifier="LocateViewController" id="HzF-X0-wfA"/>
                         <segue destination="bY9-7S-bmG" kind="presentation" identifier="DirectionsViewController" id="Acq-5e-2wv"/>

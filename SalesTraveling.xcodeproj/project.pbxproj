@@ -25,6 +25,7 @@
 		94E2D1051FC6F4A400F1FD36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 94E2D1071FC6F4A400F1FD36 /* Localizable.strings */; };
 		94E2D10A1FC6F83700F1FD36 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D1091FC6F83700F1FD36 /* String+Extension.swift */; };
 		94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */; };
+		94E2D10E1FC713DE00F1FD36 /* DynamicColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10D1FC713DE00F1FD36 /* DynamicColorButton.swift */; };
 		94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB42881FB6E663005039B7 /* Array+Extension.swift */; };
 		94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */; };
 /* End PBXBuildFile section */
@@ -51,6 +52,7 @@
 		94E2D1081FC6F4AE00F1FD36 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		94E2D1091FC6F83700F1FD36 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		94E2D10D1FC713DE00F1FD36 /* DynamicColorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicColorButton.swift; sourceTree = "<group>"; };
 		94FB42881FB6E663005039B7 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermutationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,6 +100,7 @@
 				7EFBA2841F9C8D8D0011007E /* Flows */,
 				7EB0D60B1F9E342100268E3B /* Models */,
 				94FB428A1FB6E668005039B7 /* Extensions */,
+				94E2D10F1FC713E400F1FD36 /* Custom UI */,
 				7EFBA2611F9C4B480011007E /* AppDelegate.swift */,
 				7EFBA2681F9C4B480011007E /* Assets.xcassets */,
 				7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */,
@@ -145,6 +148,14 @@
 				7EFBA2821F9C8D730011007E /* Locate */,
 			);
 			path = Flows;
+			sourceTree = "<group>";
+		};
+		94E2D10F1FC713E400F1FD36 /* Custom UI */ = {
+			isa = PBXGroup;
+			children = (
+				94E2D10D1FC713DE00F1FD36 /* DynamicColorButton.swift */,
+			);
+			path = "Custom UI";
 			sourceTree = "<group>";
 		};
 		94FB428A1FB6E668005039B7 /* Extensions */ = {
@@ -236,6 +247,7 @@
 			files = (
 				94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */,
 				7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */,
+				94E2D10E1FC713DE00F1FD36 /* DynamicColorButton.swift in Sources */,
 				7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */,
 				7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */,
 				94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */,

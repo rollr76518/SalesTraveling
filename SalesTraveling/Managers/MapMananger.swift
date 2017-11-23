@@ -38,7 +38,7 @@ class MapMananger {
 	}
 	
 	class func calculateDirections(from sourcePlacemark: MKPlacemark, to destinationPlacemark: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
-
+		
 		let request = MKDirectionsRequest.init()
 		request.source = sourcePlacemark.toMapItem
 		request.destination = destinationPlacemark.toMapItem
@@ -109,11 +109,11 @@ class MapMananger {
 	
 	class func placemarkNames(_ placemarks: [MKPlacemark]) -> String {
 		let names = placemarks.reduce("") { (result, placemark) -> String in
-            guard let name = placemark.name else { return result }
-            var append = ""
-            if placemark != placemarks.first {
-               append = "->"
-            }
+			guard let name = placemark.name else { return result }
+			var append = ""
+			if placemark != placemarks.first {
+				append = "->"
+			}
 			return result + "\(append)" + "\(name)"
 		}
 		
@@ -126,12 +126,45 @@ class MapMananger {
 		
 		return time  + ", " + distance
 	}
+	
+	class func boundingMapRect(polylines: [MKPolyline]) -> MKMapRect {
+		var westPoint: Double?
+		var northPoint: Double?
+		var eastPoint: Double?
+		var southPoint: Double?
+		
+		for polyline in polylines {
+			if let west = westPoint, let north = northPoint, let east = eastPoint, let south = southPoint {
+				
+				if polyline.boundingMapRect.origin.x < west {
+					westPoint = polyline.boundingMapRect.origin.x
+				}
+				if polyline.boundingMapRect.origin.y < north {
+					northPoint = polyline.boundingMapRect.origin.y
+				}
+				if polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width > east {
+					eastPoint = polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width
+				}
+				if polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height > south {
+					southPoint = polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height
+				}
+			}
+			else {
+				westPoint = polyline.boundingMapRect.origin.x
+				northPoint = polyline.boundingMapRect.origin.y
+				eastPoint = polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width
+				southPoint = polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height
+			}
+		}
+		
+		return MKMapRect.init(origin: MKMapPointMake(westPoint!, northPoint!), size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
+	}
 }
 
 extension MKPlacemark {
-    var toMapItem: MKMapItem {
-        let item = MKMapItem.init(placemark: self)
-        item.name = name
-        return item
-    }
+	var toMapItem: MKMapItem {
+		let item = MKMapItem.init(placemark: self)
+		item.name = name
+		return item
+	}
 }

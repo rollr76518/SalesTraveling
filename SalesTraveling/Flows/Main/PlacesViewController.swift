@@ -12,23 +12,23 @@ import MapKit
 class PlacesViewController: UIViewController {
 	
 	@IBOutlet weak var tableView: UITableView!
-	@IBOutlet weak var buttonCalculate: UIButton!
+	@IBOutlet weak var buttonShowRoutes: UIButton!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
 	
 	var placemarks: [MKPlacemark] = [] {
 		didSet {
-			buttonCalculate.isEnabled = placemarks.count > 1
+			buttonShowRoutes.isEnabled = placemarks.count > 1
 		}
 	}
 	
 	var regionImages: [UIImage] = []
 	var tourModels: [TourModel] = []
-	var possibilities: Int = 0
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		layoutLeftBarButtonItem()
+		layoutButtonShowRoutes()
 	}
 	
 	// MARK: - Navigation
@@ -55,21 +55,22 @@ class PlacesViewController: UIViewController {
 		perform(#selector(layoutLeftBarButtonItem), with: nil, afterDelay: 0.25)
 	}
 	
-	@IBAction func buttonCalculateDidPressed(_ sender: Any) {
-		if placemarks.count >= 2 {
-			possibilities = PermutationManager.factorial(placemarks.count) * (placemarks.count - 1)
-			fetchRoutes()
-		}
+	@IBAction func buttonShowRoutesDidPressed(_ sender: Any) {
+		fetchRoutes()
 	}
 }
 
 //MARK: - Private func
-extension PlacesViewController {
-	@objc fileprivate func layoutLeftBarButtonItem() {
+fileprivate extension PlacesViewController {
+	@objc func layoutLeftBarButtonItem() {
 		navigationItem.leftBarButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
 	}
 	
-	fileprivate func fetchRoutes() {
+	func layoutButtonShowRoutes() {
+		buttonShowRoutes.setTitle("Show Routes".localized, for: .normal)
+	}
+	
+	func fetchRoutes() {
 		tourModels = []
 		
 		let permutations = PermutationManager.permutations(placemarks)
