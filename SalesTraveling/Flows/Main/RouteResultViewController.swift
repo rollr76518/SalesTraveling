@@ -41,10 +41,7 @@ class RouteResultViewController: UIViewController {
 			MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
 				switch status {
 				case .success(let directions):
-					guard let route = directions.routes.first else {
-						print(directions)
-						break
-					}
+					guard let route = directions.routes.first else { break }
 					self.routes.append(route)
 					break
 				case .failure(let error): print(error); break
@@ -64,10 +61,10 @@ extension RouteResultViewController: MKMapViewDelegate {
 			return nil
 		}
 		let reuseId = "pin"
-		var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+		var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as! MKPinAnnotationView
 		pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-		pinView?.pinTintColor = .orange
-		pinView?.canShowCallout = true
+		pinView.pinTintColor = .orange
+		pinView.canShowCallout = true
 		return pinView
 	}
 	
