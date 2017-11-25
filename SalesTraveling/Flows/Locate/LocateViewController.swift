@@ -41,7 +41,7 @@ class LocateViewController: UIViewController {
 //MARK: - Private API
 extension LocateViewController {
 	fileprivate func makeAddressResultTableViewController() -> AddressResultTableViewController {
-		guard let vc = UIStoryboard.init(name: "Locate", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController
+		guard let vc = UIStoryboard(name: "Locate", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController
 			else {
 				fatalError("AddressResultTableViewController doesn't exist")
 		}
@@ -50,7 +50,7 @@ extension LocateViewController {
 		vc.mapView = mapView
 		return vc
 	}
-
+	
 	fileprivate func setupLocationManager() {
 		locationManager.delegate = self
 		locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
@@ -73,7 +73,7 @@ extension LocateViewController {
 	}
 	
 	fileprivate func setupSingleTapRecognizer() {
-		let singleTapRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(tapMap))
+		let singleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapMap))
 		singleTapRecognizer.numberOfTapsRequired = 1
 		singleTapRecognizer.numberOfTouchesRequired = 1
 		singleTapRecognizer.delaysTouchesBegan = true
@@ -130,7 +130,7 @@ extension LocateViewController: MKMapViewDelegate {
 		if let _ = selectedPlacemark {
 			return
 		}
-
+		
 		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: userLocation.coordinate)
 		addAnnotation(userLocation.coordinate)
 	}
@@ -146,7 +146,7 @@ extension LocateViewController: MKMapViewDelegate {
 		pinView?.canShowCallout = true
 		pinView?.animatesDrop = false
 		pinView?.isDraggable = true
-		pinView?.rightCalloutAccessoryView = UIButton.init(type: .contactAdd)
+		pinView?.rightCalloutAccessoryView = UIButton(type: .contactAdd)
 		return pinView
 	}
 	
@@ -164,14 +164,14 @@ extension LocateViewController: MKMapViewDelegate {
 	}
 	
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        mapView.deselectAnnotation(view.annotation, animated: false)
-        let width: CGFloat = 100
-        let rect = CGRect.init(x: view.frame.midX - view.centerOffset.x - width/2,
-                               y: view.frame.midY - view.centerOffset.y - width/2,
-                               width: width, height: width)
+		mapView.deselectAnnotation(view.annotation, animated: false)
+		let width: CGFloat = 100
+		let rect = CGRect(x: view.frame.midX - view.centerOffset.x - width/2,
+						  y: view.frame.midY - view.centerOffset.y - width/2,
+						  width: width, height: width)
 		if let selectedPlacemark = selectedPlacemark,
 			let delegate = delegate,
-            let image = UIImage.imageFromView(mapView).crop(rect: rect)  {
+			let image = UIImage.imageFromView(mapView).crop(rect: rect)  {
 			delegate.locateViewController(self, didSelect: selectedPlacemark, inRegion: image)
 			dismiss(animated: true, completion: nil)
 		}

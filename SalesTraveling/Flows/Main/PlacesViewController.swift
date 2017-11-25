@@ -79,7 +79,7 @@ fileprivate extension PlacesViewController {
 		}
 		
 		for (index, tuples) in tuplesCollection.enumerated() {
-			let tourModel = TourModel.init()
+			let tourModel = TourModel()
 			tourModels.append(tourModel)
 			
 			for tuple in tuples {
@@ -141,7 +141,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 				MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
 					switch status {
 					case .success(let response):
-						let directions = DirectionsModel.init(source: source, destination: destination, routes: response.routes)
+						let directions = DirectionsModel(source: source, destination: destination, routes: response.routes)
 						let key = "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 						let json = try! JSONEncoder().encode(directions)
 						UserDefaults.standard.set(json, forKey: key)

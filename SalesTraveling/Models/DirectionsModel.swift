@@ -16,25 +16,25 @@ struct DirectionsModel: Codable {
 	
 	var sourcePlacemark: MKPlacemark {
 		set {
-			source = HYCPlacemark.init(with: newValue)
+			source = HYCPlacemark(mkPlacemark: newValue)
 		}
 		get {
-			return MKPlacemark.init(coordinate: CLLocationCoordinate2DMake(source.latitude, source.longitude), addressDictionary: source.addressDictionary.dictionary)
+			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(source.latitude, source.longitude), addressDictionary: source.addressDictionary.dictionary)
 		}
 	}
 	
 	var destinationPlacemark: MKPlacemark {
 		set {
-			destination = HYCPlacemark.init(with: newValue)
+			destination = HYCPlacemark(mkPlacemark: newValue)
 		}
 		get {
-			return MKPlacemark.init(coordinate: CLLocationCoordinate2DMake(destination.latitude, destination.longitude), addressDictionary: destination.addressDictionary.dictionary)
+			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(destination.latitude, destination.longitude), addressDictionary: destination.addressDictionary.dictionary)
 		}
 	}
 	
 	init(source: MKPlacemark, destination: MKPlacemark, routes: [MKRoute]) {
-		self.source = HYCPlacemark.init(with: source)
-		self.destination = HYCPlacemark.init(with: destination)
+		self.source = HYCPlacemark(mkPlacemark: source)
+		self.destination = HYCPlacemark(mkPlacemark: destination)
 		self.distance = routes.first!.distance
 		self.expectedTravelTime = routes.first!.expectedTravelTime
 	}
@@ -46,13 +46,14 @@ struct HYCPlacemark: Codable {
 	var latitude: Double
 	var longitude: Double
 	var addressDictionary: HYCAddress
+//	var addressDictionary: [String: Any] <-- 不符合 Codable
 	
-	init(with placemark: MKPlacemark) {
-		name = placemark.name
-		title = placemark.title
-		latitude = placemark.coordinate.latitude
-		longitude = placemark.coordinate.longitude
-		addressDictionary = HYCAddress.init(with: placemark.addressDictionary! as! [String: Any])
+	init(mkPlacemark: MKPlacemark) {
+		name = mkPlacemark.name
+		title = mkPlacemark.title
+		latitude = mkPlacemark.coordinate.latitude
+		longitude = mkPlacemark.coordinate.longitude
+		addressDictionary = HYCAddress(dictionary: mkPlacemark.addressDictionary! as! [String: Any])
 	}
 }
 
@@ -70,19 +71,19 @@ struct HYCAddress: Codable {
 	var countryCode: String?
 	var subLocality: String?
 	
-	init(with addressDictionary: [String: Any]) {
-		street = addressDictionary["Street"] as? String
-		zip = addressDictionary["ZIP"] as? String
-		country = addressDictionary["Country"] as? String
-		subThoroughfare = addressDictionary["SubThoroughfare"] as? String
-		state = addressDictionary["State"] as? String
-		name = addressDictionary["Name"] as? String
-		subAdministratieArea = addressDictionary["SubAdministrativeArea"] as? String
-		thoroughfare = addressDictionary["Thoroughfare"] as? String
-		formattedAddressLines = addressDictionary["FormattedAddressLines"] as? [String]
-		city = addressDictionary["City"] as? String
-		countryCode = addressDictionary["CountryCode"] as? String
-		subLocality = addressDictionary["SubLocality"] as? String
+	init(dictionary: [String: Any]) {
+		street = dictionary["Street"] as? String
+		zip = dictionary["ZIP"] as? String
+		country = dictionary["Country"] as? String
+		subThoroughfare = dictionary["SubThoroughfare"] as? String
+		state = dictionary["State"] as? String
+		name = dictionary["Name"] as? String
+		subAdministratieArea = dictionary["SubAdministrativeArea"] as? String
+		thoroughfare = dictionary["Thoroughfare"] as? String
+		formattedAddressLines = dictionary["FormattedAddressLines"] as? [String]
+		city = dictionary["City"] as? String
+		countryCode = dictionary["CountryCode"] as? String
+		subLocality = dictionary["SubLocality"] as? String
 	}
 	
 	var dictionary: [String: Any] {

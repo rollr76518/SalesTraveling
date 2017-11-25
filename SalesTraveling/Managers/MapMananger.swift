@@ -20,7 +20,7 @@ class MapMananger {
 		request.naturalLanguageQuery = keywords
 		request.region = region
 		
-		let search = MKLocalSearch.init(request: request)
+		let search = MKLocalSearch(request: request)
 		search.start { (response, error) in
 			if let response = response {
 				completion(.success(response))
@@ -39,12 +39,12 @@ class MapMananger {
 	
 	class func calculateDirections(from sourcePlacemark: MKPlacemark, to destinationPlacemark: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
 		
-		let request = MKDirectionsRequest.init()
+		let request = MKDirectionsRequest()
 		request.source = sourcePlacemark.toMapItem
 		request.destination = destinationPlacemark.toMapItem
 		request.transportType = .automobile
 		
-		let directions = MKDirections.init(request: request)
+		let directions = MKDirections(request: request)
 		directions.calculate { (response, error) in
 			if let response = response {
 				completion(.success(response))
@@ -86,8 +86,8 @@ class MapMananger {
 	}
 	
 	class func reverseCoordinate(_ coordinate: CLLocationCoordinate2D, completion: @escaping (_ status: ReverseGeocodeLocationStatus) -> ())  {
-		let location = CLLocation.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
-		let geocoder = CLGeocoder.init()
+		let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+		let geocoder = CLGeocoder()
 		geocoder.reverseGeocodeLocation(location) { (clPlacemarks, error) in
 			if let clPlacemarks = clPlacemarks {
 				completion(.success(transfer(clPlacemarks: clPlacemarks)))
@@ -103,7 +103,7 @@ class MapMananger {
 		return clPlacemarks.map { (clPlacemark) -> MKPlacemark in
 			let location = clPlacemark.location!
 			let dic = clPlacemark.addressDictionary as! [String: Any]
-			return MKPlacemark.init(coordinate: location.coordinate, addressDictionary: dic)
+			return MKPlacemark(coordinate: location.coordinate, addressDictionary: dic)
 		}
 	}
 	
@@ -121,8 +121,8 @@ class MapMananger {
 	}
 	
 	class func routeInfomation(_ tourModal: TourModel) -> String {
-		let time = String.init(format: "Time".localized + ": %.2f " + "min".localized, tourModal.sumOfExpectedTravelTime/60)
-		let distance = String.init(format: "Distance".localized + ": %.2f " + "km".localized, tourModal.distances/1000)
+		let time = String(format: "Time".localized + ": %.2f " + "min".localized, tourModal.sumOfExpectedTravelTime/60)
+		let distance = String(format: "Distance".localized + ": %.2f " + "km".localized, tourModal.distances/1000)
 		
 		return time  + ", " + distance
 	}
@@ -157,13 +157,13 @@ class MapMananger {
 			}
 		}
 		
-		return MKMapRect.init(origin: MKMapPointMake(westPoint!, northPoint!), size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
+		return MKMapRect(origin: MKMapPointMake(westPoint!, northPoint!), size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
 	}
 }
 
 extension MKPlacemark {
 	var toMapItem: MKMapItem {
-		let item = MKMapItem.init(placemark: self)
+		let item = MKMapItem(placemark: self)
 		item.name = name
 		return item
 	}

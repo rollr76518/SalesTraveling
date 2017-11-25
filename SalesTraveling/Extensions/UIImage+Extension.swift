@@ -30,7 +30,7 @@ extension UIImage {
     }
 	
 	class func imageFromColor(_ color: UIColor) -> UIImage {
-		let size = CGSize.init(width: 1, height: 1)
+		let size = CGSize(width: 1, height: 1)
 		let renderer = UIGraphicsImageRenderer(size: size)
 		return renderer.image(actions: { rendererContext in
 			color.setFill()
