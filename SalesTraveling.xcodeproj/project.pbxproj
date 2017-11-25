@@ -22,6 +22,8 @@
 		9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */; };
 		945352B61FBC9F7A00176195 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 945352B51FBC9F7A00176195 /* Main.storyboard */; };
 		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
+		94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */; };
+		94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */; };
 		94E2D1051FC6F4A400F1FD36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 94E2D1071FC6F4A400F1FD36 /* Localizable.strings */; };
 		94E2D10A1FC6F83700F1FD36 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D1091FC6F83700F1FD36 /* String+Extension.swift */; };
 		94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */; };
@@ -48,6 +50,8 @@
 		9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsModel.swift; sourceTree = "<group>"; };
 		945352B51FBC9F7A00176195 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		94E2D1061FC6F4A400F1FD36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		94E2D1081FC6F4AE00F1FD36 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		94E2D1091FC6F83700F1FD36 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -162,8 +166,10 @@
 			isa = PBXGroup;
 			children = (
 				94FB42881FB6E663005039B7 /* Array+Extension.swift */,
-				945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */,
 				94E2D1091FC6F83700F1FD36 /* String+Extension.swift */,
+				945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */,
+				94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */,
+				94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */,
 				94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */,
 			);
 			path = Extensions;
@@ -247,7 +253,9 @@
 			files = (
 				94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */,
 				7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */,
+				94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */,
 				94E2D10E1FC713DE00F1FD36 /* DynamicColorButton.swift in Sources */,
+				94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */,
 				7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */,
 				7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */,
 				94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */,

@@ -14,21 +14,21 @@ class DynamicColorButton: UIButton {
 	@IBInspectable
 	var enableBackgroundColor: UIColor? {
 		didSet {
-			setBackgroundImage(UIImage.imageFromColor(enableBackgroundColor!), for: .normal)
+			setBackgroundImage(enableBackgroundColor?.toImage(), for: .normal)
 		}
 	}
 	
 	@IBInspectable
 	var highlightedBackgroundColor: UIColor? {
 		didSet {
-			setBackgroundImage(UIImage.imageFromColor(highlightedBackgroundColor!), for: .highlighted)
+			setBackgroundImage(highlightedBackgroundColor?.toImage(), for: .highlighted)
 		}
 	}
 	
 	@IBInspectable
 	var disableBackgroundColor: UIColor? {
 		didSet {
-			setBackgroundImage(UIImage.imageFromColor(disableBackgroundColor!), for: .disabled)
+			setBackgroundImage(disableBackgroundColor?.toImage(), for: .disabled)
 		}
 	}
 }

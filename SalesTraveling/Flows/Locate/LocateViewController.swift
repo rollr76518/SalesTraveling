@@ -171,7 +171,7 @@ extension LocateViewController: MKMapViewDelegate {
 						  width: width, height: width)
 		if let selectedPlacemark = selectedPlacemark,
 			let delegate = delegate,
-			let image = UIImage.imageFromView(mapView).crop(rect: rect)  {
+			let image = mapView.toImage().crop(rect: rect)  {
 			delegate.locateViewController(self, didSelect: selectedPlacemark, inRegion: image)
 			dismiss(animated: true, completion: nil)
 		}
