@@ -13,4 +13,14 @@ extension Array {
         guard let first = first else { return nil }
         return (first, Array(self[1..<count]))
     }
+	
+	func toTuple() -> [(Element, Element)] {
+		var tuples: [(Element, Element)] = []
+		
+		for (index, object) in enumerated() where index != count - 1 {
+			tuples.append((object, self[index + 1]))
+		}
+
+		return tuples
+	}
 }

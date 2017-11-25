@@ -33,7 +33,7 @@ class RouteResultViewController: UIViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
 		
-		let tuples = PermutationManager.toTuple(tourModel.placemarks)
+		let tuples = tourModel.placemarks.toTuple()
 		
 		for tuple in tuples {
 			let source = tuple.0
@@ -53,7 +53,7 @@ class RouteResultViewController: UIViewController {
 		}
 		
 		for placemark in tourModel.placemarks {
-			mapView.addAnnotation(MapMananger.pointAnnotation(placemark: placemark))
+			mapView.addAnnotation(placemark.pointAnnotation)
 		}
     }
 }

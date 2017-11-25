@@ -94,7 +94,7 @@ extension LocateViewController {
 				if let placemark = placemarks.first {
 					self.selectedPlacemark = placemark
 					self.mapView.removeAnnotations(self.mapView.annotations)
-					let newAnnotation = MapMananger.pointAnnotation(placemark: placemark)
+					let newAnnotation = placemark.pointAnnotation
 					self.mapView.addAnnotation(newAnnotation)
 					self.mapView.selectAnnotation(newAnnotation, animated: true)
 				}
@@ -191,7 +191,7 @@ extension LocateViewController: AddressResultTableViewControllerProtocol {
 	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
 		selectedPlacemark = placemark
 		
-		let annotation = MapMananger.pointAnnotation(placemark: placemark)
+		let annotation = placemark.pointAnnotation
 		mapView.removeAnnotations(mapView.annotations)
 		mapView.addAnnotation(annotation)
 		mapView.selectAnnotation(annotation, animated: true)

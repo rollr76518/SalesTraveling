@@ -42,8 +42,8 @@ extension DirectionsViewController: UITableViewDataSource, UITableViewDelegate {
 		
         let tourModel = tourModels[indexPath.row]
         
-		cell.textLabel?.text = MapMananger.routeInfomation(tourModel)
-        cell.detailTextLabel?.text = MapMananger.placemarkNames(tourModel.placemarks)
+		cell.textLabel?.text = tourModel.routeInformation
+        cell.detailTextLabel?.text = tourModel.stopInformation
 		
 		return cell
 	}

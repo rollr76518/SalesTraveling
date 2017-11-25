@@ -24,6 +24,7 @@
 		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
 		94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */; };
 		94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */; };
+		94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */; };
 		94E2D1051FC6F4A400F1FD36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 94E2D1071FC6F4A400F1FD36 /* Localizable.strings */; };
 		94E2D10A1FC6F83700F1FD36 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D1091FC6F83700F1FD36 /* String+Extension.swift */; };
 		94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */; };
@@ -52,6 +53,7 @@
 		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKPlacemark+Extension.swift"; sourceTree = "<group>"; };
 		94E2D1061FC6F4A400F1FD36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		94E2D1081FC6F4AE00F1FD36 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		94E2D1091FC6F83700F1FD36 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */,
 				94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */,
 				94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */,
+				94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */,
 				94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */,
 				7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */,
 				94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */,

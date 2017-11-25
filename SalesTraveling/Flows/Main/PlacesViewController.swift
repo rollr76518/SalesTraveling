@@ -75,7 +75,7 @@ fileprivate extension PlacesViewController {
 		
 		let permutations = PermutationManager.permutations(placemarks)
 		let tuplesCollection = permutations.map { (placemarks) -> [(MKPlacemark, MKPlacemark)] in
-			return PermutationManager.toTuple(placemarks)
+			return placemarks.toTuple()
 		}
 		
 		for (index, tuples) in tuplesCollection.enumerated() {

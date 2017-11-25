@@ -37,11 +37,11 @@ class MapMananger {
 		case failure(Error)
 	}
 	
-	class func calculateDirections(from sourcePlacemark: MKPlacemark, to destinationPlacemark: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
+	class func calculateDirections(from source: MKPlacemark, to destination: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
 		
 		let request = MKDirectionsRequest()
-		request.source = sourcePlacemark.toMapItem
-		request.destination = destinationPlacemark.toMapItem
+		request.source = source.toMapItem
+		request.destination = destination.toMapItem
 		request.transportType = .automobile
 		
 		let directions = MKDirections(request: request)
@@ -54,18 +54,6 @@ class MapMananger {
 				completion(.failure(error))
 			}
 		}
-	}
-	
-	class func pointAnnotation(mapItem: MKMapItem) -> MKPointAnnotation {
-		return pointAnnotation(placemark: mapItem.placemark)
-	}
-	
-	class func pointAnnotation(placemark: MKPlacemark) -> MKPointAnnotation {
-		let annotation = MKPointAnnotation()
-		annotation.coordinate = placemark.coordinate
-		annotation.title = placemark.name
-		annotation.subtitle = placemark.title
-		return annotation
 	}
 	
 	class func addPolyline(_ mapView: MKMapView, route: MKRoute) {
@@ -90,41 +78,18 @@ class MapMananger {
 		let geocoder = CLGeocoder()
 		geocoder.reverseGeocodeLocation(location) { (clPlacemarks, error) in
 			if let clPlacemarks = clPlacemarks {
-				completion(.success(transfer(clPlacemarks: clPlacemarks)))
+				let placemarks = clPlacemarks.map { (clPlacemark) -> MKPlacemark in
+					let location = clPlacemark.location!
+					let dic = clPlacemark.addressDictionary as! [String: Any]
+					return MKPlacemark(coordinate: location.coordinate, addressDictionary: dic)
+				}
+				completion(.success(placemarks))
 			}
 			
 			if let error = error {
 				completion(.failure(error))
 			}
 		}
-	}
-	
-	class func transfer(clPlacemarks: [CLPlacemark]) -> [MKPlacemark] {
-		return clPlacemarks.map { (clPlacemark) -> MKPlacemark in
-			let location = clPlacemark.location!
-			let dic = clPlacemark.addressDictionary as! [String: Any]
-			return MKPlacemark(coordinate: location.coordinate, addressDictionary: dic)
-		}
-	}
-	
-	class func placemarkNames(_ placemarks: [MKPlacemark]) -> String {
-		let names = placemarks.reduce("") { (result, placemark) -> String in
-			guard let name = placemark.name else { return result }
-			var append = ""
-			if placemark != placemarks.first {
-				append = "->"
-			}
-			return result + "\(append)" + "\(name)"
-		}
-		
-		return names
-	}
-	
-	class func routeInfomation(_ tourModal: TourModel) -> String {
-		let time = String(format: "Time".localized + ": %.2f " + "min".localized, tourModal.sumOfExpectedTravelTime/60)
-		let distance = String(format: "Distance".localized + ": %.2f " + "km".localized, tourModal.distances/1000)
-		
-		return time  + ", " + distance
 	}
 	
 	class func boundingMapRect(polylines: [MKPolyline]) -> MKMapRect {
@@ -157,14 +122,7 @@ class MapMananger {
 			}
 		}
 		
-		return MKMapRect(origin: MKMapPointMake(westPoint!, northPoint!), size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
-	}
-}
-
-extension MKPlacemark {
-	var toMapItem: MKMapItem {
-		let item = MKMapItem(placemark: self)
-		item.name = name
-		return item
+		return MKMapRect(origin: MKMapPointMake(westPoint!, northPoint!),
+						 size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
 	}
 }

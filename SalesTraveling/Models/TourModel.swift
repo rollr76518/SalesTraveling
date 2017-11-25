@@ -32,4 +32,23 @@ class TourModel {
 		})
 	}
 	
+	var routeInformation: String {
+		let time = String(format: "Time".localized + ": %.2f " + "min".localized, sumOfExpectedTravelTime/60)
+		let distance = String(format: "Distance".localized + ": %.2f " + "km".localized, distances/1000)
+		
+		return time  + ", " + distance
+	}
+	
+	var stopInformation: String {
+		let names = placemarks.reduce("") { (result, placemark) -> String in
+			guard let name = placemark.name else { return result }
+			var append = "->"
+			if placemark.name == placemarks.first?.name {
+				append = ""
+			}
+			return result + "\(append)" + "\(name)"
+		}
+		
+		return names
+	}
 }

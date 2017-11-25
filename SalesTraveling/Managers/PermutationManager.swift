@@ -19,19 +19,6 @@ class PermutationManager {
         return permutations(tail).flatMap { between(head, $0) }
     }
     
-    class func toTuple<T>(_ objects: [T]) -> [(T, T)] {
-        var tuples: [(T, T)] = []
-        
-        for (index, object) in objects.enumerated() {
-            if index == objects.count - 1 {
-                break
-            }
-            tuples.append((object, objects[index + 1]))
-        }
-        
-        return tuples
-    }
-    
     class func factorial(_ number: Int) -> Int {
         if number == 1 { return 1 }
         return number * factorial(number - 1)
