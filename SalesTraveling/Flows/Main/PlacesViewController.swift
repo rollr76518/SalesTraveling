@@ -85,9 +85,9 @@ fileprivate extension PlacesViewController {
 			for tuple in tuples {
 				let source = tuple.0
 				let destination = tuple.1
-				let key = "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
-				guard let json = UserDefaults.standard.object(forKey: key) as? Data else { break }
-				let directions = try! JSONDecoder().decode(DirectionsModel.self, from: json)
+				guard let directions = DataManager.shared.findDirections(source: source, destination: destination) else {
+					break
+				}
 				tourModels[index].responses.append(directions)
 			}
 		}
@@ -141,10 +141,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 				MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
 					switch status {
 					case .success(let response):
-						let directions = DirectionsModel(source: source, destination: destination, routes: response.routes)
-						let key = "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
-						let json = try! JSONEncoder().encode(directions)
-						UserDefaults.standard.set(json, forKey: key)
+						DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
+						
 						break
 					case .failure(let error):
 						print("Can't calculate route with \(error)")
