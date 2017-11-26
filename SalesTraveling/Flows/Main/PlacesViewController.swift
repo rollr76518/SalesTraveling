@@ -11,6 +11,7 @@ import MapKit
 
 class PlacesViewController: UIViewController {
 	
+	@IBOutlet var labelRemainingQuota: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var buttonShowRoutes: UIButton!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
@@ -29,6 +30,19 @@ class PlacesViewController: UIViewController {
 		super.viewDidLoad()
 		layoutLeftBarButtonItem()
 		layoutButtonShowRoutes()
+		
+		CountdownManager.shared.startTimer()
+		NotificationCenter.default.addObserver(self, selector: #selector(aabb), name: NSNotification.Name(rawValue: "test"), object: nil)
+	}
+	
+	@objc func aabb(_ notification: Notification) {
+		if let userInfo = notification.userInfo as? [String: Int],
+			let second = userInfo["second"],
+			let countTimes = userInfo["countTimes"] {
+			labelRemainingQuota.text = "剩下".localized + "\(countTimes)/50" + "," + "\(second)" + "second".localized + ""
+			//API剩餘countTimes/50次，second秒後重置
+			//
+		}
 	}
 	
 	// MARK: - Navigation
