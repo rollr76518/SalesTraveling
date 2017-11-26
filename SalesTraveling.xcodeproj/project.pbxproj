@@ -32,7 +32,7 @@
 		94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */; };
 		94E2D10E1FC713DE00F1FD36 /* DynamicColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10D1FC713DE00F1FD36 /* DynamicColorButton.swift */; };
 		94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB42881FB6E663005039B7 /* Array+Extension.swift */; };
-		94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */; };
+		94FB428C1FB6E6A8005039B7 /* AlgorithmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB428B1FB6E6A8005039B7 /* AlgorithmManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,7 +64,7 @@
 		94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		94E2D10D1FC713DE00F1FD36 /* DynamicColorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicColorButton.swift; sourceTree = "<group>"; };
 		94FB42881FB6E663005039B7 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
-		94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermutationManager.swift; sourceTree = "<group>"; };
+		94FB428B1FB6E6A8005039B7 /* AlgorithmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,7 +124,7 @@
 		7EFBA2751F9C4D6E0011007E /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				94FB428B1FB6E6A8005039B7 /* PermutationManager.swift */,
+				94FB428B1FB6E6A8005039B7 /* AlgorithmManager.swift */,
 				94D010011FC9D14D0003E979 /* DataManager.swift */,
 				7EFBA2731F9C4D670011007E /* MapMananger.swift */,
 			);
@@ -261,7 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */,
-				94FB428C1FB6E6A8005039B7 /* PermutationManager.swift in Sources */,
+				94FB428C1FB6E6A8005039B7 /* AlgorithmManager.swift in Sources */,
 				7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */,
 				94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */,
 				94E2D10E1FC713DE00F1FD36 /* DynamicColorButton.swift in Sources */,

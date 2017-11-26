@@ -23,7 +23,7 @@ class AddressResultTableViewController: UITableViewController {
     }
 }
 
-//MARK: - UITableViewDataSource, UITableViewDelegate
+// MARK: - UITableViewDataSource
 extension AddressResultTableViewController {
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return matchingItems.count
@@ -36,7 +36,10 @@ extension AddressResultTableViewController {
 		cell.detailTextLabel?.text = placemark.title
 		return cell
 	}
-	
+}
+
+// MARK: - UITableViewDelegate
+extension AddressResultTableViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let placemark = matchingItems[indexPath.row].placemark
 		delegate?.addressResultTableViewController(self, placemark: placemark)

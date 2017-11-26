@@ -22,6 +22,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <connections>
                                     <outlet property="delegate" destination="XIw-E3-7Oe" id="2Jw-89-mER"/>
+                                    <outletCollection property="gestureRecognizers" destination="uMJ-4i-Zud" appends="YES" id="nqV-Y6-DLa"/>
                                 </connections>
                             </mapView>
                         </subviews>
@@ -47,6 +48,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tNF-Zw-jdC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="uMJ-4i-Zud">
+                    <connections>
+                        <action selector="tapMap:" destination="XIw-E3-7Oe" id="F4c-9i-mtI"/>
+                        <outlet property="delegate" destination="XIw-E3-7Oe" id="Dzm-sB-w84"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1610" y="976"/>
         </scene>

@@ -73,7 +73,7 @@ fileprivate extension PlacesViewController {
 	func fetchRoutes() {
 		tourModels = []
 		
-		let permutations = PermutationManager.permutations(placemarks)
+		let permutations = AlgorithmManager.permutations(placemarks)
 		let tuplesCollection = permutations.map { (placemarks) -> [(MKPlacemark, MKPlacemark)] in
 			return placemarks.toTuple()
 		}
@@ -142,7 +142,6 @@ extension PlacesViewController: LocateViewControllerProtocol {
 					switch status {
 					case .success(let response):
 						DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
-						
 						break
 					case .failure(let error):
 						print("Can't calculate route with \(error)")

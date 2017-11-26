@@ -32,7 +32,8 @@ class DirectionsViewController: UIViewController {
 	}
 }
 
-extension DirectionsViewController: UITableViewDataSource, UITableViewDelegate {
+// MARK: - UITableViewDataSource
+extension DirectionsViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return tourModels.count
 	}
@@ -47,9 +48,12 @@ extension DirectionsViewController: UITableViewDataSource, UITableViewDelegate {
 		
 		return cell
 	}
-	
+}
+
+// MARK: - UITableViewDelegate
+extension DirectionsViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let tourModel = tourModels[indexPath.row]
+		let tourModel = tourModels[indexPath.row]
 		performSegue(withIdentifier: RouteResultViewController.identifier, sender: tourModel)
 	}
 }

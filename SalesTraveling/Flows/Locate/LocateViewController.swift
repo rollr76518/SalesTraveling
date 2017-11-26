@@ -28,7 +28,6 @@ class LocateViewController: UIViewController {
 		
 		setupLocationManager()
 		setupUISearchController()
-		setupSingleTapRecognizer()
 	}
 	
 	@IBAction func barButtonItemCloseDidPressed(_ sender: Any) {
@@ -36,11 +35,16 @@ class LocateViewController: UIViewController {
 			navigationController.dismiss(animated: true, completion: nil)
 		}
 	}
+	@IBAction func tapMap(_ sender: Any) {
+		if let recognizer = sender as? UITapGestureRecognizer {
+			tappedPoint = recognizer.location(in: view)
+		}
+	}
 }
 
 //MARK: - Private API
-extension LocateViewController {
-	fileprivate func makeAddressResultTableViewController() -> AddressResultTableViewController {
+fileprivate extension LocateViewController {
+	func makeAddressResultTableViewController() -> AddressResultTableViewController {
 		guard let vc = UIStoryboard(name: "Locate", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController
 			else {
 				fatalError("AddressResultTableViewController doesn't exist")
@@ -51,14 +55,14 @@ extension LocateViewController {
 		return vc
 	}
 	
-	fileprivate func setupLocationManager() {
+	func setupLocationManager() {
 		locationManager.delegate = self
 		locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
 		locationManager.requestWhenInUseAuthorization()
 		locationManager.requestLocation()
 	}
 	
-	fileprivate func setupUISearchController() {
+	func setupUISearchController() {
 		searchController = UISearchController(searchResultsController: addressResultTableViewController)
 		searchController.searchResultsUpdater = addressResultTableViewController
 		
@@ -72,22 +76,7 @@ extension LocateViewController {
 		definesPresentationContext = true
 	}
 	
-	fileprivate func setupSingleTapRecognizer() {
-		let singleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapMap))
-		singleTapRecognizer.numberOfTapsRequired = 1
-		singleTapRecognizer.numberOfTouchesRequired = 1
-		singleTapRecognizer.delaysTouchesBegan = true
-		singleTapRecognizer.delegate = self
-		mapView.addGestureRecognizer(singleTapRecognizer)
-	}
-	
-	@objc func tapMap(sender: Any) {
-		if let recognizer = sender as? UITapGestureRecognizer {
-			tappedPoint = recognizer.location(in: view)
-		}
-	}
-	
-	fileprivate func addAnnotation(_ coordinate: CLLocationCoordinate2D) {
+	func addAnnotation(_ coordinate: CLLocationCoordinate2D) {
 		MapMananger.reverseCoordinate(coordinate, completion: { (status) in
 			switch status {
 			case .success(let placemarks):
@@ -116,7 +105,7 @@ extension LocateViewController: CLLocationManagerDelegate {
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		//required
+		manager.stopUpdatingLocation()
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -179,7 +168,7 @@ extension LocateViewController: MKMapViewDelegate {
 	
 	func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
 		if let point = tappedPoint {
-			let coordinateTapped = mapView.convert(point, toCoordinateFrom: self.view)
+			let coordinateTapped = mapView.convert(point, toCoordinateFrom: view)
 			addAnnotation(coordinateTapped)
 			tappedPoint = nil
 		}

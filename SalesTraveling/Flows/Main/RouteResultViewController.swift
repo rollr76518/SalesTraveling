@@ -10,29 +10,32 @@ import UIKit
 import MapKit
 
 class RouteResultViewController: UIViewController {
-
+	
 	var tourModel: TourModel!
 	var routes: [MKRoute] = [] {
 		didSet {
 			if routes.count >= tourModel.placemarks.count - 1 {
-				for polyline in polylines {
-					mapView.add(polyline, level: .aboveRoads)
-				}
-				
-				let rect = MapMananger.boundingMapRect(polylines: polylines)
-				mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
+				layoutPolylines()
 			}
 		}
 	}
 	var polylines: [MKPolyline] {
 		return routes.map{ $0.polyline }
 	}
-
+	
 	@IBOutlet weak var mapView: MKMapView!
 	
 	override func viewDidLoad() {
-        super.viewDidLoad()
+		super.viewDidLoad()
 		
+		fetchRoutes()
+		layoutPinViews()
+	}
+}
+
+// MARK: - Private func
+fileprivate extension RouteResultViewController {
+	func fetchRoutes() {
 		let tuples = tourModel.placemarks.toTuple()
 		
 		for tuple in tuples {
@@ -48,13 +51,24 @@ class RouteResultViewController: UIViewController {
 				}
 			})
 		}
-		
+	}
+	
+	func layoutPinViews() {
 		for placemark in tourModel.placemarks {
 			mapView.addAnnotation(placemark.pointAnnotation)
 		}
-    }
+	}
+	
+	func layoutPolylines() {
+		for polyline in polylines {
+			mapView.add(polyline, level: .aboveRoads)
+		}
+		let rect = MapMananger.boundingMapRect(polylines: polylines)
+		mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
+	}
 }
 
+// MARK: - MKMapViewDelegate
 extension RouteResultViewController: MKMapViewDelegate {
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		if annotation is MKUserLocation {
