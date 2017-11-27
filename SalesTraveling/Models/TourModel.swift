@@ -52,3 +52,13 @@ class TourModel {
 		return names
 	}
 }
+
+extension TourModel: Comparable {
+	static func <(lhs: TourModel, rhs: TourModel) -> Bool {
+		return lhs.distances < rhs.distances
+	}
+	
+	static func ==(lhs: TourModel, rhs: TourModel) -> Bool {
+		return lhs.distances == rhs.distances
+	}
+}

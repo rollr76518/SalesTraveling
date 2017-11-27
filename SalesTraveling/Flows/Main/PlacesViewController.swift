@@ -55,7 +55,7 @@ class PlacesViewController: UIViewController {
 		if let nvc = segue.destination as? UINavigationController,
 			let vc = nvc.viewControllers.first as? DirectionsViewController,
 			let tourModels = sender as? [TourModel] {
-			vc.tourModels = tourModels
+			vc.tourModels = tourModels.sorted()
 		}
 	}
 	
