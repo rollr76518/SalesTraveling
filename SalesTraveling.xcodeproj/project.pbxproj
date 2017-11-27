@@ -20,6 +20,7 @@
 		7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2801F9C8D090011007E /* PlacesViewController.swift */; };
 		7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */; };
 		9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */; };
+		9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */; };
 		945352B61FBC9F7A00176195 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 945352B51FBC9F7A00176195 /* Main.storyboard */; };
 		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
 		94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */; };
@@ -51,6 +52,7 @@
 		7EFBA2801F9C8D090011007E /* PlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewController.swift; sourceTree = "<group>"; };
 		7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteResultViewController.swift; sourceTree = "<group>"; };
 		9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsModel.swift; sourceTree = "<group>"; };
+		9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownManager.swift; sourceTree = "<group>"; };
 		945352B51FBC9F7A00176195 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				94FB428B1FB6E6A8005039B7 /* AlgorithmManager.swift */,
 				94D010011FC9D14D0003E979 /* DataManager.swift */,
 				7EFBA2731F9C4D670011007E /* MapMananger.swift */,
+				9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */,
 				94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */,
 				94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */,
+				9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */,
 				94D010041FC9D5490003E979 /* UserDefaults+Extension.swift in Sources */,
 				9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */,
 				94E2D10A1FC6F83700F1FD36 /* String+Extension.swift in Sources */,

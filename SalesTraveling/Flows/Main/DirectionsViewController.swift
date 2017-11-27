@@ -12,11 +12,13 @@ import MapKit
 class DirectionsViewController: UIViewController {
 
 	var tourModels: [TourModel]!
-
+	@IBOutlet var labelRemainingQuota: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
+		NotificationCenter.default.addObserver(self, selector: #selector(countDownAPI),
+											   name: NSNotification.Name(rawValue: notification_count_down), object: nil)
     }
 
     // MARK: - Navigation
@@ -29,6 +31,15 @@ class DirectionsViewController: UIViewController {
 	
 	@IBAction func barButtonItemDoneDidPressed(_ sender: Any) {
 		navigationController?.dismiss(animated: true, completion: nil)
+	}
+}
+
+fileprivate extension DirectionsViewController {
+	@objc func countDownAPI(_ notification: Notification) {
+		if let userInfo = notification.userInfo as? [String: Int],
+			let countTimes = userInfo["countTimes"], let second = userInfo["second"] {
+			labelRemainingQuota.text = String(format: "API remaining %d/50 times, reset after %d seconds".localized, countTimes, second)
+		}
 	}
 }
 
@@ -53,7 +64,14 @@ extension DirectionsViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension DirectionsViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+		
 		let tourModel = tourModels[indexPath.row]
-		performSegue(withIdentifier: RouteResultViewController.identifier, sender: tourModel)
+		if CountdownManager.shared.canFetchAPI(tourModel.placemarks.count - 1) {
+			performSegue(withIdentifier: RouteResultViewController.identifier, sender: tourModel)
+		}
+		else {
+			// Show Alert
+		}
 	}
 }

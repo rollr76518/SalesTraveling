@@ -11,11 +11,14 @@ import MapKit
 
 class PlacesViewController: UIViewController {
 	
+	@IBOutlet var labelRemainingQuota: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var buttonShowRoutes: UIButton!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
-	
+	@IBOutlet var constraintLabelRemaingQuotaClose: NSLayoutConstraint!
+	@IBOutlet var constraintLabelRemaingQuotaOpen: NSLayoutConstraint!
+	lazy var firstFetch: Bool = activeAPIFetch()
 	var placemarks: [MKPlacemark] = [] {
 		didSet {
 			buttonShowRoutes.isEnabled = placemarks.count > 1
@@ -41,13 +44,18 @@ class PlacesViewController: UIViewController {
 		if let nvc = segue.destination as? UINavigationController,
 			let vc = nvc.viewControllers.first as? DirectionsViewController,
 			let tourModels = sender as? [TourModel] {
-			vc.tourModels = tourModels
+			vc.tourModels = tourModels.sorted()
 		}
 	}
 	
 	//MARK: - IBActions
 	@IBAction func barButtonItemAddDidPressed(_ sender: Any) {
-		performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
+		if CountdownManager.shared.canFetchAPI(placemarks.count) {
+			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
+		}
+		else {
+			// Show Alert
+		}
 	}
 	
 	@IBAction func leftBarButtonItemDidPressed(_ sender: Any) {
@@ -56,7 +64,7 @@ class PlacesViewController: UIViewController {
 	}
 	
 	@IBAction func buttonShowRoutesDidPressed(_ sender: Any) {
-		fetchRoutes()
+		showRoutes()
 	}
 }
 
@@ -70,7 +78,7 @@ fileprivate extension PlacesViewController {
 		buttonShowRoutes.setTitle("Show Routes".localized, for: .normal)
 	}
 	
-	func fetchRoutes() {
+	func showRoutes() {
 		tourModels = []
 		
 		let permutations = AlgorithmManager.permutations(placemarks)
@@ -92,6 +100,25 @@ fileprivate extension PlacesViewController {
 			}
 		}
 		performSegue(withIdentifier: DirectionsViewController.identifier, sender: tourModels)
+	}
+	
+	func activeAPIFetch() -> Bool {
+		UIView.animate(withDuration: 0.25) {
+			self.constraintLabelRemaingQuotaOpen.priority = .defaultHigh
+			self.constraintLabelRemaingQuotaClose.priority = .defaultLow
+			self.view.layoutIfNeeded()
+		}
+		CountdownManager.shared.startTimer()
+		NotificationCenter.default.addObserver(self, selector: #selector(countDownAPI),
+											   name: NSNotification.Name(rawValue: notification_count_down), object: nil)
+		return true
+	}
+	
+	@objc func countDownAPI(_ notification: Notification) {
+		if let userInfo = notification.userInfo as? [String: Int],
+			let countTimes = userInfo["countTimes"], let second = userInfo["second"] {
+			labelRemainingQuota.text = String(format: "API remaining %d/50 times, reset after %d seconds".localized, countTimes, second)
+		}
 	}
 }
 
@@ -138,6 +165,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			for tuple in [(Oldplacemark, placemark), (placemark, Oldplacemark)] {
 				let source = tuple.0
 				let destination = tuple.1
+				CountdownManager.shared.countTimes += 1
+				let _ = firstFetch
 				MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
 					switch status {
 					case .success(let response):
