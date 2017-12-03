@@ -105,7 +105,7 @@
                         <barButtonItem key="backBarButtonItem" title=" " id="Azt-iq-BaB"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="471-aI-oTy">
                             <connections>
-                                <action selector="barButtonItemAddDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
+                                <action selector="rightBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -243,7 +243,11 @@
                         <viewLayoutGuide key="safeArea" id="BQb-Im-LK3"/>
                     </view>
                     <navigationItem key="navigationItem" id="rrT-oQ-Ik1">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="L7y-lD-eYY"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="L7y-lD-eYY">
+                            <connections>
+                                <action selector="rightBarButtonItemDidPressed:" destination="g2k-oM-hP5" id="BvC-Wr-EzH"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="pfy-Vj-cnU" id="Yfr-kh-IQq"/>

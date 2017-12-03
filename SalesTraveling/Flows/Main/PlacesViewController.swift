@@ -49,12 +49,13 @@ class PlacesViewController: UIViewController {
 	}
 	
 	//MARK: - IBActions
-	@IBAction func barButtonItemAddDidPressed(_ sender: Any) {
+	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
 		if CountdownManager.shared.canFetchAPI(placemarks.count) {
 			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
 		}
 		else {
-			// Show Alert
+			let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "API Request is reached limited".localized)
+			present(alert, animated: true, completion: nil)
 		}
 	}
 	
@@ -173,7 +174,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 						DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
 						break
 					case .failure(let error):
-						print("Can't calculate route with \(error)")
+						let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+						self.present(alert, animated: true, completion: nil)
 						break
 					}
 				})

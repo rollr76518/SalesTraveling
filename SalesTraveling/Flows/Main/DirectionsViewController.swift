@@ -71,7 +71,8 @@ extension DirectionsViewController: UITableViewDelegate {
 			performSegue(withIdentifier: RouteResultViewController.identifier, sender: tourModel)
 		}
 		else {
-			// Show Alert
+			let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "API Request is reached limited".localized)
+			present(alert, animated: true, completion: nil)
 		}
 	}
 }

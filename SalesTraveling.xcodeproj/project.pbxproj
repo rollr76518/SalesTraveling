@@ -23,6 +23,7 @@
 		9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */; };
 		945352B61FBC9F7A00176195 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 945352B51FBC9F7A00176195 /* Main.storyboard */; };
 		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
+		94B6E2191FD43849003E7064 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B6E2181FD43849003E7064 /* AlertManager.swift */; };
 		94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */; };
 		94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */; };
 		94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */; };
@@ -55,6 +56,7 @@
 		9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownManager.swift; sourceTree = "<group>"; };
 		945352B51FBC9F7A00176195 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		94B6E2181FD43849003E7064 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKPlacemark+Extension.swift"; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				94D010011FC9D14D0003E979 /* DataManager.swift */,
 				7EFBA2731F9C4D670011007E /* MapMananger.swift */,
 				9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */,
+				94B6E2181FD43849003E7064 /* AlertManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 				94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */,
 				9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */,
 				94D010041FC9D5490003E979 /* UserDefaults+Extension.swift in Sources */,
+				94B6E2191FD43849003E7064 /* AlertManager.swift in Sources */,
 				9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */,
 				94E2D10A1FC6F83700F1FD36 /* String+Extension.swift in Sources */,
 				7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */,

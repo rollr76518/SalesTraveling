@@ -25,6 +25,14 @@ class RouteResultViewController: UIViewController {
 	
 	@IBOutlet weak var mapView: MKMapView!
 	
+	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
+		let mapItems = tourModel.placemarks.map({ (placemark) -> MKMapItem in
+			return placemark.toMapItem
+		})
+		let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
+		MKMapItem.openMaps(with: mapItems, launchOptions: options)
+	}
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
