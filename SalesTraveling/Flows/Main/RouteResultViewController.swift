@@ -9,8 +9,10 @@
 import UIKit
 import MapKit
 
+//https://stackoverflow.com/questions/37967555/how-to-mimic-ios-10-maps-bottom-sheet
 class RouteResultViewController: UIViewController {
 	
+	@IBOutlet var tableView: UITableView!
 	var tourModel: TourModel!
 	var routes: [MKRoute] = [] {
 		didSet {
@@ -95,5 +97,40 @@ extension RouteResultViewController: MKMapViewDelegate {
 		renderer.strokeColor = .orange
 		renderer.lineWidth = 4.0
 		return renderer
+	}
+}
+
+// MARK: - UITableViewDataSource
+extension RouteResultViewController: UITableViewDataSource {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return tourModel.placemarks.count
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+		let placemark = tourModel.placemarks[indexPath.row]
+		cell.textLabel?.text = "\(indexPath.row + 1). "
+		if let name = placemark.name {
+			 cell.textLabel?.text?.append(name)
+		}
+		cell.detailTextLabel?.text = placemark.title
+		
+		return cell
+	}
+}
+
+// MARK: UITableViewDelegate
+extension RouteResultViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+		
+		let placemark = tourModel.placemarks[indexPath.row]
+		
+		for annotation in mapView.annotations {
+			if annotation.coordinate.latitude == placemark.coordinate.latitude &&
+				annotation.coordinate.longitude == placemark.coordinate.longitude {
+				mapView.selectAnnotation(annotation, animated: true)
+			}
+		}
 	}
 }
