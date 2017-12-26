@@ -14,7 +14,6 @@ protocol LocateViewControllerProtocol {
 }
 
 class LocateViewController: UIViewController {
-	let locationManager = CLLocationManager()
 	lazy var addressResultTableViewController = makeAddressResultTableViewController()
 	var searchController: UISearchController!
 	var delegate: LocateViewControllerProtocol?
@@ -26,7 +25,6 @@ class LocateViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		setupLocationManager()
 		setupUISearchController()
 	}
 	
@@ -53,13 +51,6 @@ fileprivate extension LocateViewController {
 		vc.delegate = self
 		vc.mapView = mapView
 		return vc
-	}
-	
-	func setupLocationManager() {
-		locationManager.delegate = self
-		locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-		locationManager.requestWhenInUseAuthorization()
-		locationManager.requestLocation()
 	}
 	
 	func setupUISearchController() {
@@ -93,23 +84,6 @@ fileprivate extension LocateViewController {
 				break
 			}
 		})
-	}
-}
-
-//MARK: - CLLocationManagerDelegate
-extension LocateViewController: CLLocationManagerDelegate {
-	private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-		if status != .authorizedWhenInUse {
-			manager.requestLocation()
-		}
-	}
-	
-	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		manager.stopUpdatingLocation()
-	}
-	
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		print("manager didFailWithError: \(error)")
 	}
 }
 

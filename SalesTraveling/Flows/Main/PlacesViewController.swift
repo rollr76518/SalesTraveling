@@ -19,12 +19,13 @@ class PlacesViewController: UIViewController {
 	@IBOutlet var constraintLabelRemaingQuotaClose: NSLayoutConstraint!
 	@IBOutlet var constraintLabelRemaingQuotaOpen: NSLayoutConstraint!
 	lazy var firstFetch: Bool = activeAPIFetch()
+	var userPlacemark: MKPlacemark?
 	var placemarks: [MKPlacemark] = [] {
 		didSet {
 			buttonShowRoutes.isEnabled = placemarks.count > 1
 		}
 	}
-	
+	let locationManager = CLLocationManager()
 	var regionImages: [UIImage] = []
 	var tourModels: [TourModel] = []
 	
@@ -32,6 +33,7 @@ class PlacesViewController: UIViewController {
 		super.viewDidLoad()
 		layoutLeftBarButtonItem()
 		layoutButtonShowRoutes()
+		setupLocationManager()
 	}
 	
 	// MARK: - Navigation
@@ -44,7 +46,9 @@ class PlacesViewController: UIViewController {
 		if let nvc = segue.destination as? UINavigationController,
 			let vc = nvc.viewControllers.first as? DirectionsViewController,
 			let tourModels = sender as? [TourModel] {
-			vc.tourModels = tourModels.sorted()
+			vc.tourModels = tourModels.sorted().filter({ (tourModel) -> Bool in
+				tourModel.responses.count > 0
+			})
 		}
 	}
 	
@@ -121,29 +125,95 @@ fileprivate extension PlacesViewController {
 			labelRemainingQuota.text = String(format: "API remaining %d/50 times, reset after %d seconds".localized, countTimes, second)
 		}
 	}
+	
+	func setupLocationManager() {
+		locationManager.delegate = self
+		locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+		locationManager.requestWhenInUseAuthorization()
+		locationManager.requestLocation()
+	}
+}
+
+//MARK: - CLLocationManagerDelegate
+extension PlacesViewController: CLLocationManagerDelegate {
+	private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+		if status != .authorizedWhenInUse {
+			manager.requestLocation()
+		}
+	}
+
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		MapMananger.reverseCoordinate(locations.first!.coordinate) { (status) in
+			switch status {
+			case .success(let placemarks):
+				self.userPlacemark = placemarks.first
+				self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+			case .failure(let error):
+				print(error)
+				break
+			}
+		}
+		manager.stopUpdatingLocation()
+	}
+
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+		print("manager didFailWithError: \(error)")
+	}
 }
 
 //MARK: - UITableViewDataSource
 extension PlacesViewController: UITableViewDataSource {
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 2
+	}
+	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if section == 0 {
+			return 1
+		}
 		return placemarks.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+		if indexPath.section == 0 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath)
+			if let userPlacemark = userPlacemark {
+				cell.textLabel?.text = userPlacemark.name
+			}
+			return cell
+		}
+		
+		let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
 		
 		let placemark = placemarks[indexPath.row]
 		cell.textLabel?.text = placemark.name
 		cell.detailTextLabel?.text = placemark.title
 		cell.imageView?.image = regionImages[indexPath.row]
+		cell.imageView?.layer.cornerRadius = 10.0
+		cell.imageView?.layer.masksToBounds = true
 		
 		return cell
+	}
+	
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if section == 0 {
+			return "From here".localized
+		}
+		
+		return "Places you want to go".localized
 	}
 }
 
 //MARK: - UITableViewDelegate
 extension PlacesViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+	}
+
 	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		if indexPath.section == 0 {
+			return false
+		}
 		return true
 	}
 	

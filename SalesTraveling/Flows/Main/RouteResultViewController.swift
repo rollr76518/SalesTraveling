@@ -28,11 +28,14 @@ class RouteResultViewController: UIViewController {
 	@IBOutlet weak var mapView: MKMapView!
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		let mapItems = tourModel.placemarks.map({ (placemark) -> MKMapItem in
-			return placemark.toMapItem
-		})
-		let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-		MKMapItem.openMaps(with: mapItems, launchOptions: options)
+//		let mapItems = tourModel.placemarks.map({ (placemark) -> MKMapItem in
+//			return placemark.toMapItem
+//		})
+//		let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
+//		MKMapItem.openMaps(with: mapItems, launchOptions: options)
+		
+		let activity = UIActivityViewController(activityItems: [tourModel.stopInformation], applicationActivities: nil)
+		present(activity, animated: true, completion: nil)
 	}
 	
 	override func viewDidLoad() {
@@ -40,6 +43,10 @@ class RouteResultViewController: UIViewController {
 		
 		fetchRoutes()
 		layoutPinViews()
+	}
+	
+	@IBAction func panGestureRecognizerDidPressed(_ sender: UIPanGestureRecognizer) {
+		print(sender.location(in: sender.view?.superview))
 	}
 }
 
