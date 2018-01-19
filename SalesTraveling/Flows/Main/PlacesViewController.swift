@@ -13,16 +13,23 @@ class PlacesViewController: UIViewController {
 	
 	@IBOutlet var labelRemainingQuota: UILabel!
 	@IBOutlet weak var tableView: UITableView!
-	@IBOutlet weak var buttonShowRoutes: UIButton!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
+	@IBOutlet var barButtonItemCalculate: UIBarButtonItem!
 	@IBOutlet var constraintLabelRemaingQuotaClose: NSLayoutConstraint!
 	@IBOutlet var constraintLabelRemaingQuotaOpen: NSLayoutConstraint!
+	@IBOutlet var constraintToolbarOpen: NSLayoutConstraint!
+	@IBOutlet var constraintToolbarClose: NSLayoutConstraint!
 	lazy var firstFetch: Bool = activeAPIFetch()
 	var userPlacemark: MKPlacemark?
 	var placemarks: [MKPlacemark] = [] {
 		didSet {
-			buttonShowRoutes.isEnabled = placemarks.count > 1
+			let shouldShow = placemarks.count >= 2
+			UIView.animate(withDuration: 0.25) {
+				self.constraintToolbarOpen.priority = shouldShow ? .defaultHigh:.defaultLow
+				self.constraintToolbarClose.priority = shouldShow ? .defaultLow:.defaultHigh
+				self.view.layoutIfNeeded()
+			}
 		}
 	}
 	let locationManager = CLLocationManager()
@@ -79,23 +86,32 @@ fileprivate extension PlacesViewController {
 		navigationItem.leftBarButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
 	}
 	
-	func layoutButtonShowRoutes() {
-		buttonShowRoutes.setTitle("Show Routes".localized, for: .normal)
-	}
+	func layoutButtonShowRoutes() {}
 	
 	func showRoutes() {
 		tourModels = []
 		
 		let permutations = AlgorithmManager.permutations(placemarks)
+		//[1, 2, 3] -> [[1, 2, 3], [1, 3, 2], [2, 3, 1], [2, 1, 3], [3, 1, 2], [3, 2, 1]]
+		
 		let tuplesCollection = permutations.map { (placemarks) -> [(MKPlacemark, MKPlacemark)] in
 			return placemarks.toTuple()
 		}
+		//[[(1, 2), (2, 3)], [(1, 3), (3, 2)], [(2, 3), (3, 1)], [(2, 1), (1, 3)], [(3, 1), (1, 2)], [(3, 2), (2, 1)]]
 		
 		for (index, tuples) in tuplesCollection.enumerated() {
 			let tourModel = TourModel()
 			tourModels.append(tourModel)
 			
-			for tuple in tuples {
+			for (index2, tuple) in tuples.enumerated() {
+				if index2 == 0 {
+					let source = userPlacemark!
+					let destination = tuple.0
+					guard let directions = DataManager.shared.findDirections(source: source, destination: destination) else {
+						break
+					}
+					tourModels[index].responses.append(directions)
+				}
 				let source = tuple.0
 				let destination = tuple.1
 				guard let directions = DataManager.shared.findDirections(source: source, destination: destination) else {
@@ -197,10 +213,10 @@ extension PlacesViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 {
-			return "From here".localized
+			return "From".localized
 		}
 		
-		return "Places you want to go".localized
+		return "To".localized
 	}
 }
 
@@ -232,12 +248,13 @@ extension PlacesViewController: UITableViewDelegate {
 //MARK: - LocateViewControllerProtocol
 extension PlacesViewController: LocateViewControllerProtocol {
 	func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage) {
+		let _ = firstFetch
+
 		for Oldplacemark in placemarks {
 			for tuple in [(Oldplacemark, placemark), (placemark, Oldplacemark)] {
 				let source = tuple.0
 				let destination = tuple.1
 				CountdownManager.shared.countTimes += 1
-				let _ = firstFetch
 				MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
 					switch status {
 					case .success(let response):
@@ -251,6 +268,22 @@ extension PlacesViewController: LocateViewControllerProtocol {
 				})
 			}
 		}
+		
+		if let userPlacemark = userPlacemark {
+			CountdownManager.shared.countTimes += 1
+			MapMananger.calculateDirections(from: userPlacemark, to: placemark, completion: { (status) in
+				switch status {
+				case .success(let response):
+					DataManager.shared.saveDirections(source: userPlacemark, destination: placemark, routes: response.routes)
+					break
+				case .failure(let error):
+					let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+					self.present(alert, animated: true, completion: nil)
+					break
+				}
+			})
+		}
+		
 		placemarks.append(placemark)
 		regionImages.append(image)
 		tableView.reloadData()
