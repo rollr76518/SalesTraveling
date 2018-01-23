@@ -12,6 +12,9 @@ import MapKit
 //https://stackoverflow.com/questions/37967555/how-to-mimic-ios-10-maps-bottom-sheet
 class RouteResultViewController: UIViewController {
 	
+	let toppestY: CGFloat = 80.0
+	let lowestY = (UIScreen.main.bounds.height - 80)
+	
 	@IBOutlet var tableView: UITableView!
 	var tourModel: TourModel!
 	var routes: [MKRoute] = [] {
@@ -26,6 +29,7 @@ class RouteResultViewController: UIViewController {
 	}
 	
 	@IBOutlet weak var mapView: MKMapView!
+	@IBOutlet var movableView: UIVisualEffectView!
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
 //		let mapItems = tourModel.placemarks.map({ (placemark) -> MKMapItem in
@@ -43,10 +47,38 @@ class RouteResultViewController: UIViewController {
 		
 		fetchRoutes()
 		layoutPinViews()
+		layoutMovableView()
+	}
+	
+	@IBAction func tapGestureRecognizerDidPressed(_ sender: UITapGestureRecognizer) {
+		if isOpen() {
+			closeMovableView()
+		}
+		else {
+			openMovableView()
+		}
 	}
 	
 	@IBAction func panGestureRecognizerDidPressed(_ sender: UIPanGestureRecognizer) {
-		print(sender.location(in: sender.view?.superview))
+		let touchPoint = sender.location(in: sender.view?.superview)
+		switch sender.state {
+		case .began: break
+		case .changed:
+			UIView.beginAnimations(nil, context: nil)
+			movableView.frame.origin.y = touchPoint.y
+			UIView.commitAnimations()
+			break
+		case .ended, .failed, .cancelled:
+			if touchPoint.y < UIScreen.main.bounds.height/2 {
+				openMovableView()
+			}
+			else {
+				closeMovableView()
+			}
+			break
+		default: break
+		}
+
 	}
 }
 
@@ -82,6 +114,27 @@ fileprivate extension RouteResultViewController {
 		}
 		let rect = MapMananger.boundingMapRect(polylines: polylines)
 		mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
+	}
+	
+	func layoutMovableView() {
+		movableView.layer.cornerRadius = 22.0
+		movableView.layer.masksToBounds = true
+	}
+	
+	func isOpen() -> Bool {
+		return movableView.frame.origin.y == toppestY
+	}
+	
+	func openMovableView() {
+		UIView.beginAnimations(nil, context: nil)
+		movableView.frame.origin.y = toppestY
+		UIView.commitAnimations()
+	}
+	
+	func closeMovableView() {
+		UIView.beginAnimations(nil, context: nil)
+		movableView.frame.origin.y = lowestY
+		UIView.commitAnimations()
 	}
 }
 
@@ -131,6 +184,8 @@ extension RouteResultViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 		
+		closeMovableView()
+		
 		let placemark = tourModel.placemarks[indexPath.row]
 		
 		for annotation in mapView.annotations {
@@ -139,5 +194,12 @@ extension RouteResultViewController: UITableViewDelegate {
 				mapView.selectAnnotation(annotation, animated: true)
 			}
 		}
+	}
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension RouteResultViewController: UIGestureRecognizerDelegate {
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+		return !tableView.frame.contains(touch.location(in: movableView))
 	}
 }

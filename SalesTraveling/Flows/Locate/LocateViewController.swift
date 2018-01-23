@@ -163,7 +163,7 @@ extension LocateViewController: AddressResultTableViewControllerProtocol {
 	}
 }
 
-//MAKR: - UIGestureRecognizerDelegate
+//MARK: - UIGestureRecognizerDelegate
 extension LocateViewController: UIGestureRecognizerDelegate {
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		return !(touch.view is MKPinAnnotationView)
