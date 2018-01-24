@@ -11,6 +11,7 @@ import MapKit
 
 protocol LocateViewControllerProtocol {
 	func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage)
+	func locateViewController(_ vc: LocateViewController, change placemark: MKPlacemark, at indexPath: IndexPath, inRegion image: UIImage)
 }
 
 class LocateViewController: UIViewController {
@@ -19,6 +20,7 @@ class LocateViewController: UIViewController {
 	var delegate: LocateViewControllerProtocol?
 	var selectedPlacemark: MKPlacemark?
 	var tappedPoint: CGPoint?
+	var tuple: (IndexPath, MKPlacemark)?
 	
 	@IBOutlet weak var mapView: MKMapView!
 	
@@ -26,6 +28,7 @@ class LocateViewController: UIViewController {
 		super.viewDidLoad()
 		
 		setupUISearchController()
+		handleDefaultPlacemark()
 	}
 	
 	@IBAction func barButtonItemCloseDidPressed(_ sender: Any) {
@@ -36,6 +39,14 @@ class LocateViewController: UIViewController {
 	@IBAction func tapMap(_ sender: Any) {
 		if let recognizer = sender as? UITapGestureRecognizer {
 			tappedPoint = recognizer.location(in: view)
+		}
+	}
+	
+	func handleDefaultPlacemark() {
+		if let tuple = tuple {
+			let placemark = tuple.1
+			MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
+			addAnnotation(placemark.coordinate)
 		}
 	}
 }
@@ -135,7 +146,12 @@ extension LocateViewController: MKMapViewDelegate {
 		if let selectedPlacemark = selectedPlacemark,
 			let delegate = delegate,
 			let image = mapView.toImage().crop(rect: rect)  {
-			delegate.locateViewController(self, didSelect: selectedPlacemark, inRegion: image)
+			if let tuple = tuple {
+				delegate.locateViewController(self, change: selectedPlacemark, at: tuple.0, inRegion: image)
+			}
+			else {
+				delegate.locateViewController(self, didSelect: selectedPlacemark, inRegion: image)
+			}
 			dismiss(animated: true, completion: nil)
 		}
 	}

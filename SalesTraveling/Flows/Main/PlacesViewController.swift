@@ -48,6 +48,9 @@ class PlacesViewController: UIViewController {
 		if let nvc = segue.destination as? UINavigationController,
 			let vc = nvc.viewControllers.first as? LocateViewController {
 			vc.delegate = self
+			if let tuple = sender as? (IndexPath, MKPlacemark) {
+				vc.defaultPlacemark = tuple.1
+			}
 		}
 		
 		if let nvc = segue.destination as? UINavigationController,
@@ -224,6 +227,14 @@ extension PlacesViewController: UITableViewDataSource {
 extension PlacesViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
+		
+		if indexPath.section == 0 {
+			performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, userPlacemark!))
+		}
+		else {
+			let placemark = placemarks[indexPath.row]
+			performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, placemark))
+		}
 	}
 
 	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
