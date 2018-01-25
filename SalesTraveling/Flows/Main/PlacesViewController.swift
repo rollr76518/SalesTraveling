@@ -49,7 +49,7 @@ class PlacesViewController: UIViewController {
 			let vc = nvc.viewControllers.first as? LocateViewController {
 			vc.delegate = self
 			if let tuple = sender as? (IndexPath, MKPlacemark) {
-				vc.defaultPlacemark = tuple.1
+				vc.tuple = tuple
 			}
 		}
 		
@@ -297,6 +297,20 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		
 		placemarks.append(placemark)
 		regionImages.append(image)
+		tableView.reloadData()
+	}
+	
+	func locateViewController(_ vc: LocateViewController, change placemark: MKPlacemark, at indexPath: IndexPath, inRegion image: UIImage) {
+		if indexPath.section == 0 {
+			userPlacemark = placemark
+			//重新計算跟所有的 placemark 的 route
+		}
+		else {
+			placemarks[indexPath.row] = placemark
+			regionImages[indexPath.row] = image
+			//重新計算跟所有的 placemark 的 route
+		}
+		
 		tableView.reloadData()
 	}
 }
