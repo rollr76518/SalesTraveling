@@ -261,8 +261,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 	func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage) {
 		let _ = firstFetch
 
-		for Oldplacemark in placemarks {
-			for tuple in [(Oldplacemark, placemark), (placemark, Oldplacemark)] {
+		for oldPlacemark in placemarks {
+			for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
 				let source = tuple.0
 				let destination = tuple.1
 				CountdownManager.shared.countTimes += 1
@@ -303,12 +303,45 @@ extension PlacesViewController: LocateViewControllerProtocol {
 	func locateViewController(_ vc: LocateViewController, change placemark: MKPlacemark, at indexPath: IndexPath, inRegion image: UIImage) {
 		if indexPath.section == 0 {
 			userPlacemark = placemark
-			//重新計算跟所有的 placemark 的 route
+			for oldPlacemark in placemarks {
+				CountdownManager.shared.countTimes += 1
+				MapMananger.calculateDirections(from: placemark, to: oldPlacemark, completion: { (status) in
+					switch status {
+					case .success(let response):
+						DataManager.shared.saveDirections(source: placemark, destination: oldPlacemark, routes: response.routes)
+						break
+					case .failure(let error):
+						let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+						self.present(alert, animated: true, completion: nil)
+						break
+					}
+				})
+			}
 		}
 		else {
 			placemarks[indexPath.row] = placemark
 			regionImages[indexPath.row] = image
-			//重新計算跟所有的 placemark 的 route
+			
+			for (index, oldPlacemark) in placemarks.enumerated() {
+				if index == indexPath.row { return }
+				
+				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
+					let source = tuple.0
+					let destination = tuple.1
+					CountdownManager.shared.countTimes += 1
+					MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
+						switch status {
+						case .success(let response):
+							DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
+							break
+						case .failure(let error):
+							let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+							self.present(alert, animated: true, completion: nil)
+							break
+						}
+					})
+				}
+			}
 		}
 		
 		tableView.reloadData()

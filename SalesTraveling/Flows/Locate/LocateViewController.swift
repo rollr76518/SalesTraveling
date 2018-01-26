@@ -87,7 +87,7 @@ fileprivate extension LocateViewController {
 					self.mapView.removeAnnotations(self.mapView.annotations)
 					let newAnnotation = placemark.pointAnnotation
 					self.mapView.addAnnotation(newAnnotation)
-					self.mapView.selectAnnotation(newAnnotation, animated: true)
+					self.mapView.selectAnnotation(newAnnotation, animated: false)
 				}
 				break
 			case .failure(let error):
