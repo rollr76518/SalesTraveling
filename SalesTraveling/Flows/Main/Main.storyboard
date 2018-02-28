@@ -386,6 +386,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="constriantOfMovableViewHeight" destination="H7s-VA-IYR" id="NMc-Rh-Trc"/>
                         <outlet property="labelOfPlacemark" destination="FAh-z7-IMM" id="cl8-Vg-wi8"/>
                         <outlet property="mapView" destination="pfy-Vj-cnU" id="Yfr-kh-IQq"/>
                         <outlet property="movableView" destination="19n-OQ-Nik" id="nDV-N2-NBv"/>

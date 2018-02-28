@@ -30,6 +30,7 @@ class RouteResultViewController: UIViewController {
 	
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
+	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
 	@IBOutlet var labelOfPlacemark: UILabel!
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
@@ -48,8 +49,13 @@ class RouteResultViewController: UIViewController {
 		
 		fetchRoutes()
 		layoutPinViews()
-		layoutMovableView()
 		labelOfPlacemark.text = "Placemarks".localized
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		layoutMovableView()
 	}
 	
 	@IBAction func tapGestureRecognizerDidPressed(_ sender: UITapGestureRecognizer) {
@@ -121,6 +127,7 @@ fileprivate extension RouteResultViewController {
 	func layoutMovableView() {
 		movableView.layer.cornerRadius = 22.0
 		movableView.layer.masksToBounds = true
+		constriantOfMovableViewHeight.constant = view.frame.height
 	}
 	
 	func isOpen() -> Bool {
