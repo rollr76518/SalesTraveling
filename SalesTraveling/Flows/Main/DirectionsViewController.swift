@@ -50,14 +50,19 @@ extension DirectionsViewController: UITableViewDataSource {
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		
-        let tourModel = tourModels[indexPath.row]
-        
-		cell.textLabel?.text = tourModel.routeInformation
-        cell.detailTextLabel?.text = tourModel.stopInformation
-		
-		return cell
+		let tourModel = tourModels[indexPath.row]
+
+		if #available(iOS 11, *) {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "ios11", for: indexPath)
+			cell.textLabel?.text = tourModel.routeInformation
+			cell.detailTextLabel?.text = tourModel.stopInformation
+			return cell
+		} else {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "ios10", for: indexPath) as! DynamicHeightTableViewCell
+			cell.labelTitle.text = tourModel.routeInformation
+			cell.labelSubtitle.text = tourModel.stopInformation
+			return cell
+		}
 	}
 }
 
@@ -74,5 +79,9 @@ extension DirectionsViewController: UITableViewDelegate {
 			let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "API Request is reached limited".localized)
 			present(alert, animated: true, completion: nil)
 		}
+	}
+	
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return UITableViewAutomaticDimension
 	}
 }

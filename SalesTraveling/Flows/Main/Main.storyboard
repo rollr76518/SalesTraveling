@@ -169,7 +169,7 @@
                                 <rect key="frame" x="0.0" y="84" width="375" height="583"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="8GS-OK-Ulz" detailTextLabel="GUE-dr-UKA" style="IBUITableViewCellStyleSubtitle" id="BDT-9t-tci">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ios11" textLabel="8GS-OK-Ulz" detailTextLabel="GUE-dr-UKA" style="IBUITableViewCellStyleSubtitle" id="BDT-9t-tci">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BDT-9t-tci" id="LhL-kT-acU">
@@ -192,6 +192,41 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ios10" id="grR-bS-Car" customClass="DynamicHeightTableViewCell" customModule="SalesTraveling" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="grR-bS-Car" id="AIq-lg-gNO">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ics-3i-Hu6">
+                                                    <rect key="frame" x="15" y="2" width="345" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yBx-wO-nho">
+                                                    <rect key="frame" x="15" y="23" width="345" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="ultraLight" pointSize="16"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ics-3i-Hu6" firstAttribute="leading" secondItem="AIq-lg-gNO" secondAttribute="leading" constant="15" id="HA0-mX-GO9"/>
+                                                <constraint firstAttribute="trailing" secondItem="yBx-wO-nho" secondAttribute="trailing" constant="15" id="Rvl-Wv-E13"/>
+                                                <constraint firstAttribute="trailing" secondItem="ics-3i-Hu6" secondAttribute="trailing" constant="15" id="gJm-xs-iVx"/>
+                                                <constraint firstItem="yBx-wO-nho" firstAttribute="leading" secondItem="AIq-lg-gNO" secondAttribute="leading" constant="15" id="h0I-vq-DAd"/>
+                                                <constraint firstItem="ics-3i-Hu6" firstAttribute="top" secondItem="AIq-lg-gNO" secondAttribute="top" constant="2" id="k7Y-nf-smz"/>
+                                                <constraint firstAttribute="bottom" secondItem="yBx-wO-nho" secondAttribute="bottom" constant="0.5" id="pYC-36-9xL"/>
+                                                <constraint firstItem="yBx-wO-nho" firstAttribute="top" secondItem="ics-3i-Hu6" secondAttribute="bottom" id="vUA-ki-AaD"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="labelSubtitle" destination="yBx-wO-nho" id="qFn-0W-YYf"/>
+                                            <outlet property="labelTitle" destination="ics-3i-Hu6" id="104-RZ-ln5"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
