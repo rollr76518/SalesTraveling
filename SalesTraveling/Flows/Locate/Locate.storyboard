@@ -22,7 +22,6 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <connections>
                                     <outlet property="delegate" destination="XIw-E3-7Oe" id="2Jw-89-mER"/>
-                                    <outletCollection property="gestureRecognizers" destination="uMJ-4i-Zud" appends="YES" id="nqV-Y6-DLa"/>
                                 </connections>
                             </mapView>
                         </subviews>
@@ -34,6 +33,9 @@
                             <constraint firstItem="2Wo-jj-HAz" firstAttribute="leading" secondItem="s2S-m2-016" secondAttribute="leading" id="wnX-Sk-5gf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="s2S-m2-016"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="uMJ-4i-Zud" appends="YES" id="bfv-eq-ozI"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="y3x-SB-3E3">
                         <barButtonItem key="rightBarButtonItem" systemItem="stop" id="ohb-2v-gCj">

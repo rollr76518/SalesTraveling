@@ -158,7 +158,7 @@ extension LocateViewController: MKMapViewDelegate {
 	
 	func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
 		if let point = tappedPoint {
-			let coordinateTapped = mapView.convert(point, toCoordinateFrom: view)
+			let coordinateTapped = mapView.convert(point, toCoordinateFrom: self.view)
 			addAnnotation(coordinateTapped)
 			tappedPoint = nil
 		}
