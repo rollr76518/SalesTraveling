@@ -13,3 +13,7 @@
 "km"="km";
 "Show Routes"="Show Routes";
 "API remaining %d/50 times, reset after %d seconds"="API remaining %d/50 times, reset after %d seconds";
+"Placemarks"="Placemarks";
+"From"="From";
+"To"="To";
+"Calculate"="Calculate";

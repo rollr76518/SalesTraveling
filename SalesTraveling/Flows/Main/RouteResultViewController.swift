@@ -30,6 +30,7 @@ class RouteResultViewController: UIViewController {
 	
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
+	@IBOutlet var labelOfPlacemark: UILabel!
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
 //		let mapItems = tourModel.placemarks.map({ (placemark) -> MKMapItem in
@@ -48,6 +49,7 @@ class RouteResultViewController: UIViewController {
 		fetchRoutes()
 		layoutPinViews()
 		layoutMovableView()
+		labelOfPlacemark.text = "Placemarks".localized
 	}
 	
 	@IBAction func tapGestureRecognizerDidPressed(_ sender: UITapGestureRecognizer) {

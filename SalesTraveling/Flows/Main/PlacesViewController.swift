@@ -41,6 +41,7 @@ class PlacesViewController: UIViewController {
 		layoutLeftBarButtonItem()
 		layoutButtonShowRoutes()
 		setupLocationManager()
+		barButtonItemCalculate.title = "Calculate".localized
 	}
 	
 	// MARK: - Navigation

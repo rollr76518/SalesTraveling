@@ -52,11 +52,11 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="placeCell" textLabel="rnj-pf-MUy" detailTextLabel="6t9-eg-Pxl" style="IBUITableViewCellStyleSubtitle" id="uv3-9g-6eq">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="placeCell" textLabel="rnj-pf-MUy" detailTextLabel="6t9-eg-Pxl" style="IBUITableViewCellStyleSubtitle" id="uv3-9g-6eq">
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uv3-9g-6eq" id="NpJ-Wq-kgl">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rnj-pf-MUy">
@@ -202,6 +202,9 @@
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ics-3i-Hu6">
                                                     <rect key="frame" x="15" y="2" width="345" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" priority="750" constant="21" id="PPP-Py-Rg0"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -285,6 +288,14 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="523"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="roQ-yh-l2N">
+                                            <rect key="frame" x="165" y="3" width="44" height="3"/>
+                                            <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="44" id="UcM-wP-teO"/>
+                                                <constraint firstAttribute="height" constant="3" id="Ujm-1O-rQz"/>
+                                            </constraints>
+                                        </view>
                                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FAh-z7-IMM">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <gestureRecognizers/>
@@ -335,14 +346,16 @@
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="Tg7-9t-MbQ" secondAttribute="bottom" id="5pt-jP-4yj"/>
                                         <constraint firstAttribute="trailing" secondItem="FAh-z7-IMM" secondAttribute="trailing" id="AJ1-i6-vkM"/>
+                                        <constraint firstItem="roQ-yh-l2N" firstAttribute="centerX" secondItem="j2Q-oH-Iyp" secondAttribute="centerX" id="QmQ-cV-44R"/>
                                         <constraint firstAttribute="trailing" secondItem="Tg7-9t-MbQ" secondAttribute="trailing" id="VUv-ty-y4H"/>
                                         <constraint firstItem="Tg7-9t-MbQ" firstAttribute="top" secondItem="FAh-z7-IMM" secondAttribute="bottom" id="jCW-pV-vCY"/>
+                                        <constraint firstItem="roQ-yh-l2N" firstAttribute="top" secondItem="j2Q-oH-Iyp" secondAttribute="top" constant="3" id="jOF-jZ-B1y"/>
                                         <constraint firstItem="FAh-z7-IMM" firstAttribute="leading" secondItem="j2Q-oH-Iyp" secondAttribute="leading" id="laB-ws-wwB"/>
                                         <constraint firstItem="FAh-z7-IMM" firstAttribute="top" secondItem="j2Q-oH-Iyp" secondAttribute="top" id="mSZ-hn-3Wm"/>
                                         <constraint firstItem="Tg7-9t-MbQ" firstAttribute="leading" secondItem="j2Q-oH-Iyp" secondAttribute="leading" id="t1A-xj-Bph"/>
                                     </constraints>
                                 </view>
-                                <blurEffect style="light"/>
+                                <blurEffect style="extraLight"/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="wWT-B8-yg1" appends="YES" id="Oy5-TT-cKk"/>
                                     <outletCollection property="gestureRecognizers" destination="d7e-4Q-4Fv" appends="YES" id="bfU-wg-GwG"/>
@@ -373,6 +386,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="labelOfPlacemark" destination="FAh-z7-IMM" id="cl8-Vg-wi8"/>
                         <outlet property="mapView" destination="pfy-Vj-cnU" id="Yfr-kh-IQq"/>
                         <outlet property="movableView" destination="19n-OQ-Nik" id="nDV-N2-NBv"/>
                         <outlet property="tableView" destination="Tg7-9t-MbQ" id="J4g-Qk-cff"/>
