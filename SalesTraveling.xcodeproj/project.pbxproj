@@ -39,6 +39,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7E06DA2C20514DAA0020A192 /* Cardino Blue.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Cardino Blue.gpx"; sourceTree = "<group>"; };
 		7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsViewController.swift; sourceTree = "<group>"; };
 		7EB0D6091F9E341B00268E3B /* TourModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourModel.swift; sourceTree = "<group>"; };
 		7EFBA25E1F9C4B480011007E /* SalesTraveling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalesTraveling.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +123,7 @@
 				7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */,
 				7EFBA26D1F9C4B480011007E /* Info.plist */,
 				7EFBA2761F9C53080011007E /* taipei 101.gpx */,
+				7E06DA2C20514DAA0020A192 /* Cardino Blue.gpx */,
 				94E2D1071FC6F4A400F1FD36 /* Localizable.strings */,
 			);
 			path = SalesTraveling;

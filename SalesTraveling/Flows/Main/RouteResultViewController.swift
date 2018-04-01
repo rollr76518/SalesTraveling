@@ -121,7 +121,7 @@ fileprivate extension RouteResultViewController {
 			mapView.add(polyline, level: .aboveRoads)
 		}
 		let rect = MapMananger.boundingMapRect(polylines: polylines)
-		mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: false)
+		mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsetsMake(10, 10, 10, 10), animated: false)
 	}
 	
 	func layoutMovableView() {
