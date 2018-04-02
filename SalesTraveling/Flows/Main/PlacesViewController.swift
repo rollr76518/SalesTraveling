@@ -135,7 +135,7 @@ fileprivate extension PlacesViewController {
 		}
 		CountdownManager.shared.startTimer()
 		NotificationCenter.default.addObserver(self, selector: #selector(countDownAPI),
-											   name: NSNotification.Name(rawValue: notification_count_down), object: nil)
+											   name: NSNotification.Name.CountDown, object: nil)
 		return true
 	}
 	

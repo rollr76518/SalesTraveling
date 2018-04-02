@@ -18,7 +18,7 @@ class DirectionsViewController: UIViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
 		NotificationCenter.default.addObserver(self, selector: #selector(countDownAPI),
-											   name: NSNotification.Name(rawValue: notification_count_down), object: nil)
+											   name: NSNotification.Name.CountDown, object: nil)
     }
 
     // MARK: - Navigation

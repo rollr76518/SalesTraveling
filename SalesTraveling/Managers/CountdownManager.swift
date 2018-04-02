@@ -8,8 +8,6 @@
 
 import Foundation
 
-let notification_count_down = "count down"
-
 class CountdownManager {
 	static let shared = CountdownManager()
 	fileprivate lazy var timer = makeTimer()
@@ -29,7 +27,7 @@ fileprivate extension CountdownManager {
 		let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (timer) in
 			self.second -= 1
 			let info = ["second": self.second, "countTimes": self.countTimes]
-			NotificationCenter.default.post(name: NSNotification.Name(rawValue: notification_count_down), object: nil, userInfo: info)
+			NotificationCenter.default.post(name: NSNotification.Name.CountDown, object: nil, userInfo: info)
 		}
 		return timer
 	}

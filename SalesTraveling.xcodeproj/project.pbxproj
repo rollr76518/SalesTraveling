@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7E076E7A1F9CCAFC0013E8B4 /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */; };
 		7E63348F207200BB007A2A85 /* UIAlertController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E63348E207200BB007A2A85 /* UIAlertController+Extension.swift */; };
+		7E63349120720270007A2A85 /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E63349020720270007A2A85 /* NotificationName+Extension.swift */; };
 		7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB0D6091F9E341B00268E3B /* TourModel.swift */; };
 		7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2611F9C4B480011007E /* AppDelegate.swift */; };
 		7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA2681F9C4B480011007E /* Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		7E06DA2C20514DAA0020A192 /* Cardino Blue.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Cardino Blue.gpx"; sourceTree = "<group>"; };
 		7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsViewController.swift; sourceTree = "<group>"; };
 		7E63348E207200BB007A2A85 /* UIAlertController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Extension.swift"; sourceTree = "<group>"; };
+		7E63349020720270007A2A85 /* NotificationName+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		7EB0D6091F9E341B00268E3B /* TourModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourModel.swift; sourceTree = "<group>"; };
 		7EFBA25E1F9C4B480011007E /* SalesTraveling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalesTraveling.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EFBA2611F9C4B480011007E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 			children = (
 				94FB42881FB6E663005039B7 /* Array+Extension.swift */,
 				94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */,
+				7E63349020720270007A2A85 /* NotificationName+Extension.swift */,
 				94E2D1091FC6F83700F1FD36 /* String+Extension.swift */,
 				7E63348E207200BB007A2A85 /* UIAlertController+Extension.swift */,
 				94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */,
@@ -285,6 +288,7 @@
 				94D010041FC9D5490003E979 /* UserDefaults+Extension.swift in Sources */,
 				9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */,
 				94E2D10A1FC6F83700F1FD36 /* String+Extension.swift in Sources */,
+				7E63349120720270007A2A85 /* NotificationName+Extension.swift in Sources */,
 				9441DAB22046B41B00BFB9B5 /* DynamicHeightTableViewCell.swift in Sources */,
 				7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */,
 				7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */,
