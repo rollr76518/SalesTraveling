@@ -8,8 +8,8 @@
 
 import MapKit
 
-class MapMananger {
-	
+class MapMananger { }
+extension MapMananger {
 	enum LocalSearchStatus {
 		case success(MKLocalSearchResponse)
 		case failure(Error)
@@ -31,7 +31,9 @@ class MapMananger {
 			}
 		}
 	}
-	
+}
+
+extension MapMananger {
 	enum DirectResponseStatus {
 		case success(MKDirectionsResponse)
 		case failure(Error)
@@ -55,19 +57,9 @@ class MapMananger {
 			}
 		}
 	}
-	
-	class func addPolyline(_ mapView: MKMapView, route: MKRoute) {
-		mapView.add(route.polyline, level: .aboveRoads)
-		let rect = route.polyline.boundingMapRect
-		mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
-	}
-	
-	class func showRegion(_ mapView: MKMapView, spanDegrees: Double,  coordinate: CLLocationCoordinate2D) {
-		let span = MKCoordinateSpanMake(spanDegrees, spanDegrees)
-		let region = MKCoordinateRegionMake(coordinate, span)
-		mapView.setRegion(region, animated: true)
-	}
-	
+}
+
+extension MapMananger {
 	enum ReverseGeocodeLocationStatus {
 		case success([MKPlacemark])
 		case failure(Error)
@@ -90,6 +82,20 @@ class MapMananger {
 				completion(.failure(error))
 			}
 		}
+	}
+}
+
+extension MapMananger {
+	class func addPolyline(_ mapView: MKMapView, route: MKRoute) {
+		mapView.add(route.polyline, level: .aboveRoads)
+		let rect = route.polyline.boundingMapRect
+		mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
+	}
+	
+	class func showRegion(_ mapView: MKMapView, spanDegrees: Double,  coordinate: CLLocationCoordinate2D) {
+		let span = MKCoordinateSpanMake(spanDegrees, spanDegrees)
+		let region = MKCoordinateRegionMake(coordinate, span)
+		mapView.setRegion(region, animated: true)
 	}
 	
 	class func boundingMapRect(polylines: [MKPolyline]) -> MKMapRect {
