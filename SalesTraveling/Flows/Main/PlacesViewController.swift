@@ -69,7 +69,7 @@ class PlacesViewController: UIViewController {
 			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
 		}
 		else {
-			let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "API Request is reached limited".localized)
+			let alert = UIAlertController(title: "Prompt".localized, message: "API Request is reached limited".localized)
 			present(alert, animated: true, completion: nil)
 		}
 	}
@@ -273,7 +273,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 						DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
 						break
 					case .failure(let error):
-						let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+						let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
 						self.present(alert, animated: true, completion: nil)
 						break
 					}
@@ -289,7 +289,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 					DataManager.shared.saveDirections(source: userPlacemark, destination: placemark, routes: response.routes)
 					break
 				case .failure(let error):
-					let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+					let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
 					self.present(alert, animated: true, completion: nil)
 					break
 				}
@@ -312,7 +312,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 						DataManager.shared.saveDirections(source: placemark, destination: oldPlacemark, routes: response.routes)
 						break
 					case .failure(let error):
-						let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+						let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
 						self.present(alert, animated: true, completion: nil)
 						break
 					}
@@ -336,7 +336,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 							DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
 							break
 						case .failure(let error):
-							let alert = AlertManager.basicAlert(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+							let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
 							self.present(alert, animated: true, completion: nil)
 							break
 						}
