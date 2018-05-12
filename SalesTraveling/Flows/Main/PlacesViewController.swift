@@ -262,6 +262,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 	func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage) {
 		let _ = firstFetch
 
+		HYCLoadingView.shared.show()
+		
 		for oldPlacemark in placemarks {
 			for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
 				let source = tuple.0
