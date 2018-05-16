@@ -264,23 +264,12 @@ extension PlacesViewController: LocateViewControllerProtocol {
 
 		HYCLoadingView.shared.show()
 		
-		for oldPlacemark in placemarks {
-			for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-				let source = tuple.0
-				let destination = tuple.1
-				CountdownManager.shared.countTimes += 1
-				MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
-					switch status {
-					case .success(let response):
-						DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
-						break
-					case .failure(let error):
-						let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
-						self.present(alert, animated: true, completion: nil)
-						break
-					}
-				})
+		DataManager.shared.fetchRoutes(placemarks: placemarks, placemark: placemark) { (models) in
+			print(models.count)
+			for model in models {
+				print(model)
 			}
+			HYCLoadingView.shared.dismiss()
 		}
 		
 		if let userPlacemark = userPlacemark {
