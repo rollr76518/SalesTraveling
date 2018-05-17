@@ -264,27 +264,16 @@ extension PlacesViewController: LocateViewControllerProtocol {
 
 		HYCLoadingView.shared.show()
 		
-		DataManager.shared.fetchRoutes(placemarks: placemarks, placemark: placemark) { (models) in
-			print(models.count)
-			for model in models {
-				print(model)
+		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { (status) in
+			switch status {
+			case .failure(let error):
+				let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+				self.present(alert, animated: true, completion: nil)
+			case .success(let directionModels):
+				DataManager.shared.save(directions: directionModels)
 			}
+			
 			HYCLoadingView.shared.dismiss()
-		}
-		
-		if let userPlacemark = userPlacemark {
-			CountdownManager.shared.countTimes += 1
-			MapMananger.calculateDirections(from: userPlacemark, to: placemark, completion: { (status) in
-				switch status {
-				case .success(let response):
-					DataManager.shared.saveDirections(source: userPlacemark, destination: placemark, routes: response.routes)
-					break
-				case .failure(let error):
-					let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
-					self.present(alert, animated: true, completion: nil)
-					break
-				}
-			})
 		}
 		
 		placemarks.append(placemark)
@@ -293,49 +282,45 @@ extension PlacesViewController: LocateViewControllerProtocol {
 	}
 	
 	func locateViewController(_ vc: LocateViewController, change placemark: MKPlacemark, at indexPath: IndexPath, inRegion image: UIImage) {
+		
+		HYCLoadingView.shared.show()
+
 		if indexPath.section == 0 {
 			userPlacemark = placemark
-			for oldPlacemark in placemarks {
-				CountdownManager.shared.countTimes += 1
-				MapMananger.calculateDirections(from: placemark, to: oldPlacemark, completion: { (status) in
-					switch status {
-					case .success(let response):
-						DataManager.shared.saveDirections(source: placemark, destination: oldPlacemark, routes: response.routes)
-						break
-					case .failure(let error):
-						let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
-						self.present(alert, animated: true, completion: nil)
-						break
-					}
-				})
-			}
+			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { (status) in
+				switch status {
+				case .failure(let error):
+					let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+					self.present(alert, animated: true, completion: nil)
+				case .success(let directionModels):
+					DataManager.shared.save(directions: directionModels)
+				}
+				
+				HYCLoadingView.shared.dismiss()
+			})
 		}
 		else {
 			placemarks[indexPath.row] = placemark
 			regionImages[indexPath.row] = image
 			
-			for (index, oldPlacemark) in placemarks.enumerated() {
-				if index == indexPath.row { return }
-				
-				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-					let source = tuple.0
-					let destination = tuple.1
-					CountdownManager.shared.countTimes += 1
-					MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
-						switch status {
-						case .success(let response):
-							DataManager.shared.saveDirections(source: source, destination: destination, routes: response.routes)
-							break
-						case .failure(let error):
-							let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
-							self.present(alert, animated: true, completion: nil)
-							break
-						}
-					})
+			let oldPlacemarks = placemarks.filter({ (oldPlacemark) -> Bool in
+				return oldPlacemark != placemark
+			})
+			
+			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: userPlacemark, completeBlock: { (status) in
+				switch status {
+				case .failure(let error):
+					let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
+					self.present(alert, animated: true, completion: nil)
+				case .success(let directionModels):
+					DataManager.shared.save(directions: directionModels)
 				}
-			}
+				
+				HYCLoadingView.shared.dismiss()
+			})
 		}
 		
-		tableView.reloadData()
+		let indexSet: IndexSet = [indexPath.section]
+		tableView.reloadSections(indexSet, with: .automatic)
 	}
 }
