@@ -153,6 +153,52 @@ extension DataManager {
 			queue.waitUntilAllOperationsAreFinished()
 		}
 	}
+	
+	enum FetchRouteStatus {
+		case success([MKRoute])
+		case failure(Error)
+	}
+	
+	func fetchRoutes(placemarks: [MKPlacemark], completeBlock: @escaping (FetchRouteStatus)->()) {
+		DispatchQueue.global().async {
+			
+			let queue = OperationQueue()
+			queue.name = "Fetch diretcions of placemarks"
+			
+			var routes = [MKRoute]()
+			let callbackFinishOperation = BlockOperation {
+				DispatchQueue.main.async {
+					completeBlock(.success(routes))
+				}
+			}
+			
+			let tuples = placemarks.toTuple()
+			
+			for tuple in tuples {
+				let source = tuple.0
+				let destination = tuple.1
+				let blockOperation = BlockOperation(block: {
+					let semaphore = DispatchSemaphore(value: 0)
+					MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
+						switch status {
+						case .failure(let error): 								completeBlock(.failure(error))
+						case .success(let response):
+							if let route = response.routes.first {
+								routes.append(route)
+							}
+						}
+						semaphore.signal()
+					})
+					semaphore.wait()
+				})
+				callbackFinishOperation.addDependency(blockOperation)
+				queue.addOperation(blockOperation)
+			}
+
+			queue.addOperation(callbackFinishOperation)
+			queue.waitUntilAllOperationsAreFinished()
+		}
+	}
 }
 
 private extension DataManager {

@@ -94,20 +94,19 @@ class RouteResultViewController: UIViewController {
 // MARK: - Private func
 fileprivate extension RouteResultViewController {
 	func fetchRoutes() {
-		let tuples = tourModel.placemarks.toTuple()
-		//TODO: 修改寫法
-		for tuple in tuples {
-			let source = tuple.0
-			let destination = tuple.1
-			MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
-				switch status {
-				case .success(let directions):
-					guard let route = directions.routes.first else { break }
-					self.routes.append(route)
-					break
-				case .failure(let error): print(error); break
-				}
-			})
+		HYCLoadingView.shared.show()
+		
+		DataManager.shared.fetchRoutes(placemarks: tourModel.placemarks) { [weak self] (status) in
+			
+			HYCLoadingView.shared.dismiss()
+			
+			switch status {
+			case .failure(let error):
+				let alert = UIAlertController(title: "Prompt".localized, message: error.localizedDescription)
+				self?.present(alert, animated: true, completion: nil)
+			case .success(let routes):
+				self?.routes = routes
+			}
 		}
 	}
 	
