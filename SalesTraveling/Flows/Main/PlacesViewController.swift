@@ -49,7 +49,7 @@ class PlacesViewController: UIViewController {
 		if let nvc = segue.destination as? UINavigationController,
 			let vc = nvc.viewControllers.first as? LocateViewController {
 			vc.delegate = self
-			if let tuple = sender as? (IndexPath, MKPlacemark) {
+			if let tuple = sender as? (IndexPath, MKPlacemark?) {
 				vc.tuple = tuple
 			}
 		}
@@ -66,7 +66,7 @@ class PlacesViewController: UIViewController {
 	//MARK: - IBActions
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
 		let count = timesOfRequestShouldCalledWhenAddNewPlacemark
-		print(count)
+		
 		if CountdownManager.shared.canCallRequest(count) {
 			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
 		}
@@ -125,20 +125,18 @@ fileprivate extension PlacesViewController {
 			tourModels.append(tourModel)
 			
 			for (index2, tuple) in tuples.enumerated() {
-				if index2 == 0 {
-					let source = userPlacemark!
+				if index2 == 0, let userPlacemark = userPlacemark {
+					let source = userPlacemark
 					let destination = tuple.0
-					guard let directions = DataManager.shared.findDirections(source: source, destination: destination) else {
-						break
+					if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
+						tourModels[index].responses.append(directions)
 					}
-					tourModels[index].responses.append(directions)
 				}
 				let source = tuple.0
 				let destination = tuple.1
-				guard let directions = DataManager.shared.findDirections(source: source, destination: destination) else {
-					break
+				if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
+					tourModels[index].responses.append(directions)
 				}
-				tourModels[index].responses.append(directions)
 			}
 		}
 		performSegue(withIdentifier: DirectionsViewController.identifier, sender: tourModels)
@@ -250,8 +248,7 @@ extension PlacesViewController: UITableViewDelegate {
 			let count = timesOfRequestShouldCalledWhenChangeUserPlacemark
 			
 			if CountdownManager.shared.canCallRequest(count) {
-				//TODO: 這個 userPlacemark! 可能會導致 Crash
-				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, userPlacemark!))
+				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, userPlacemark))
 			}
 			else {
 				let alert = UIAlertController(title: "Prompt".localized, message: "API Request is reached limited".localized)

@@ -20,7 +20,7 @@ class LocateViewController: UIViewController {
 	var delegate: LocateViewControllerProtocol?
 	var selectedPlacemark: MKPlacemark?
 	var tappedPoint: CGPoint?
-	var tuple: (IndexPath, MKPlacemark)?
+	var tuple: (IndexPath, MKPlacemark?)?
 	
 	@IBOutlet weak var mapView: MKMapView!
 	
@@ -43,8 +43,7 @@ class LocateViewController: UIViewController {
 	}
 	
 	func handleDefaultPlacemark() {
-		if let tuple = tuple {
-			let placemark = tuple.1
+		if let tuple = tuple, let placemark = tuple.1 {
 			MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
 			addAnnotation(placemark.coordinate)
 		}
