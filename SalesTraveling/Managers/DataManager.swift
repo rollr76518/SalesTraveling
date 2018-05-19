@@ -17,9 +17,9 @@ class DataManager {
 extension DataManager {
 	func save(direction: DirectionsModel) {
 		do {
-			let json = try JSONEncoder().encode(direction)
+			let data = try JSONEncoder().encode(direction)
 			let key = createKeyBy(source: direction.sourcePlacemark, destination: direction.destinationPlacemark)
-			UserDefaults.standard.set(json, forKey: key)
+			UserDefaults.standard.set(data, forKey: key)
 		} catch {
 			print("Cant save directions with \(error)")
 		}
@@ -33,8 +33,8 @@ extension DataManager {
 	
 	func findDirections(source: MKPlacemark, destination: MKPlacemark) -> DirectionsModel? {
 		let key = createKeyBy(source: source, destination: destination)
-		guard let json = UserDefaults.standard.object(forKey: key) as? Data ,
-			let directions = try? JSONDecoder().decode(DirectionsModel.self, from: json) else { return nil }
+		guard let data = UserDefaults.standard.object(forKey: key) as? Data ,
+			let directions = try? JSONDecoder().decode(DirectionsModel.self, from: data) else { return nil }
 		return directions
 	}
 }
@@ -68,7 +68,6 @@ extension DataManager {
 			}
 			
 			for oldPlacemark in placemarks {
-//				CountdownManager.shared.countTimes += 1
 				let source = placemark
 				let destination = oldPlacemark
 				
@@ -134,39 +133,32 @@ extension DataManager {
 			}
 			
 			
-			if placemarks.count == 0 {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionsModels))
-				}
-				return
-			}
-			
-			for oldPlacemark in placemarks {
-				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-					let source = tuple.0
-					let destination = tuple.1
-//					CountdownManager.shared.countTimes += 1
-					
-					let blockOperation = BlockOperation(block: {
-						let semaphore = DispatchSemaphore(value: 0)
-						MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
-							switch state {
-							case .failure(let error):
-								completeBlock(.failure(error))
-							case .success(let response):
-								let directions = DirectionsModel(source: source, destination: destination, routes: response.routes)
-								directionsModels.append(directions)
-							}
-							semaphore.signal()
+			if placemarks.count != 0 {
+				for oldPlacemark in placemarks {
+					for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
+						let source = tuple.0
+						let destination = tuple.1
+						
+						let blockOperation = BlockOperation(block: {
+							let semaphore = DispatchSemaphore(value: 0)
+							MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
+								switch state {
+								case .failure(let error):
+									completeBlock(.failure(error))
+								case .success(let response):
+									let directions = DirectionsModel(source: source, destination: destination, routes: response.routes)
+									directionsModels.append(directions)
+								}
+								semaphore.signal()
+							})
+							semaphore.wait()
 						})
-						semaphore.wait()
-					})
-					
-					callbackFinishOperation.addDependency(blockOperation)
-					queue.addOperation(blockOperation)
+						
+						callbackFinishOperation.addDependency(blockOperation)
+						queue.addOperation(blockOperation)
+					}
 				}
 			}
-			
 			queue.addOperation(callbackFinishOperation)
 			queue.waitUntilAllOperationsAreFinished()
 		}

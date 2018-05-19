@@ -72,7 +72,7 @@ extension DirectionsViewController: UITableViewDelegate {
 		tableView.deselectRow(at: indexPath, animated: true)
 		
 		let tourModel = tourModels[indexPath.row]
-		if CountdownManager.shared.canFetchAPI(tourModel.placemarks.count - 1) {
+		if CountdownManager.shared.canCallRequest(tourModel.placemarks.count - 1) {
 			performSegue(withIdentifier: RouteResultViewController.identifier, sender: tourModel)
 		}
 		else {

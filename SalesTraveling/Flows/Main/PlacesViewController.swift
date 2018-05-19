@@ -65,7 +65,9 @@ class PlacesViewController: UIViewController {
 	
 	//MARK: - IBActions
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		if CountdownManager.shared.canFetchAPI(placemarks.count) {
+		let count = timesOfRequestShouldCalledWhenAddNewPlacemark
+		print(count)
+		if CountdownManager.shared.canCallRequest(count) {
 			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
 		}
 		else {
@@ -81,6 +83,21 @@ class PlacesViewController: UIViewController {
 	
 	@IBAction func buttonShowRoutesDidPressed(_ sender: Any) {
 		showRoutes()
+	}
+}
+
+//MARK: - Compute Properties
+private extension PlacesViewController {
+	var timesOfRequestShouldCalledWhenAddNewPlacemark: Int {
+		return CountdownManager.shared.timesOfRequestShouldCalledWhenAddNewPlacemark(placemarks: placemarks.count, userPlacemark: (userPlacemark != nil))
+	}
+
+	var timesOfRequestShouldCalledWhenChangeExistPlacemark: Int {
+		return CountdownManager.shared.timesOfRequestShouldCalledWhenChangeExistPlacemark(placemarks: placemarks.count, userPlacemark: (userPlacemark != nil))
+	}
+	
+	var timesOfRequestShouldCalledWhenChangeUserPlacemark: Int {
+		return CountdownManager.shared.timesOfRequestShouldCalledWhenChangeUserPlacemark(placemarks: placemarks.count)
 	}
 }
 
@@ -134,12 +151,12 @@ fileprivate extension PlacesViewController {
 			self.view.layoutIfNeeded()
 		}
 		CountdownManager.shared.startTimer()
-		NotificationCenter.default.addObserver(self, selector: #selector(countDownAPI),
+		NotificationCenter.default.addObserver(self, selector: #selector(countDown),
 											   name: NSNotification.Name.CountDown, object: nil)
 		return true
 	}
 	
-	@objc func countDownAPI(_ notification: Notification) {
+	@objc func countDown(_ notification: Notification) {
 		if let userInfo = notification.userInfo as? [String: Int],
 			let countTimes = userInfo["countTimes"], let second = userInfo["second"] {
 			labelRemainingQuota.text = String(format: "API remaining %d/50 times, reset after %d seconds".localized, countTimes, second)
@@ -230,11 +247,28 @@ extension PlacesViewController: UITableViewDelegate {
 		tableView.deselectRow(at: indexPath, animated: true)
 		
 		if indexPath.section == 0 {
-			performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, userPlacemark!))
+			let count = timesOfRequestShouldCalledWhenChangeUserPlacemark
+			
+			if CountdownManager.shared.canCallRequest(count) {
+				//TODO: 這個 userPlacemark! 可能會導致 Crash
+				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, userPlacemark!))
+			}
+			else {
+				let alert = UIAlertController(title: "Prompt".localized, message: "API Request is reached limited".localized)
+				present(alert, animated: true, completion: nil)
+			}
 		}
 		else {
-			let placemark = placemarks[indexPath.row]
-			performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, placemark))
+			let count = timesOfRequestShouldCalledWhenChangeExistPlacemark
+			
+			if CountdownManager.shared.canCallRequest(count) {
+				let placemark = placemarks[indexPath.row]
+				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, placemark))
+			}
+			else {
+				let alert = UIAlertController(title: "Prompt".localized, message: "API Request is reached limited".localized)
+				present(alert, animated: true, completion: nil)
+			}
 		}
 	}
 
@@ -262,6 +296,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 	func locateViewController(_ vc: LocateViewController, didSelect placemark: MKPlacemark, inRegion image: UIImage) {
 		let _ = firstFetch
 
+		CountdownManager.shared.countTimes += timesOfRequestShouldCalledWhenAddNewPlacemark
+		
 		HYCLoadingView.shared.show()
 		
 		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { (status) in
@@ -274,19 +310,20 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			}
 			
 			HYCLoadingView.shared.dismiss()
+			self.placemarks.append(placemark)
+			self.regionImages.append(image)
+			self.tableView.reloadData()
 		}
-		
-		placemarks.append(placemark)
-		regionImages.append(image)
-		tableView.reloadData()
 	}
 	
 	func locateViewController(_ vc: LocateViewController, change placemark: MKPlacemark, at indexPath: IndexPath, inRegion image: UIImage) {
 		
+		
 		HYCLoadingView.shared.show()
 
 		if indexPath.section == 0 {
-			userPlacemark = placemark
+			CountdownManager.shared.countTimes += timesOfRequestShouldCalledWhenChangeUserPlacemark
+
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { (status) in
 				switch status {
 				case .failure(let error):
@@ -294,14 +331,14 @@ extension PlacesViewController: LocateViewControllerProtocol {
 					self.present(alert, animated: true, completion: nil)
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
+					self.userPlacemark = placemark
 				}
 				
 				HYCLoadingView.shared.dismiss()
 			})
 		}
 		else {
-			placemarks[indexPath.row] = placemark
-			regionImages[indexPath.row] = image
+			CountdownManager.shared.countTimes += timesOfRequestShouldCalledWhenChangeExistPlacemark
 			
 			let oldPlacemarks = placemarks.filter({ (oldPlacemark) -> Bool in
 				return oldPlacemark != placemark
@@ -314,6 +351,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 					self.present(alert, animated: true, completion: nil)
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
+					self.placemarks[indexPath.row] = placemark
+					self.regionImages[indexPath.row] = image
 				}
 				
 				HYCLoadingView.shared.dismiss()

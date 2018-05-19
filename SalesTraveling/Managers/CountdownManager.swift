@@ -42,7 +42,35 @@ extension CountdownManager {
 		timer.invalidate()
 	}
 	
-	func canFetchAPI(_ times: Int) -> Bool {
-		return countTimes + times < 60
+	func canCallRequest(_ times: Int) -> Bool {
+		return countTimes + times < 50
+	}
+	
+	//TODO: 可以寫測試
+	//Add New Placemark
+	func timesOfRequestShouldCalledWhenAddNewPlacemark(placemarks count: Int, userPlacemark isExist: Bool) -> Int {
+		var times: Int = 0
+		
+		if isExist {
+			times += 1
+		}
+		
+		times += count * 2
+		return times
+	}
+	//Change Already Exist Placemark
+	func timesOfRequestShouldCalledWhenChangeExistPlacemark(placemarks count: Int, userPlacemark isExist: Bool) -> Int {
+		var times: Int = 0
+		
+		if isExist {
+			times += 1
+		}
+		
+		times += (count - 1) * 2
+		return times
+	}
+	//Change UserPlacemark
+	func timesOfRequestShouldCalledWhenChangeUserPlacemark(placemarks count: Int) -> Int {
+		return count * 2
 	}
 }
