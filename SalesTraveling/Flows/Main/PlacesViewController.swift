@@ -57,7 +57,7 @@ class PlacesViewController: UIViewController {
 		if let nvc = segue.destination as? UINavigationController,
 			let vc = nvc.viewControllers.first as? DirectionsViewController,
 			let tourModels = sender as? [TourModel] {
-			vc.tourModels = tourModels.sorted().filter({ (tourModel) -> Bool in
+			vc.tourModels = tourModels.filter({ (tourModel) -> Bool in
 				tourModel.responses.count > 0
 			})
 		}

@@ -259,12 +259,24 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="barButtonItemSortByDistance" destination="H4X-j7-EA0" id="M33-HN-MfT"/>
+                        <outlet property="barButtonItemSortByTime" destination="Nps-8Z-swG" id="lyB-gC-f30"/>
                         <outlet property="labelRemainingQuota" destination="KyU-vr-X66" id="xhG-20-NI9"/>
                         <outlet property="tableView" destination="Ni6-rI-gd0" id="7ee-RW-2nF"/>
                         <segue destination="g2k-oM-hP5" kind="show" identifier="RouteResultViewController" id="w8j-yH-ENV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DLl-qA-i3A" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem title="Item" id="Nps-8Z-swG">
+                    <connections>
+                        <action selector="barButtonItemSortByTimeDidPressed:" destination="UxO-G5-wxr" id="DEt-c6-M65"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem title="Item" id="H4X-j7-EA0">
+                    <connections>
+                        <action selector="barButtonItemSortByDistanceDidPressed:" destination="UxO-G5-wxr" id="ykx-Tp-d8f"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="1260" y="1413"/>
         </scene>
