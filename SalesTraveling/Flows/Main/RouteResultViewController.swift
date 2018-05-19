@@ -40,6 +40,7 @@ class RouteResultViewController: UIViewController {
 //		let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
 //		MKMapItem.openMaps(with: mapItems, launchOptions: options)
 		
+		//TODO: 只支援 Google Map
 		let activity = UIActivityViewController(activityItems: [tourModel.stopInformation], applicationActivities: nil)
 		present(activity, animated: true, completion: nil)
 	}
@@ -94,7 +95,7 @@ class RouteResultViewController: UIViewController {
 fileprivate extension RouteResultViewController {
 	func fetchRoutes() {
 		let tuples = tourModel.placemarks.toTuple()
-		
+		//TODO: 修改寫法
 		for tuple in tuples {
 			let source = tuple.0
 			let destination = tuple.1
@@ -183,7 +184,7 @@ extension RouteResultViewController: UITableViewDataSource {
 			 cell.textLabel?.text?.append(name)
 		}
 		cell.detailTextLabel?.text = placemark.title
-		
+		//TODO: 增加每個路線的 share
 		return cell
 	}
 }
