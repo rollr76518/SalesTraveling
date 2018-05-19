@@ -53,13 +53,6 @@ extension DataManager {
 			queue.name = "Fetch diretcions of placemarks"
 			
 			var directionsModels = [DirectionsModel]()
-			if placemarks.count == 0 {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionsModels))
-				}
-				return
-			}
-			
 
 			let callbackFinishOperation = BlockOperation {
 				DispatchQueue.main.async {
@@ -132,31 +125,28 @@ extension DataManager {
 				queue.addOperation(blockOperation)
 			}
 			
-			
-			if placemarks.count != 0 {
-				for oldPlacemark in placemarks {
-					for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-						let source = tuple.0
-						let destination = tuple.1
-						
-						let blockOperation = BlockOperation(block: {
-							let semaphore = DispatchSemaphore(value: 0)
-							MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
-								switch state {
-								case .failure(let error):
-									completeBlock(.failure(error))
-								case .success(let response):
-									let directions = DirectionsModel(source: source, destination: destination, routes: response.routes)
-									directionsModels.append(directions)
-								}
-								semaphore.signal()
-							})
-							semaphore.wait()
+			for oldPlacemark in placemarks {
+				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
+					let source = tuple.0
+					let destination = tuple.1
+					
+					let blockOperation = BlockOperation(block: {
+						let semaphore = DispatchSemaphore(value: 0)
+						MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
+							switch state {
+							case .failure(let error):
+								completeBlock(.failure(error))
+							case .success(let response):
+								let directions = DirectionsModel(source: source, destination: destination, routes: response.routes)
+								directionsModels.append(directions)
+							}
+							semaphore.signal()
 						})
-						
-						callbackFinishOperation.addDependency(blockOperation)
-						queue.addOperation(blockOperation)
-					}
+						semaphore.wait()
+					})
+					
+					callbackFinishOperation.addDependency(blockOperation)
+					queue.addOperation(blockOperation)
 				}
 			}
 			queue.addOperation(callbackFinishOperation)

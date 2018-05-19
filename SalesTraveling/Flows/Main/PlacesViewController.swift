@@ -332,6 +332,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					self.userPlacemark = placemark
+					self.tableView.reloadSections([indexPath.section], with: .automatic)
 				}
 				
 				HYCLoadingView.shared.dismiss()
@@ -353,13 +354,11 @@ extension PlacesViewController: LocateViewControllerProtocol {
 					DataManager.shared.save(directions: directionModels)
 					self.placemarks[indexPath.row] = placemark
 					self.regionImages[indexPath.row] = image
+					self.tableView.reloadSections([indexPath.section], with: .automatic)
 				}
 				
 				HYCLoadingView.shared.dismiss()
 			})
 		}
-		
-		let indexSet: IndexSet = [indexPath.section]
-		tableView.reloadSections(indexSet, with: .automatic)
 	}
 }
