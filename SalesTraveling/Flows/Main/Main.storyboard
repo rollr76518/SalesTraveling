@@ -8,7 +8,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -388,18 +387,15 @@
                         <viewLayoutGuide key="safeArea" id="BQb-Im-LK3"/>
                     </view>
                     <navigationItem key="navigationItem" id="rrT-oQ-Ik1">
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="save" id="pTm-Fs-I7K"/>
-                            <barButtonItem systemItem="action" id="L7y-lD-eYY">
-                                <connections>
-                                    <action selector="rightBarButtonItemDidPressed:" destination="g2k-oM-hP5" id="BvC-Wr-EzH"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="pTm-Fs-I7K">
+                            <connections>
+                                <action selector="rightBarButtonItemDidPressed:" destination="g2k-oM-hP5" id="d6U-it-pkq"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="constriantOfMovableViewHeight" destination="H7s-VA-IYR" id="NMc-Rh-Trc"/>
-                        <outlet property="labelOfPlacemark" destination="FAh-z7-IMM" id="cl8-Vg-wi8"/>
+                        <outlet property="labelOfPlacemarks" destination="FAh-z7-IMM" id="cl8-Vg-wi8"/>
                         <outlet property="mapView" destination="pfy-Vj-cnU" id="Yfr-kh-IQq"/>
                         <outlet property="movableView" destination="19n-OQ-Nik" id="nDV-N2-NBv"/>
                         <outlet property="tableView" destination="Tg7-9t-MbQ" id="J4g-Qk-cff"/>

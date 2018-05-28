@@ -31,18 +31,10 @@ class RouteResultViewController: UIViewController {
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
 	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
-	@IBOutlet var labelOfPlacemark: UILabel!
+	@IBOutlet var labelOfPlacemarks: UILabel!
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-//		let mapItems = tourModel.placemarks.map({ (placemark) -> MKMapItem in
-//			return placemark.toMapItem
-//		})
-//		let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-//		MKMapItem.openMaps(with: mapItems, launchOptions: options)
-		
-		//TODO: 只支援 Google Map
-		let activity = UIActivityViewController(activityItems: [tourModel.stopInformation], applicationActivities: nil)
-		present(activity, animated: true, completion: nil)
+
 	}
 	
 	override func viewDidLoad() {
@@ -50,7 +42,7 @@ class RouteResultViewController: UIViewController {
 		
 		fetchRoutes()
 		layoutPinViews()
-		labelOfPlacemark.text = "Placemarks".localized
+		labelOfPlacemarks.text = "Placemarks".localized
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -111,15 +103,11 @@ fileprivate extension RouteResultViewController {
 	}
 	
 	func layoutPinViews() {
-		for placemark in tourModel.placemarks {
-			mapView.addAnnotation(placemark.pointAnnotation)
-		}
+		mapView.addAnnotations(tourModel.placemarks)
 	}
 	
 	func layoutPolylines() {
-		for polyline in polylines {
-			mapView.add(polyline, level: .aboveRoads)
-		}
+		mapView.addOverlays(polylines, level: .aboveRoads)
 		let rect = MapMananger.boundingMapRect(polylines: polylines)
 		mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsetsMake(10, 10, 10, 10), animated: false)
 	}
@@ -158,6 +146,7 @@ extension RouteResultViewController: MKMapViewDelegate {
 		pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
 		pinView?.pinTintColor = .orange
 		pinView?.canShowCallout = true
+		pinView?.rightCalloutAccessoryView = UIButton(type: .infoLight)
 		return pinView
 	}
 	
@@ -166,6 +155,22 @@ extension RouteResultViewController: MKMapViewDelegate {
 		renderer.strokeColor = .orange
 		renderer.lineWidth = 4.0
 		return renderer
+	}
+	
+	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+		if let annotation = view.annotation {
+			for placemark in tourModel.placemarks {
+				if placemark.coordinate.latitude == annotation.coordinate.latitude &&
+					placemark.coordinate.longitude == annotation.coordinate.longitude {
+					
+					let mapItems = [placemark.toMapItem]
+					let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
+					MKMapItem.openMaps(with: mapItems, launchOptions: options)
+				}
+			}
+		} else {
+			print("view.annotation is nil")
+		}
 	}
 }
 
@@ -183,7 +188,6 @@ extension RouteResultViewController: UITableViewDataSource {
 			 cell.textLabel?.text?.append(name)
 		}
 		cell.detailTextLabel?.text = placemark.title
-		//TODO: 增加每個路線的 share
 		return cell
 	}
 }
