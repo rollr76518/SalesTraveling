@@ -68,7 +68,6 @@ class RouteResultViewController: UIViewController {
 			UIView.beginAnimations(nil, context: nil)
 			movableView.frame.origin.y = touchPoint.y
 			UIView.commitAnimations()
-			break
 		case .ended, .failed, .cancelled:
 			if touchPoint.y < UIScreen.main.bounds.height/2 {
 				openMovableView()
@@ -76,7 +75,6 @@ class RouteResultViewController: UIViewController {
 			else {
 				closeMovableView()
 			}
-			break
 		default: break
 		}
 

@@ -78,36 +78,25 @@ fileprivate extension LocateViewController {
 	}
 	
 	func addAnnotation(_ coordinate: CLLocationCoordinate2D) {
-		MapMananger.reverseCoordinate(coordinate, completion: { (status) in
+		MapMananger.reverseCoordinate(coordinate, completion: { [weak self] (status) in
 			switch status {
 			case .success(let placemarks):
-				if let placemark = placemarks.first {
-					self.selectedPlacemark = placemark
-					self.mapView.removeAnnotations(self.mapView.annotations)
+				if let placemark = placemarks.first, let strongSelf = self {
+					self?.selectedPlacemark = placemark
+					self?.mapView.removeAnnotations(strongSelf.mapView.annotations)
 					let newAnnotation = placemark.pointAnnotation
-					self.mapView.addAnnotation(newAnnotation)
-					self.mapView.selectAnnotation(newAnnotation, animated: false)
+					self?.mapView.addAnnotation(newAnnotation)
+					self?.mapView.selectAnnotation(newAnnotation, animated: false)
 				}
-				break
 			case .failure(let error):
-				self.presentAlert(of: "reverseCoordinate: \(error)")
-				break
+				self?.presentAlert(of: "reverseCoordinate: \(error)")
 			}
 		})
 	}
 }
 
 //MARK: - MKMapViewDelegate
-extension LocateViewController: MKMapViewDelegate {
-//	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-//		if let _ = selectedPlacemark {
-//			return
-//		}
-//
-//		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: userLocation.coordinate)
-//		addAnnotation(userLocation.coordinate)
-//	}
-	
+extension LocateViewController: MKMapViewDelegate {	
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		if annotation is MKUserLocation {
 			return nil
@@ -130,7 +119,6 @@ extension LocateViewController: MKMapViewDelegate {
 			if let annotation = view.annotation {
 				addAnnotation(annotation.coordinate)
 			}
-			break
 		default:
 			break
 		}

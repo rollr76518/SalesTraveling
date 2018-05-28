@@ -112,10 +112,8 @@ extension DataManager {
 						case .success(let response):
 							let directions = DirectionsModel(source: source, destination: destination, routes: response.routes)
 							directionsModels.append(directions)
-							break
 						case .failure(let error):
 							completeBlock(.failure(error))
-							break
 						}
 						semaphore.signal()
 					})

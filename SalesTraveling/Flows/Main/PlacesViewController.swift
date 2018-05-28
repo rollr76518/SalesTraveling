@@ -177,21 +177,20 @@ extension PlacesViewController: CLLocationManagerDelegate {
 	}
 
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		MapMananger.reverseCoordinate(locations.first!.coordinate) { (status) in
+		MapMananger.reverseCoordinate(locations.first!.coordinate) { [weak self] (status) in
 			switch status {
 			case .success(let placemarks):
-				self.userPlacemark = placemarks.first
-				self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+				self?.userPlacemark = placemarks.first
+				self?.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
 			case .failure(let error):
-				self.presentAlert(of: error.localizedDescription)
-				break
+				self?.presentAlert(of: error.localizedDescription)
 			}
 		}
 		manager.stopUpdatingLocation()
 	}
 
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		print("manager didFailWithError: \(error)")
+		presentAlert(of: "manager didFailWithError: \(error)")
 	}
 }
 
@@ -294,18 +293,18 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		
 		HYCLoadingView.shared.show()
 		
-		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { (status) in
+		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { [weak self] (status) in
 			switch status {
 			case .failure(let error):
-				self.presentAlert(of: "Can't calculate route with \(error)")
+				self?.presentAlert(of: "Can't calculate route with \(error)")
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
+				self?.placemarks.append(placemark)
+				self?.regionImages.append(image)
+				self?.tableView.reloadData()
 			}
 			
 			HYCLoadingView.shared.dismiss()
-			self.placemarks.append(placemark)
-			self.regionImages.append(image)
-			self.tableView.reloadData()
 		}
 	}
 	
@@ -317,14 +316,14 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		if indexPath.section == 0 {
 			CountdownManager.shared.countTimes += timesOfRequestShouldCalledWhenChangeUserPlacemark
 
-			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { (status) in
+			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { [weak self] (status) in
 				switch status {
 				case .failure(let error):
-					self.presentAlert(of: "Can't calculate route with \(error)")
+					self?.presentAlert(of: "Can't calculate route with \(error)")
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
-					self.userPlacemark = placemark
-					self.tableView.reloadSections([indexPath.section], with: .automatic)
+					self?.userPlacemark = placemark
+					self?.tableView.reloadSections([indexPath.section], with: .automatic)
 				}
 				
 				HYCLoadingView.shared.dismiss()
@@ -337,15 +336,15 @@ extension PlacesViewController: LocateViewControllerProtocol {
 				return oldPlacemark != placemark
 			})
 			
-			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: userPlacemark, completeBlock: { (status) in
+			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: userPlacemark, completeBlock: { [weak self] (status) in
 				switch status {
 				case .failure(let error):
-					self.presentAlert(of: "Can't calculate route with \(error)")
+					self?.presentAlert(of: "Can't calculate route with \(error)")
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
-					self.placemarks[indexPath.row] = placemark
-					self.regionImages[indexPath.row] = image
-					self.tableView.reloadSections([indexPath.section], with: .automatic)
+					self?.placemarks[indexPath.row] = placemark
+					self?.regionImages[indexPath.row] = image
+					self?.tableView.reloadSections([indexPath.section], with: .automatic)
 				}
 				
 				HYCLoadingView.shared.dismiss()

@@ -53,17 +53,15 @@ extension AddressResultTableViewController: UISearchResultsUpdating {
 		guard let keywords = searchController.searchBar.text,
 			let mapView = mapView else { return }
 		
-		MapMananger.fetchLocalSearch(with: keywords, region: mapView.region) { (status) in
+		MapMananger.fetchLocalSearch(with: keywords, region: mapView.region) { [weak self] (status) in
 			switch status {
 			case .success(let response):
-				self.matchingItems = response.mapItems
-				break
+				self?.matchingItems = response.mapItems
 			case .failure(let error):
 				print("fetch local search \(error)")
-				self.matchingItems = []
-				break
+				self?.matchingItems = []
 			}
-			self.tableView.reloadData()
+			self?.tableView.reloadData()
 		}
 	}
 }
