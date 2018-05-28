@@ -34,7 +34,7 @@ class RouteResultViewController: UIViewController {
 	@IBOutlet var labelOfPlacemarks: UILabel!
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-
+		//TODO: Save TourModel to UserDefault
 	}
 	
 	override func viewDidLoad() {
@@ -94,8 +94,7 @@ fileprivate extension RouteResultViewController {
 			
 			switch status {
 			case .failure(let error):
-				let alert = UIAlertController(title: "Prompt".localized, message: error.localizedDescription)
-				self?.present(alert, animated: true, completion: nil)
+				self?.presentAlert(of: error.localizedDescription)
 			case .success(let routes):
 				self?.routes = routes
 			}

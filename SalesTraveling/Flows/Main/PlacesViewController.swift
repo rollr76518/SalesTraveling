@@ -71,8 +71,7 @@ class PlacesViewController: UIViewController {
 			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
 		}
 		else {
-			let alert = UIAlertController(title: "Prompt".localized, message: "API Request is reached limited".localized)
-			present(alert, animated: true, completion: nil)
+			presentAlert(of: "API Request is reached limited".localized)
 		}
 	}
 	
@@ -184,7 +183,7 @@ extension PlacesViewController: CLLocationManagerDelegate {
 				self.userPlacemark = placemarks.first
 				self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
 			case .failure(let error):
-				print(error)
+				self.presentAlert(of: error.localizedDescription)
 				break
 			}
 		}
@@ -251,8 +250,7 @@ extension PlacesViewController: UITableViewDelegate {
 				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, userPlacemark))
 			}
 			else {
-				let alert = UIAlertController(title: "Prompt".localized, message: "API Request is reached limited".localized)
-				present(alert, animated: true, completion: nil)
+				presentAlert(of: "API Request is reached limited".localized)
 			}
 		}
 		else {
@@ -263,8 +261,7 @@ extension PlacesViewController: UITableViewDelegate {
 				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, placemark))
 			}
 			else {
-				let alert = UIAlertController(title: "Prompt".localized, message: "API Request is reached limited".localized)
-				present(alert, animated: true, completion: nil)
+				presentAlert(of: "API Request is reached limited".localized)
 			}
 		}
 	}
@@ -300,8 +297,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { (status) in
 			switch status {
 			case .failure(let error):
-				let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
-				self.present(alert, animated: true, completion: nil)
+				self.presentAlert(of: "Can't calculate route with \(error)")
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
 			}
@@ -324,8 +320,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { (status) in
 				switch status {
 				case .failure(let error):
-					let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
-					self.present(alert, animated: true, completion: nil)
+					self.presentAlert(of: "Can't calculate route with \(error)")
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					self.userPlacemark = placemark
@@ -345,8 +340,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: userPlacemark, completeBlock: { (status) in
 				switch status {
 				case .failure(let error):
-					let alert = UIAlertController(title: "Prompt".localized, message: "Can't calculate route with \(error)")
-					self.present(alert, animated: true, completion: nil)
+					self.presentAlert(of: "Can't calculate route with \(error)")
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					self.placemarks[indexPath.row] = placemark

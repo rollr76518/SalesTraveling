@@ -90,7 +90,7 @@ fileprivate extension LocateViewController {
 				}
 				break
 			case .failure(let error):
-				print("reverseCoordinate: \(error)")
+				self.presentAlert(of: "reverseCoordinate: \(error)")
 				break
 			}
 		})
