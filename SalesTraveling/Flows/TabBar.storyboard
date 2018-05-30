@@ -20,6 +20,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="Qb9-pv-yl6" kind="relationship" relationship="viewControllers" id="p9M-pH-vNP"/>
+                        <segue destination="rZh-U0-Bf6" kind="relationship" relationship="viewControllers" id="6AQ-kb-l8u"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ESc-Bx-7Me" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -36,10 +37,10 @@
             </objects>
             <point key="canvasLocation" x="-46" y="-274"/>
         </scene>
-        <!--Storyboard Reference-->
+        <!--Favorites-->
         <scene sceneID="tla-Ue-itN">
             <objects>
-                <viewControllerPlaceholder id="rZh-U0-Bf6" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="Favorites" id="rZh-U0-Bf6" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="r5U-qi-ydj"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1nL-tN-n8M" userLabel="First Responder" sceneMemberID="firstResponder"/>

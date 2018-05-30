@@ -29,6 +29,8 @@
 		9481FCE020A7241200F8E842 /* HYCLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9481FCDF20A7241200F8E842 /* HYCLoadingView.swift */; };
 		94B2394820BEF32C00AE0E03 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */; };
 		94B2394A20BEF33A00AE0E03 /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B2394920BEF33A00AE0E03 /* TabBar.storyboard */; };
+		94B2394C20BEF68000AE0E03 /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B2394B20BEF68000AE0E03 /* Favorites.storyboard */; };
+		94B2394F20BEF6C600AE0E03 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2394E20BEF6C600AE0E03 /* FavoritesViewController.swift */; };
 		94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */; };
 		94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */; };
 		94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */; };
@@ -68,6 +70,8 @@
 		9481FCDF20A7241200F8E842 /* HYCLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HYCLoadingView.swift; sourceTree = "<group>"; };
 		94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		94B2394920BEF33A00AE0E03 /* TabBar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabBar.storyboard; sourceTree = "<group>"; };
+		94B2394B20BEF68000AE0E03 /* Favorites.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Favorites.storyboard; sourceTree = "<group>"; };
+		94B2394E20BEF6C600AE0E03 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKPlacemark+Extension.swift"; sourceTree = "<group>"; };
@@ -172,12 +176,22 @@
 		7EFBA2841F9C8D8D0011007E /* Flows */ = {
 			isa = PBXGroup;
 			children = (
-				7EFBA2831F9C8D870011007E /* Main */,
-				7EFBA2821F9C8D730011007E /* Locate */,
 				94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */,
 				94B2394920BEF33A00AE0E03 /* TabBar.storyboard */,
+				7EFBA2831F9C8D870011007E /* Main */,
+				7EFBA2821F9C8D730011007E /* Locate */,
+				94B2394D20BEF68600AE0E03 /* Favorites */,
 			);
 			path = Flows;
+			sourceTree = "<group>";
+		};
+		94B2394D20BEF68600AE0E03 /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				94B2394B20BEF68000AE0E03 /* Favorites.storyboard */,
+				94B2394E20BEF6C600AE0E03 /* FavoritesViewController.swift */,
+			);
+			path = Favorites;
 			sourceTree = "<group>";
 		};
 		94E2D10F1FC713E400F1FD36 /* Custom UI */ = {
@@ -273,6 +287,7 @@
 				7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */,
 				945352B61FBC9F7A00176195 /* Main.storyboard in Resources */,
 				94B2394A20BEF33A00AE0E03 /* TabBar.storyboard in Resources */,
+				94B2394C20BEF68000AE0E03 /* Favorites.storyboard in Resources */,
 				7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */,
+				94B2394F20BEF6C600AE0E03 /* FavoritesViewController.swift in Sources */,
 				94FB428C1FB6E6A8005039B7 /* AlgorithmManager.swift in Sources */,
 				7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */,
 				94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */,
