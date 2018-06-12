@@ -10,6 +10,6 @@ import Foundation
 
 extension UserDefaults {
 	enum Keys {
-//		static let DirectionKey(source: MKPlacemark, destination: MKPlacemark) = "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
+		static let FavoriteTours = "FavoriteTours"
 	}
 }

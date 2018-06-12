@@ -34,7 +34,7 @@ class RouteResultViewController: UIViewController {
 	@IBOutlet var labelOfPlacemarks: UILabel!
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		//TODO: Save TourModel to UserDefault
+		DataManager.shared.save(tourModel: tourModel)
 	}
 	
 	override func viewDidLoad() {

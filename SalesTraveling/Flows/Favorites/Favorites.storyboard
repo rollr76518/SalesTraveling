@@ -6,45 +6,9 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Favorites View Controller-->
-        <scene sceneID="dS8-sL-Dj8">
-            <objects>
-                <viewController storyboardIdentifier="FavoritesViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yGz-sw-LxV" customClass="FavoritesViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="c6M-QJ-V2d">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="auQ-EU-Hlj">
-                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="yGz-sw-LxV" id="6Kc-W9-yXp"/>
-                                    <outlet property="delegate" destination="yGz-sw-LxV" id="28h-ij-jUY"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="KDc-AY-T1B" firstAttribute="trailing" secondItem="auQ-EU-Hlj" secondAttribute="trailing" id="Zu3-gq-yjh"/>
-                            <constraint firstItem="KDc-AY-T1B" firstAttribute="bottom" secondItem="auQ-EU-Hlj" secondAttribute="bottom" id="gO1-Od-PW5"/>
-                            <constraint firstItem="auQ-EU-Hlj" firstAttribute="leading" secondItem="KDc-AY-T1B" secondAttribute="leading" id="iE5-ut-JMd"/>
-                            <constraint firstItem="auQ-EU-Hlj" firstAttribute="top" secondItem="KDc-AY-T1B" secondAttribute="top" id="y3y-k4-c5n"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="KDc-AY-T1B"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="IlA-NY-mOx"/>
-                    <connections>
-                        <outlet property="tableView" destination="auQ-EU-Hlj" id="BoE-C5-WNK"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4xo-Wo-367" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="767.20000000000005" y="162.3688155922039"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="jvU-e3-O9X">
             <objects>
@@ -58,12 +22,22 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="yGz-sw-LxV" kind="relationship" relationship="rootViewController" id="suf-Mt-reF"/>
+                        <segue destination="pWv-Lb-8tt" kind="relationship" relationship="rootViewController" id="tzN-6I-hdn"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Skt-bu-Usk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-172" y="161.46926536731635"/>
+        </scene>
+        <!--TourList-->
+        <scene sceneID="wMG-kT-Yxk">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TourList" id="pWv-Lb-8tt" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="iK9-O6-peq"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sg9-54-zRb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="478" y="161"/>
         </scene>
     </scenes>
 </document>
