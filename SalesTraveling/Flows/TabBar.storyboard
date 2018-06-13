@@ -18,34 +18,10 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
-                    <connections>
-                        <segue destination="Qb9-pv-yl6" kind="relationship" relationship="viewControllers" id="p9M-pH-vNP"/>
-                        <segue destination="rZh-U0-Bf6" kind="relationship" relationship="viewControllers" id="6AQ-kb-l8u"/>
-                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ESc-Bx-7Me" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-775" y="-122"/>
-        </scene>
-        <!--Main-->
-        <scene sceneID="XZ7-X8-YTl">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Main" id="Qb9-pv-yl6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" id="WRQ-tj-9YL"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ED8-af-1Bp" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-46" y="-274"/>
-        </scene>
-        <!--Favorites-->
-        <scene sceneID="tla-Ue-itN">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Favorites" id="rZh-U0-Bf6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="r5U-qi-ydj"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1nL-tN-n8M" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-46" y="22"/>
         </scene>
     </scenes>
 </document>

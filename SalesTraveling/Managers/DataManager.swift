@@ -33,9 +33,28 @@ extension DataManager {
 	
 	func findDirections(source: MKPlacemark, destination: MKPlacemark) -> DirectionsModel? {
 		let key = createKeyBy(source: source, destination: destination)
-		guard let data = UserDefaults.standard.object(forKey: key) as? Data ,
+		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
 			let directions = try? JSONDecoder().decode(DirectionsModel.self, from: data) else { return nil }
 		return directions
+	}
+	
+	func save(tourModel: TourModel) {
+		var favoriteTours = self.savedTours()
+		favoriteTours.append(tourModel)
+		do {
+			let data = try JSONEncoder().encode(favoriteTours)
+			let key = UserDefaults.Keys.SavedTours
+			UserDefaults.standard.set(data, forKey: key)
+		} catch {
+			print("Cant save tourModel with \(error)")
+		}
+	}
+	
+	func savedTours() -> [TourModel] {
+		let key = UserDefaults.Keys.SavedTours
+		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
+			let tourModels = try? JSONDecoder().decode([TourModel].self, from: data) else { return [TourModel]() }
+		return tourModels
 	}
 }
 

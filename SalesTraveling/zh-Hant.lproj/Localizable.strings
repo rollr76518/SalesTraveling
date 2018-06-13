@@ -14,6 +14,12 @@
 "Show Routes"="規劃路線";
 "API remaining %d/50 times, reset after %d seconds"="API 剩餘 %d/50 次，%d秒後重置";
 "Placemarks"="地標";
-"From"="從";
-"To"="到";
+"Source"="出發點";
 "Calculate"="計算";
+"Sorted by distance"="使用距離排序";
+"Sorted by time"="使用時間排序";
+"Tour"="路程";
+"Saved Tours"="已儲存的路程";
+"Result of caculate"="計算結果";
+"Tour calculate"="路程計算";
+"Add placemark"="新增地標";

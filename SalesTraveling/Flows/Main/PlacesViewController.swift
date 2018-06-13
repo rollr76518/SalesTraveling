@@ -20,6 +20,7 @@ class PlacesViewController: UIViewController {
 	@IBOutlet var constraintLabelRemaingQuotaOpen: NSLayoutConstraint!
 	@IBOutlet var constraintToolbarOpen: NSLayoutConstraint!
 	@IBOutlet var constraintToolbarClose: NSLayoutConstraint!
+	@IBOutlet var barButtomItemAdd: UIBarButtonItem!
 	lazy var firstFetch: Bool = activeAPIFetch()
 	var userPlacemark: MKPlacemark?
 	var placemarks: [MKPlacemark] = [] {
@@ -42,6 +43,8 @@ class PlacesViewController: UIViewController {
 		layoutButtonShowRoutes()
 		setupLocationManager()
 		barButtonItemCalculate.title = "Calculate".localized
+		title = "Tour calculate".localized
+		barButtomItemAdd.title = "Add placemark".localized
 	}
 	
 	// MARK: - Navigation
@@ -55,7 +58,7 @@ class PlacesViewController: UIViewController {
 		}
 		
 		if let nvc = segue.destination as? UINavigationController,
-			let vc = nvc.viewControllers.first as? DirectionsViewController,
+			let vc = nvc.viewControllers.first as? TourListViewController,
 			let tourModels = sender as? [TourModel] {
 			vc.tourModels = tourModels.filter({ (tourModel) -> Bool in
 				tourModel.responses.count > 0
@@ -138,7 +141,7 @@ fileprivate extension PlacesViewController {
 				}
 			}
 		}
-		performSegue(withIdentifier: DirectionsViewController.identifier, sender: tourModels)
+		performSegue(withIdentifier: TourListViewController.identifier, sender: tourModels)
 	}
 	
 	func activeAPIFetch() -> Bool {
@@ -230,10 +233,10 @@ extension PlacesViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 {
-			return "From".localized
+			return "Source".localized
 		}
 		
-		return "To".localized
+		return "Placemarks".localized
 	}
 }
 

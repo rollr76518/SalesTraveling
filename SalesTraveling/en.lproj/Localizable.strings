@@ -14,6 +14,12 @@
 "Show Routes"="Show Routes";
 "API remaining %d/50 times, reset after %d seconds"="API remaining %d/50 times, reset after %d seconds";
 "Placemarks"="Placemarks";
-"From"="From";
-"To"="To";
+"Source"="Source";
 "Calculate"="Calculate";
+"Sorted by distance"="Sorted by distance";
+"Sorted by time"="Sorted by time";
+"Tour"="Tour";
+"Saved Tours"="Saved Tours";
+"Result of caculate"="Result of caculate";
+"Tour calculate"="Tour calculate";
+"Add placemark"="Add placemark";

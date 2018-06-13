@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7E076E7A1F9CCAFC0013E8B4 /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */; };
 		7E63348F207200BB007A2A85 /* UIAlertController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E63348E207200BB007A2A85 /* UIAlertController+Extension.swift */; };
 		7E63349120720270007A2A85 /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E63349020720270007A2A85 /* NotificationName+Extension.swift */; };
 		7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB0D6091F9E341B00268E3B /* TourModel.swift */; };
@@ -20,7 +19,7 @@
 		7EFBA27D1F9C55490011007E /* AddressResultTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA27C1F9C55490011007E /* AddressResultTableViewController.swift */; };
 		7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA27E1F9C82B10011007E /* Locate.storyboard */; };
 		7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2801F9C8D090011007E /* PlacesViewController.swift */; };
-		7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */; };
+		7EFBA2861F9C9D210011007E /* TourViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2851F9C9D210011007E /* TourViewController.swift */; };
 		9441DAB22046B41B00BFB9B5 /* DynamicHeightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9441DAB12046B41B00BFB9B5 /* DynamicHeightTableViewCell.swift */; };
 		9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */; };
 		9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */; };
@@ -30,7 +29,8 @@
 		94B2394820BEF32C00AE0E03 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */; };
 		94B2394A20BEF33A00AE0E03 /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B2394920BEF33A00AE0E03 /* TabBar.storyboard */; };
 		94B2394C20BEF68000AE0E03 /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B2394B20BEF68000AE0E03 /* Favorites.storyboard */; };
-		94B2394F20BEF6C600AE0E03 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2394E20BEF6C600AE0E03 /* FavoritesViewController.swift */; };
+		94C0559E20D0073A00CD0F6E /* TourListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C0559D20D0073A00CD0F6E /* TourListViewController.swift */; };
+		94C055A120D0075600CD0F6E /* TourList.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94C055A020D0075600CD0F6E /* TourList.storyboard */; };
 		94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */; };
 		94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */; };
 		94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */; };
@@ -46,7 +46,6 @@
 
 /* Begin PBXFileReference section */
 		7E06DA2C20514DAA0020A192 /* Cardino Blue.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Cardino Blue.gpx"; sourceTree = "<group>"; };
-		7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsViewController.swift; sourceTree = "<group>"; };
 		7E63348E207200BB007A2A85 /* UIAlertController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Extension.swift"; sourceTree = "<group>"; };
 		7E63349020720270007A2A85 /* NotificationName+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		7EB0D6091F9E341B00268E3B /* TourModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourModel.swift; sourceTree = "<group>"; };
@@ -61,7 +60,7 @@
 		7EFBA27C1F9C55490011007E /* AddressResultTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressResultTableViewController.swift; sourceTree = "<group>"; };
 		7EFBA27E1F9C82B10011007E /* Locate.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Locate.storyboard; sourceTree = "<group>"; };
 		7EFBA2801F9C8D090011007E /* PlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewController.swift; sourceTree = "<group>"; };
-		7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteResultViewController.swift; sourceTree = "<group>"; };
+		7EFBA2851F9C9D210011007E /* TourViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourViewController.swift; sourceTree = "<group>"; };
 		9441DAB12046B41B00BFB9B5 /* DynamicHeightTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightTableViewCell.swift; sourceTree = "<group>"; };
 		9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsModel.swift; sourceTree = "<group>"; };
 		9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownManager.swift; sourceTree = "<group>"; };
@@ -71,7 +70,8 @@
 		94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		94B2394920BEF33A00AE0E03 /* TabBar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabBar.storyboard; sourceTree = "<group>"; };
 		94B2394B20BEF68000AE0E03 /* Favorites.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Favorites.storyboard; sourceTree = "<group>"; };
-		94B2394E20BEF6C600AE0E03 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		94C0559D20D0073A00CD0F6E /* TourListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourListViewController.swift; sourceTree = "<group>"; };
+		94C055A020D0075600CD0F6E /* TourList.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TourList.storyboard; sourceTree = "<group>"; };
 		94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFD1FC9B60A0003E979 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		94D00FFF1FC9B8570003E979 /* MKPlacemark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKPlacemark+Extension.swift"; sourceTree = "<group>"; };
@@ -167,8 +167,6 @@
 			children = (
 				945352B51FBC9F7A00176195 /* Main.storyboard */,
 				7EFBA2801F9C8D090011007E /* PlacesViewController.swift */,
-				7E076E791F9CCAFC0013E8B4 /* DirectionsViewController.swift */,
-				7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -176,11 +174,12 @@
 		7EFBA2841F9C8D8D0011007E /* Flows */ = {
 			isa = PBXGroup;
 			children = (
-				94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */,
 				94B2394920BEF33A00AE0E03 /* TabBar.storyboard */,
-				7EFBA2831F9C8D870011007E /* Main */,
-				7EFBA2821F9C8D730011007E /* Locate */,
+				94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */,
 				94B2394D20BEF68600AE0E03 /* Favorites */,
+				7EFBA2821F9C8D730011007E /* Locate */,
+				7EFBA2831F9C8D870011007E /* Main */,
+				94C0559F20D0074000CD0F6E /* TourList */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -189,9 +188,18 @@
 			isa = PBXGroup;
 			children = (
 				94B2394B20BEF68000AE0E03 /* Favorites.storyboard */,
-				94B2394E20BEF6C600AE0E03 /* FavoritesViewController.swift */,
 			);
 			path = Favorites;
+			sourceTree = "<group>";
+		};
+		94C0559F20D0074000CD0F6E /* TourList */ = {
+			isa = PBXGroup;
+			children = (
+				94C055A020D0075600CD0F6E /* TourList.storyboard */,
+				94C0559D20D0073A00CD0F6E /* TourListViewController.swift */,
+				7EFBA2851F9C9D210011007E /* TourViewController.swift */,
+			);
+			path = TourList;
 			sourceTree = "<group>";
 		};
 		94E2D10F1FC713E400F1FD36 /* Custom UI */ = {
@@ -248,7 +256,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Hanyu;
 				TargetAttributes = {
 					7EFBA25D1F9C4B480011007E = {
@@ -283,6 +291,7 @@
 			files = (
 				7EFBA26C1F9C4B480011007E /* LaunchScreen.storyboard in Resources */,
 				94E2D1051FC6F4A400F1FD36 /* Localizable.strings in Resources */,
+				94C055A120D0075600CD0F6E /* TourList.storyboard in Resources */,
 				7EFBA2771F9C53080011007E /* taipei 101.gpx in Resources */,
 				7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */,
 				945352B61FBC9F7A00176195 /* Main.storyboard in Resources */,
@@ -300,13 +309,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				94D010001FC9B8570003E979 /* MKPlacemark+Extension.swift in Sources */,
-				94B2394F20BEF6C600AE0E03 /* FavoritesViewController.swift in Sources */,
 				94FB428C1FB6E6A8005039B7 /* AlgorithmManager.swift in Sources */,
 				7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */,
+				94C0559E20D0073A00CD0F6E /* TourListViewController.swift in Sources */,
 				94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */,
 				94E2D10E1FC713DE00F1FD36 /* DynamicColorButton.swift in Sources */,
 				94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */,
-				7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */,
+				7EFBA2861F9C9D210011007E /* TourViewController.swift in Sources */,
 				7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */,
 				94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */,
 				94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */,
@@ -323,7 +332,6 @@
 				7E63348F207200BB007A2A85 /* UIAlertController+Extension.swift in Sources */,
 				94D010021FC9D14D0003E979 /* DataManager.swift in Sources */,
 				7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */,
-				7E076E7A1F9CCAFC0013E8B4 /* DirectionsViewController.swift in Sources */,
 				945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */,
 				7EFBA27D1F9C55490011007E /* AddressResultTableViewController.swift in Sources */,
 			);
@@ -367,6 +375,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -374,6 +383,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -425,6 +435,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -432,6 +443,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -468,12 +480,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LB9NKBAM6;
 				INFOPLIST_FILE = SalesTraveling/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HYC.SalesTraveling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -484,12 +496,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LB9NKBAM6;
 				INFOPLIST_FILE = SalesTraveling/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HYC.SalesTraveling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

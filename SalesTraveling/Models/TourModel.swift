@@ -6,18 +6,19 @@
 //  Copyright © 2017年 Hanyu. All rights reserved.
 //
 
-import MapKit
+import MapKit.MKPlacemark
 
-class TourModel {
-	
+struct TourModel: Codable {
 	var responses: [DirectionsModel] = []
-	
+}
+
+extension TourModel {
 	var placemarks: [MKPlacemark] {
-        var placemarks = responses.map{ $0.sourcePlacemark }
-        if let last = responses.last {
-            placemarks.append(last.destinationPlacemark)
-        }
-        return placemarks
+		var placemarks = responses.map{ $0.sourcePlacemark }
+		if let last = responses.last {
+			placemarks.append(last.destinationPlacemark)
+		}
+		return placemarks
 	}
 	
 	var distances: CLLocationDistance {
@@ -25,7 +26,7 @@ class TourModel {
 			return result + directionResponse.distance
 		})
 	}
-
+	
 	var sumOfExpectedTravelTime: TimeInterval {
 		return responses.reduce(0, { (result, directionResponse) -> TimeInterval in
 			return result + directionResponse.expectedTravelTime
