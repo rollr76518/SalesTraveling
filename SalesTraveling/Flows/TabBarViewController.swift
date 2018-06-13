@@ -22,8 +22,9 @@ class TabBarViewController: UITabBarController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		let favoriteTours = DataManager.shared.favoriteTours()
-		favoritesViewController.tourModels = favoriteTours
+		let savedTours = DataManager.shared.savedTours()
+		favoritesViewController.tourModels = savedTours
+		favoritesViewController.isInTabBar = true
 	}
 }
 

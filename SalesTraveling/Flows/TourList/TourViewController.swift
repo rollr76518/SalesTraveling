@@ -1,5 +1,5 @@
 //
-//  RouteResultViewController.swift
+//  TourViewController.swift
 //  SalesTraveling
 //
 //  Created by Hanyu on 2017/10/22.
@@ -10,13 +10,15 @@ import UIKit
 import MapKit
 
 //https://stackoverflow.com/questions/37967555/how-to-mimic-ios-10-maps-bottom-sheet
-class RouteResultViewController: UIViewController {
+class TourViewController: UIViewController {
+	
 	
 	let toppestY: CGFloat = 80.0
 	let lowestY = (UIScreen.main.bounds.height - 80)
 	
 	@IBOutlet var tableView: UITableView!
 	var tourModel: TourModel!
+	var isInTabBar: Bool!
 	var routes: [MKRoute] = [] {
 		didSet {
 			if routes.count >= tourModel.placemarks.count - 1 {
@@ -33,6 +35,7 @@ class RouteResultViewController: UIViewController {
 	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
 	@IBOutlet var labelOfPlacemarks: UILabel!
 	
+	@IBOutlet var barButtonItemSave: UIBarButtonItem!
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
 		DataManager.shared.save(tourModel: tourModel)
 	}
@@ -43,6 +46,11 @@ class RouteResultViewController: UIViewController {
 		fetchRoutes()
 		layoutPinViews()
 		labelOfPlacemarks.text = "Placemarks".localized
+		title = "Tour".localized
+		
+		if !isInTabBar {
+			navigationItem.rightBarButtonItem = barButtonItemSave
+		}
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -82,7 +90,7 @@ class RouteResultViewController: UIViewController {
 }
 
 // MARK: - Private func
-fileprivate extension RouteResultViewController {
+fileprivate extension TourViewController {
 	func fetchRoutes() {
 		HYCLoadingView.shared.show()
 		
@@ -133,7 +141,7 @@ fileprivate extension RouteResultViewController {
 }
 
 // MARK: - MKMapViewDelegate
-extension RouteResultViewController: MKMapViewDelegate {
+extension TourViewController: MKMapViewDelegate {
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		if annotation is MKUserLocation {
 			return nil
@@ -172,7 +180,7 @@ extension RouteResultViewController: MKMapViewDelegate {
 }
 
 // MARK: - UITableViewDataSource
-extension RouteResultViewController: UITableViewDataSource {
+extension TourViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return tourModel.placemarks.count
 	}
@@ -190,7 +198,7 @@ extension RouteResultViewController: UITableViewDataSource {
 }
 
 // MARK: UITableViewDelegate
-extension RouteResultViewController: UITableViewDelegate {
+extension TourViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 		
@@ -208,7 +216,7 @@ extension RouteResultViewController: UITableViewDelegate {
 }
 
 // MARK: - UIGestureRecognizerDelegate
-extension RouteResultViewController: UIGestureRecognizerDelegate {
+extension TourViewController: UIGestureRecognizerDelegate {
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		return !tableView.frame.contains(touch.location(in: movableView))
 	}

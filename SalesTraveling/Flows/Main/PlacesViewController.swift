@@ -20,6 +20,7 @@ class PlacesViewController: UIViewController {
 	@IBOutlet var constraintLabelRemaingQuotaOpen: NSLayoutConstraint!
 	@IBOutlet var constraintToolbarOpen: NSLayoutConstraint!
 	@IBOutlet var constraintToolbarClose: NSLayoutConstraint!
+	@IBOutlet var barButtomItemAdd: UIBarButtonItem!
 	lazy var firstFetch: Bool = activeAPIFetch()
 	var userPlacemark: MKPlacemark?
 	var placemarks: [MKPlacemark] = [] {
@@ -42,6 +43,8 @@ class PlacesViewController: UIViewController {
 		layoutButtonShowRoutes()
 		setupLocationManager()
 		barButtonItemCalculate.title = "Calculate".localized
+		title = "Tour calculate".localized
+		barButtomItemAdd.title = "Add placemark".localized
 	}
 	
 	// MARK: - Navigation
@@ -230,10 +233,10 @@ extension PlacesViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 {
-			return "From".localized
+			return "Source".localized
 		}
 		
-		return "To".localized
+		return "Placemarks".localized
 	}
 }
 

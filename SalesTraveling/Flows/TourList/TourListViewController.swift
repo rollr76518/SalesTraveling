@@ -10,6 +10,8 @@ import UIKit
 import MapKit
 
 class TourListViewController: UIViewController {
+	
+	var isInTabBar: Bool = false
 
 	var tourModels: [TourModel]! {
 		didSet {
@@ -27,28 +29,38 @@ class TourListViewController: UIViewController {
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet var barButtonItemSortByDistance: UIBarButtonItem! {
 		didSet {
-			barButtonItemSortByDistance.title = "Distance".localized
+			barButtonItemSortByDistance.title = "Sorted by distance".localized
 		}
 	}
 	@IBOutlet var barButtonItemSortByTime: UIBarButtonItem! {
 		didSet {
-			barButtonItemSortByTime.title = "Time".localized
+			barButtonItemSortByTime.title = "Sorted by time".localized
 		}
 	}
+	@IBOutlet var barbuttonItemClose: UIBarButtonItem!
+	@IBOutlet var constraintOfLabelRemaingQuotaBottom: NSLayoutConstraint!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		NotificationCenter.default.addObserver(self, selector: #selector(countDownAPI),
 											   name: NSNotification.Name.CountDown, object: nil)
 		
-		navigationItem.leftBarButtonItem = barButtonItemSortByTime
+		if !isInTabBar {
+			navigationItem.leftBarButtonItem = barButtonItemSortByTime
+			navigationItem.rightBarButtonItem = barbuttonItemClose
+			title = "Result of caculate".localized
+		} else {
+			title = "Saved Tours".localized
+			constraintOfLabelRemaingQuotaBottom.constant = 0
+		}
 	}
 	
 	// MARK: - Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if let vc = segue.destination as? RouteResultViewController,
+		if let vc = segue.destination as? TourViewController,
 			let tourModel = sender as? TourModel {
 			vc.tourModel = tourModel
+			vc.isInTabBar = isInTabBar
 		}
 	}
 	// MAKR: - IBActions
@@ -91,17 +103,17 @@ extension TourListViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let tourModel = tourModelsSorted[indexPath.row]
 		
-		if #available(iOS 11, *) {
+//		if #available(iOS 11, *) {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "ios11", for: indexPath)
 			cell.textLabel?.text = tourModel.routeInformation
 			cell.detailTextLabel?.text = tourModel.stopInformation
 			return cell
-		} else {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "ios10", for: indexPath) as! DynamicHeightTableViewCell
-			cell.labelTitle.text = tourModel.routeInformation
-			cell.labelSubtitle.text = tourModel.stopInformation
-			return cell
-		}
+//		} else {
+//			let cell = tableView.dequeueReusableCell(withIdentifier: "ios10", for: indexPath) as! DynamicHeightTableViewCell
+//			cell.labelTitle.text = tourModel.routeInformation
+//			cell.labelSubtitle.text = tourModel.stopInformation
+//			return cell
+//		}
 	}
 }
 
@@ -112,7 +124,7 @@ extension TourListViewController: UITableViewDelegate {
 		
 		let tourModel = tourModelsSorted[indexPath.row]
 		if CountdownManager.shared.canCallRequest(tourModel.placemarks.count - 1) {
-			performSegue(withIdentifier: RouteResultViewController.identifier, sender: tourModel)
+			performSegue(withIdentifier: TourViewController.identifier, sender: tourModel)
 		}
 		else {
 			presentAlert(of: "API Request is reached limited".localized)

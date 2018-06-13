@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -110,13 +109,14 @@
                     </view>
                     <navigationItem key="navigationItem" id="eyE-K3-QF6">
                         <barButtonItem key="backBarButtonItem" title=" " id="Azt-iq-BaB"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="471-aI-oTy">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="471-aI-oTy">
                             <connections>
                                 <action selector="rightBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="barButtomItemAdd" destination="471-aI-oTy" id="2fg-Bh-woy"/>
                         <outlet property="barButtonItemCalculate" destination="thi-mw-c0C" id="1If-EO-EIa"/>
                         <outlet property="barButtonItemDone" destination="s4n-oh-aRc" id="hiQ-lZ-nFz"/>
                         <outlet property="barButtonItemEdit" destination="6BD-DM-gR5" id="qt6-WY-OHV"/>

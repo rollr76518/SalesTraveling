@@ -39,19 +39,19 @@ extension DataManager {
 	}
 	
 	func save(tourModel: TourModel) {
-		var favoriteTours = self.favoriteTours()
+		var favoriteTours = self.savedTours()
 		favoriteTours.append(tourModel)
 		do {
 			let data = try JSONEncoder().encode(favoriteTours)
-			let key = UserDefaults.Keys.FavoriteTours
+			let key = UserDefaults.Keys.SavedTours
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
 			print("Cant save tourModel with \(error)")
 		}
 	}
 	
-	func favoriteTours() -> [TourModel] {
-		let key = UserDefaults.Keys.FavoriteTours
+	func savedTours() -> [TourModel] {
+		let key = UserDefaults.Keys.SavedTours
 		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
 			let tourModels = try? JSONDecoder().decode([TourModel].self, from: data) else { return [TourModel]() }
 		return tourModels

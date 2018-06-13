@@ -19,7 +19,7 @@
 		7EFBA27D1F9C55490011007E /* AddressResultTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA27C1F9C55490011007E /* AddressResultTableViewController.swift */; };
 		7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA27E1F9C82B10011007E /* Locate.storyboard */; };
 		7EFBA2811F9C8D090011007E /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2801F9C8D090011007E /* PlacesViewController.swift */; };
-		7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */; };
+		7EFBA2861F9C9D210011007E /* TourViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2851F9C9D210011007E /* TourViewController.swift */; };
 		9441DAB22046B41B00BFB9B5 /* DynamicHeightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9441DAB12046B41B00BFB9B5 /* DynamicHeightTableViewCell.swift */; };
 		9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */; };
 		9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */; };
@@ -60,7 +60,7 @@
 		7EFBA27C1F9C55490011007E /* AddressResultTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressResultTableViewController.swift; sourceTree = "<group>"; };
 		7EFBA27E1F9C82B10011007E /* Locate.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Locate.storyboard; sourceTree = "<group>"; };
 		7EFBA2801F9C8D090011007E /* PlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewController.swift; sourceTree = "<group>"; };
-		7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteResultViewController.swift; sourceTree = "<group>"; };
+		7EFBA2851F9C9D210011007E /* TourViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourViewController.swift; sourceTree = "<group>"; };
 		9441DAB12046B41B00BFB9B5 /* DynamicHeightTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightTableViewCell.swift; sourceTree = "<group>"; };
 		9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsModel.swift; sourceTree = "<group>"; };
 		9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownManager.swift; sourceTree = "<group>"; };
@@ -197,7 +197,7 @@
 			children = (
 				94C055A020D0075600CD0F6E /* TourList.storyboard */,
 				94C0559D20D0073A00CD0F6E /* TourListViewController.swift */,
-				7EFBA2851F9C9D210011007E /* RouteResultViewController.swift */,
+				7EFBA2851F9C9D210011007E /* TourViewController.swift */,
 			);
 			path = TourList;
 			sourceTree = "<group>";
@@ -315,7 +315,7 @@
 				94D00FFC1FC9B5850003E979 /* UIView+Extension.swift in Sources */,
 				94E2D10E1FC713DE00F1FD36 /* DynamicColorButton.swift in Sources */,
 				94D00FFE1FC9B60A0003E979 /* UIColor+Extension.swift in Sources */,
-				7EFBA2861F9C9D210011007E /* RouteResultViewController.swift in Sources */,
+				7EFBA2861F9C9D210011007E /* TourViewController.swift in Sources */,
 				7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */,
 				94E2D10C1FC7019900F1FD36 /* UIViewController+Extension.swift in Sources */,
 				94FB42891FB6E663005039B7 /* Array+Extension.swift in Sources */,
@@ -480,12 +480,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LB9NKBAM6;
 				INFOPLIST_FILE = SalesTraveling/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HYC.SalesTraveling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -496,12 +496,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LB9NKBAM6;
 				INFOPLIST_FILE = SalesTraveling/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HYC.SalesTraveling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

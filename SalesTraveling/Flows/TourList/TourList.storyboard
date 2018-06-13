@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -112,24 +111,22 @@
                             <constraint firstItem="CJi-0u-ZQW" firstAttribute="trailing" secondItem="cbj-3k-2Gu" secondAttribute="trailing" id="asY-bW-byC"/>
                             <constraint firstItem="CJi-0u-ZQW" firstAttribute="trailing" secondItem="3y4-O0-Aar" secondAttribute="trailing" id="emU-hk-UzA"/>
                             <constraint firstItem="CJi-0u-ZQW" firstAttribute="bottom" secondItem="3y4-O0-Aar" secondAttribute="bottom" id="nL3-Kb-5D3"/>
+                            <constraint firstItem="CJi-0u-ZQW" firstAttribute="top" secondItem="cbj-3k-2Gu" secondAttribute="bottom" constant="-20" id="t2C-en-Foq"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CJi-0u-ZQW"/>
                     </view>
                     <navigationItem key="navigationItem" id="tsn-b8-Myl">
                         <barButtonItem key="backBarButtonItem" title=" " id="j7N-vn-i23"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="stop" id="3as-4v-EOO">
-                            <connections>
-                                <action selector="barButtonItemDoneDidPressed:" destination="5A9-sm-Swq" id="9JV-9L-Orl"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="barButtonItemSortByDistance" destination="37O-U8-Jzr" id="Cdb-oh-974"/>
                         <outlet property="barButtonItemSortByTime" destination="3Lu-qs-Y7c" id="JNa-2H-jfB"/>
+                        <outlet property="barbuttonItemClose" destination="3as-4v-EOO" id="4Y7-rh-k3A"/>
+                        <outlet property="constraintOfLabelRemaingQuotaBottom" destination="t2C-en-Foq" id="aeR-18-dhs"/>
                         <outlet property="labelRemainingQuota" destination="cbj-3k-2Gu" id="gTk-WY-i9f"/>
                         <outlet property="tableView" destination="3y4-O0-Aar" id="h5G-4r-u9p"/>
-                        <segue destination="st8-Tk-dZV" kind="show" identifier="RouteResultViewController" id="b1c-XK-z64"/>
+                        <segue destination="st8-Tk-dZV" kind="show" identifier="TourViewController" id="b1c-XK-z64"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SgZ-2k-ztx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -143,13 +140,18 @@
                         <action selector="barButtonItemSortByDistanceDidPressed:" destination="5A9-sm-Swq" id="kEa-4P-nKb"/>
                     </connections>
                 </barButtonItem>
+                <barButtonItem systemItem="stop" id="3as-4v-EOO">
+                    <connections>
+                        <action selector="barButtonItemDoneDidPressed:" destination="5A9-sm-Swq" id="9JV-9L-Orl"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="1260" y="1413"/>
         </scene>
-        <!--Route Result View Controller-->
+        <!--Tour View Controller-->
         <scene sceneID="UtO-v7-koq">
             <objects>
-                <viewController id="st8-Tk-dZV" customClass="RouteResultViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="st8-Tk-dZV" customClass="TourViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wT8-DT-PoB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -253,14 +255,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="eqk-nb-EOm"/>
                     </view>
-                    <navigationItem key="navigationItem" id="lM3-CN-15N">
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="7Oh-yU-Ytu">
-                            <connections>
-                                <action selector="rightBarButtonItemDidPressed:" destination="st8-Tk-dZV" id="4dZ-mg-STk"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="lM3-CN-15N"/>
                     <connections>
+                        <outlet property="barButtonItemSave" destination="7Oh-yU-Ytu" id="QFd-b0-JHx"/>
                         <outlet property="constriantOfMovableViewHeight" destination="ECG-7G-PgD" id="dh4-LN-iS1"/>
                         <outlet property="labelOfPlacemarks" destination="OE6-zK-XOe" id="3HG-lx-MXd"/>
                         <outlet property="mapView" destination="zM6-Jq-0FX" id="4tx-pK-DnN"/>
@@ -280,6 +277,11 @@
                         <outlet property="delegate" destination="st8-Tk-dZV" id="SZM-N0-ufn"/>
                     </connections>
                 </tapGestureRecognizer>
+                <barButtonItem systemItem="save" id="7Oh-yU-Ytu">
+                    <connections>
+                        <action selector="rightBarButtonItemDidPressed:" destination="st8-Tk-dZV" id="4dZ-mg-STk"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="2176.8000000000002" y="1412.7436281859073"/>
         </scene>
