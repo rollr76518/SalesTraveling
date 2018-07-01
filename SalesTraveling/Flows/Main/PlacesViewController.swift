@@ -212,8 +212,10 @@ extension PlacesViewController: UITableViewDataSource {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath)
 			if let userPlacemark = userPlacemark {
 				cell.textLabel?.text = userPlacemark.name
+				cell.textLabel?.textColor = UIColor.black
 			} else {
 				cell.textLabel?.text = "Tap to select your source".localized
+				cell.textLabel?.textColor = UIColor.gray
 			}
 			return cell
 		}

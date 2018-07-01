@@ -27,12 +27,12 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2u4-Jb-Yfp">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="2u4-Jb-Yfp">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="sourceCell" textLabel="L7R-0R-nxv" style="IBUITableViewCellStyleDefault" id="aM8-PK-7tr">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aM8-PK-7tr" id="F1c-4w-12a">
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
@@ -49,7 +49,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="placeCell" textLabel="rnj-pf-MUy" detailTextLabel="6t9-eg-Pxl" style="IBUITableViewCellStyleSubtitle" id="uv3-9g-6eq">
-                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uv3-9g-6eq" id="NpJ-Wq-kgl">
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
@@ -94,7 +94,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="eyE-K3-QF6">
                         <barButtonItem key="backBarButtonItem" title=" " id="Azt-iq-BaB"/>
-                        <barButtonItem key="rightBarButtonItem" title="Result of caculate" id="thi-mw-c0C">
+                        <barButtonItem key="rightBarButtonItem" title="Result" id="thi-mw-c0C">
                             <connections>
                                 <action selector="barButtonItemResultOfCaculateDidPressed:" destination="BYZ-38-t0r" id="V4S-4W-BqI"/>
                             </connections>
