@@ -19,9 +19,10 @@
 "Sorted by time"="使用時間排序";
 "Tour"="路程";
 "Saved Tours"="已儲存的路程";
-"Result of caculate"="計算結果";
+"Result"="結果";
 "Tour calculate"="路程計算";
 "Add placemark"="新增地標";
 "Placemark numbers should in 2~9"="地標應在2~9個";
 "Prompt"="提示";
 "Save to favorite!"="存到最愛囉！";
+"Tap to select your source"="點擊以選擇起始點";

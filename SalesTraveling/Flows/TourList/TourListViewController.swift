@@ -44,7 +44,7 @@ class TourListViewController: UIViewController {
 		if !isInTabBar {
 			navigationItem.leftBarButtonItem = barButtonItemSortByTime
 			navigationItem.rightBarButtonItem = barButtonItemClose
-			title = "Result of caculate".localized
+			title = "Result".localized
 		} else {
 			perform(#selector(layoutLeftBarButtonItem(_:)), with: barButtonItemEdit, afterDelay: 0.25)
 			title = "Saved Tours".localized

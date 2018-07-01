@@ -33,7 +33,7 @@ class PlacesViewController: UIViewController {
 		layoutLeftBarButtonItem()
 		layoutButtonShowRoutes()
 		setupLocationManager()
-		barButtonItemResultOfCaculate.title = "Result of caculate".localized
+		barButtonItemResultOfCaculate.title = "Result".localized
 		title = "Tour calculate".localized
 		barButtomItemAdd.title = "Add placemark".localized
 	}
@@ -212,6 +212,8 @@ extension PlacesViewController: UITableViewDataSource {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath)
 			if let userPlacemark = userPlacemark {
 				cell.textLabel?.text = userPlacemark.name
+			} else {
+				cell.textLabel?.text = "Tap to select your source".localized
 			}
 			return cell
 		}
