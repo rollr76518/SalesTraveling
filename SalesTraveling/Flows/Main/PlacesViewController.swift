@@ -15,24 +15,15 @@ class PlacesViewController: UIViewController {
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
-	@IBOutlet var barButtonItemCalculate: UIBarButtonItem!
+	@IBOutlet var barButtonItemResultOfCaculate: UIBarButtonItem!
 	@IBOutlet var constraintLabelRemaingQuotaClose: NSLayoutConstraint!
 	@IBOutlet var constraintLabelRemaingQuotaOpen: NSLayoutConstraint!
-	@IBOutlet var constraintToolbarOpen: NSLayoutConstraint!
-	@IBOutlet var constraintToolbarClose: NSLayoutConstraint!
 	@IBOutlet var barButtomItemAdd: UIBarButtonItem!
+	@IBOutlet var toolbar: UIToolbar!
+	
 	lazy var firstFetch: Bool = activeAPIFetch()
 	var userPlacemark: MKPlacemark?
-	var placemarks: [MKPlacemark] = [] {
-		didSet {
-			let shouldShow = placemarks.count >= 2
-			UIView.animate(withDuration: 0.25) {
-				self.constraintToolbarOpen.priority = shouldShow ? .defaultHigh:.defaultLow
-				self.constraintToolbarClose.priority = shouldShow ? .defaultLow:.defaultHigh
-				self.view.layoutIfNeeded()
-			}
-		}
-	}
+	var placemarks: [MKPlacemark] = []
 	let locationManager = CLLocationManager()
 	var regionImages: [UIImage] = []
 	var tourModels: [TourModel] = []
@@ -42,7 +33,7 @@ class PlacesViewController: UIViewController {
 		layoutLeftBarButtonItem()
 		layoutButtonShowRoutes()
 		setupLocationManager()
-		barButtonItemCalculate.title = "Calculate".localized
+		barButtonItemResultOfCaculate.title = "Result of caculate".localized
 		title = "Tour calculate".localized
 		barButtomItemAdd.title = "Add placemark".localized
 	}
@@ -83,8 +74,12 @@ class PlacesViewController: UIViewController {
 		perform(#selector(layoutLeftBarButtonItem), with: nil, afterDelay: 0.25)
 	}
 	
-	@IBAction func buttonShowRoutesDidPressed(_ sender: Any) {
-		showRoutes()
+	@IBAction func barButtonItemResultOfCaculateDidPressed(_ sender: Any) {
+		if placemarks.count < 2 {
+			presentAlert(of: "Placemark numbers should in 2~9".localized)
+			return
+		}
+		showResultOfCaculate()
 	}
 }
 
@@ -106,12 +101,14 @@ private extension PlacesViewController {
 //MARK: - Private func
 fileprivate extension PlacesViewController {
 	@objc func layoutLeftBarButtonItem() {
-		navigationItem.leftBarButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
+		let barButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
+		let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		toolbar.items = [barButtonItem!, space, barButtomItemAdd]
 	}
 	
 	func layoutButtonShowRoutes() {}
 	
-	func showRoutes() {
+	func showResultOfCaculate() {
 		tourModels = []
 		
 		let permutations = AlgorithmManager.permutations(placemarks)
@@ -284,6 +281,20 @@ extension PlacesViewController: UITableViewDelegate {
 			placemarks.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .automatic)
 		}
+	}
+	
+	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		if section == 0 {
+			return nil
+		}
+		return toolbar
+	}
+	
+	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		if section == 0 {
+			return CGFloat.leastNormalMagnitude
+		}
+		return 44
 	}
 }
 

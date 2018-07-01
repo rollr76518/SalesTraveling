@@ -15,7 +15,6 @@
 "API remaining %d/50 times, reset after %d seconds"="API 剩餘 %d/50 次，%d秒後重置";
 "Placemarks"="地標";
 "Source"="出發點";
-"Calculate"="計算";
 "Sorted by distance"="使用距離排序";
 "Sorted by time"="使用時間排序";
 "Tour"="路程";
@@ -23,3 +22,5 @@
 "Result of caculate"="計算結果";
 "Tour calculate"="路程計算";
 "Add placemark"="新增地標";
+"Placemark numbers should in 2~9"="地標應在2~9個";
+"Prompt"="提示";

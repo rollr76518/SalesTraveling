@@ -78,30 +78,15 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="9B3-AI-ee1"/>
                                 </connections>
                             </tableView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bqg-7T-bpV">
-                                <rect key="frame" x="0.0" y="618" width="375" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="usd-a9-2vZ"/>
-                                    <barButtonItem title="Calculate" id="thi-mw-c0C">
-                                        <connections>
-                                            <action selector="buttonShowRoutesDidPressed:" destination="BYZ-38-t0r" id="V4S-4W-BqI"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="2u4-Jb-Yfp" firstAttribute="top" secondItem="gfE-al-oEb" secondAttribute="bottom" id="1x7-c7-eWO"/>
-                            <constraint firstItem="bqg-7T-bpV" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Chw-no-ydG"/>
-                            <constraint firstItem="bqg-7T-bpV" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" priority="250" id="G3m-kI-d5e"/>
                             <constraint firstItem="gfE-al-oEb" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="top" priority="750" id="HTQ-rd-8Ut"/>
                             <constraint firstItem="gfE-al-oEb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="VWD-op-FZQ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2u4-Jb-Yfp" secondAttribute="trailing" id="XBo-LL-B0M"/>
                             <constraint firstItem="2u4-Jb-Yfp" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZvW-eq-Mxo"/>
-                            <constraint firstItem="bqg-7T-bpV" firstAttribute="top" secondItem="2u4-Jb-Yfp" secondAttribute="bottom" id="l7t-vO-05e"/>
-                            <constraint firstItem="bqg-7T-bpV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="bottom" priority="750" id="mDc-Kp-Hh5"/>
-                            <constraint firstItem="bqg-7T-bpV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rEd-nW-sP5"/>
+                            <constraint firstItem="2u4-Jb-Yfp" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="fF0-Ae-IyW"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="gfE-al-oEb" secondAttribute="trailing" id="rwJ-Be-PJ6"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="gfE-al-oEb" secondAttribute="top" priority="250" id="z6e-v5-72P"/>
                         </constraints>
@@ -109,23 +94,22 @@
                     </view>
                     <navigationItem key="navigationItem" id="eyE-K3-QF6">
                         <barButtonItem key="backBarButtonItem" title=" " id="Azt-iq-BaB"/>
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="471-aI-oTy">
+                        <barButtonItem key="rightBarButtonItem" title="Result of caculate" id="thi-mw-c0C">
                             <connections>
-                                <action selector="rightBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
+                                <action selector="barButtonItemResultOfCaculateDidPressed:" destination="BYZ-38-t0r" id="V4S-4W-BqI"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="barButtomItemAdd" destination="471-aI-oTy" id="2fg-Bh-woy"/>
-                        <outlet property="barButtonItemCalculate" destination="thi-mw-c0C" id="1If-EO-EIa"/>
                         <outlet property="barButtonItemDone" destination="s4n-oh-aRc" id="hiQ-lZ-nFz"/>
                         <outlet property="barButtonItemEdit" destination="6BD-DM-gR5" id="qt6-WY-OHV"/>
+                        <outlet property="barButtonItemResultOfCaculate" destination="thi-mw-c0C" id="1If-EO-EIa"/>
                         <outlet property="constraintLabelRemaingQuotaClose" destination="HTQ-rd-8Ut" id="5Qe-1H-QQQ"/>
                         <outlet property="constraintLabelRemaingQuotaOpen" destination="z6e-v5-72P" id="axT-ZH-OZl"/>
-                        <outlet property="constraintToolbarClose" destination="mDc-Kp-Hh5" id="YO5-cD-ecF"/>
-                        <outlet property="constraintToolbarOpen" destination="G3m-kI-d5e" id="afL-mL-aGf"/>
                         <outlet property="labelRemainingQuota" destination="gfE-al-oEb" id="FGN-Ma-SNh"/>
                         <outlet property="tableView" destination="2u4-Jb-Yfp" id="Mzt-Dr-Ocn"/>
+                        <outlet property="toolbar" destination="bqg-7T-bpV" id="g2D-RY-VNO"/>
                         <segue destination="9qX-1u-wGR" kind="presentation" identifier="LocateViewController" id="HzF-X0-wfA"/>
                         <segue destination="bY9-7S-bmG" kind="presentation" identifier="TourListViewController" id="Acq-5e-2wv"/>
                     </connections>
@@ -141,6 +125,18 @@
                         <action selector="leftBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="SSd-S4-VaD"/>
                     </connections>
                 </barButtonItem>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="bqg-7T-bpV">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <items>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="usd-a9-2vZ"/>
+                        <barButtonItem title="Item" id="471-aI-oTy">
+                            <connections>
+                                <action selector="rightBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
             </objects>
             <point key="canvasLocation" x="-380" y="976"/>
         </scene>

@@ -15,7 +15,6 @@
 "API remaining %d/50 times, reset after %d seconds"="API remaining %d/50 times, reset after %d seconds";
 "Placemarks"="Placemarks";
 "Source"="Source";
-"Calculate"="Calculate";
 "Sorted by distance"="Sorted by distance";
 "Sorted by time"="Sorted by time";
 "Tour"="Tour";
@@ -23,3 +22,5 @@
 "Result of caculate"="Result of caculate";
 "Tour calculate"="Tour calculate";
 "Add placemark"="Add placemark";
+"Placemark numbers should in 2~9"="Placemark numbers should in 2~9";
+"Prompt"="Prompt";
