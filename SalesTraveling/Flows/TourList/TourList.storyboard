@@ -120,9 +120,11 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="barButtonItemClose" destination="3as-4v-EOO" id="4Y7-rh-k3A"/>
+                        <outlet property="barButtonItemDone" destination="hRs-6B-Yi9" id="Ms9-6u-WvP"/>
+                        <outlet property="barButtonItemEdit" destination="4xS-Sk-2R8" id="g8T-DT-rEC"/>
                         <outlet property="barButtonItemSortByDistance" destination="37O-U8-Jzr" id="Cdb-oh-974"/>
                         <outlet property="barButtonItemSortByTime" destination="3Lu-qs-Y7c" id="JNa-2H-jfB"/>
-                        <outlet property="barbuttonItemClose" destination="3as-4v-EOO" id="4Y7-rh-k3A"/>
                         <outlet property="constraintOfLabelRemaingQuotaBottom" destination="t2C-en-Foq" id="aeR-18-dhs"/>
                         <outlet property="labelRemainingQuota" destination="cbj-3k-2Gu" id="gTk-WY-i9f"/>
                         <outlet property="tableView" destination="3y4-O0-Aar" id="h5G-4r-u9p"/>
@@ -143,6 +145,16 @@
                 <barButtonItem systemItem="stop" id="3as-4v-EOO">
                     <connections>
                         <action selector="barButtonItemDoneDidPressed:" destination="5A9-sm-Swq" id="9JV-9L-Orl"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem style="plain" systemItem="done" id="hRs-6B-Yi9">
+                    <connections>
+                        <action selector="barButtonItemEditAndDoneDidPressed:" destination="5A9-sm-Swq" id="Vgh-of-Tc2"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem style="plain" systemItem="edit" id="4xS-Sk-2R8">
+                    <connections>
+                        <action selector="barButtonItemEditAndDoneDidPressed:" destination="5A9-sm-Swq" id="ncd-4b-NNy"/>
                     </connections>
                 </barButtonItem>
             </objects>

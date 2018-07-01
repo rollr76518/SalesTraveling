@@ -18,13 +18,7 @@ class TourListViewController: UIViewController {
 			tourModelsSorted = tourModels.sorted()
 		}
 	}
-	private var tourModelsSorted: [TourModel]! {
-		didSet {
-			if isViewLoaded {
-				tableView.reloadData()
-			}
-		}
-	}
+	private var tourModelsSorted: [TourModel]!
 	@IBOutlet var labelRemainingQuota: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet var barButtonItemSortByDistance: UIBarButtonItem! {
@@ -37,7 +31,9 @@ class TourListViewController: UIViewController {
 			barButtonItemSortByTime.title = "Sorted by time".localized
 		}
 	}
-	@IBOutlet var barbuttonItemClose: UIBarButtonItem!
+	@IBOutlet var barButtonItemClose: UIBarButtonItem!
+	@IBOutlet var barButtonItemDone: UIBarButtonItem!
+	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
 	@IBOutlet var constraintOfLabelRemaingQuotaBottom: NSLayoutConstraint!
 	
 	override func viewDidLoad() {
@@ -47,12 +43,19 @@ class TourListViewController: UIViewController {
 		
 		if !isInTabBar {
 			navigationItem.leftBarButtonItem = barButtonItemSortByTime
-			navigationItem.rightBarButtonItem = barbuttonItemClose
+			navigationItem.rightBarButtonItem = barButtonItemClose
 			title = "Result of caculate".localized
 		} else {
+			perform(#selector(layoutLeftBarButtonItem(_:)), with: barButtonItemEdit, afterDelay: 0.25)
 			title = "Saved Tours".localized
 			constraintOfLabelRemaingQuotaBottom.constant = 0
 		}
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		tableView.reloadData()
 	}
 	
 	// MARK: - Navigation
@@ -70,6 +73,7 @@ class TourListViewController: UIViewController {
 	
 	@IBAction func barButtonItemSortByDistanceDidPressed(_ sender: UIBarButtonItem) {
 		tourModelsSorted = tourModels.sorted()
+		tableView.reloadData()
 		perform(#selector(layoutLeftBarButtonItem(_:)), with: barButtonItemSortByTime, afterDelay: 0.25)
 	}
 	
@@ -77,7 +81,14 @@ class TourListViewController: UIViewController {
 		tourModelsSorted = tourModels.sorted(by: { (lhs, rhs) -> Bool in
 			return lhs.sumOfExpectedTravelTime < rhs.sumOfExpectedTravelTime
 		})
+		tableView.reloadData()
 		perform(#selector(layoutLeftBarButtonItem(_:)), with: barButtonItemSortByDistance, afterDelay: 0.25)
+	}
+	
+	@IBAction func barButtonItemEditAndDoneDidPressed(_ sender: UIBarButtonItem) {
+		tableView.setEditing(!tableView.isEditing, animated: true)
+		let barButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
+		perform(#selector(layoutLeftBarButtonItem(_:)), with: barButtonItem, afterDelay: 0.25)
 	}
 }
 
@@ -103,17 +114,10 @@ extension TourListViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let tourModel = tourModelsSorted[indexPath.row]
 		
-//		if #available(iOS 11, *) {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "ios11", for: indexPath)
-			cell.textLabel?.text = tourModel.routeInformation
-			cell.detailTextLabel?.text = tourModel.stopInformation
-			return cell
-//		} else {
-//			let cell = tableView.dequeueReusableCell(withIdentifier: "ios10", for: indexPath) as! DynamicHeightTableViewCell
-//			cell.labelTitle.text = tourModel.routeInformation
-//			cell.labelSubtitle.text = tourModel.stopInformation
-//			return cell
-//		}
+		let cell = tableView.dequeueReusableCell(withIdentifier: "ios11", for: indexPath)
+		cell.textLabel?.text = tourModel.routeInformation
+		cell.detailTextLabel?.text = tourModel.stopInformation
+		return cell
 	}
 }
 
@@ -133,5 +137,22 @@ extension TourListViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return UITableViewAutomaticDimension
+	}
+	
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return true
+	}
+	
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+		return .delete
+	}
+	
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			let tourModel = tourModelsSorted[indexPath.row]
+			DataManager.shared.delete(tourModel: tourModel)
+			tourModels = DataManager.shared.savedTours()
+			tableView.deleteRows(at: [indexPath], with: .automatic)
+		}
 	}
 }

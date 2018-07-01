@@ -37,8 +37,11 @@ extension DataManager {
 			let directions = try? JSONDecoder().decode(DirectionsModel.self, from: data) else { return nil }
 		return directions
 	}
-	
-	func save(tourModel: TourModel) {
+}
+
+// MARK: - TourModel
+extension DataManager {
+	func save(tourModel: TourModel) throws {
 		var favoriteTours = self.savedTours()
 		favoriteTours.append(tourModel)
 		do {
@@ -46,7 +49,30 @@ extension DataManager {
 			let key = UserDefaults.Keys.SavedTours
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
-			print("Cant save tourModel with \(error)")
+			throw error
+		}
+	}
+	
+	func save(tourModels: [TourModel]) throws {
+		do {
+			for tourModel in tourModels {
+				try save(tourModel: tourModel)
+			}
+		} catch {
+			throw error
+		}
+	}
+	
+	func delete(tourModel: TourModel) {
+		let newTours = self.savedTours().filter { (oldTourModel) -> Bool in
+			return oldTourModel != tourModel
+		}
+		do {
+			let data = try JSONEncoder().encode(newTours)
+			let key = UserDefaults.Keys.SavedTours
+			UserDefaults.standard.set(data, forKey: key)
+		} catch {
+			print("Cant delete tourModel with \(error)")
 		}
 	}
 	

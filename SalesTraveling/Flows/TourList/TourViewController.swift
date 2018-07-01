@@ -12,7 +12,6 @@ import MapKit
 //https://stackoverflow.com/questions/37967555/how-to-mimic-ios-10-maps-bottom-sheet
 class TourViewController: UIViewController {
 	
-	
 	let toppestY: CGFloat = 80.0
 	let lowestY = (UIScreen.main.bounds.height - 80)
 	
@@ -37,7 +36,12 @@ class TourViewController: UIViewController {
 	
 	@IBOutlet var barButtonItemSave: UIBarButtonItem!
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		DataManager.shared.save(tourModel: tourModel)
+		do {
+			try DataManager.shared.save(tourModel: tourModel)
+			presentAlert(of: "Save to favorite!".localized)
+		} catch {
+			print("Cant save tourModel with \(error)")
+		}
 	}
 	
 	override func viewDidLoad() {
