@@ -104,7 +104,6 @@ extension LocateViewController: MKMapViewDelegate {
 		let reuseId = "pin"
 		var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
 		pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-		pinView?.pinTintColor = .orange
 		pinView?.canShowCallout = true
 		pinView?.animatesDrop = false
 		pinView?.isDraggable = true

@@ -103,7 +103,7 @@ fileprivate extension PlacesViewController {
 	@objc func layoutLeftBarButtonItem() {
 		let barButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
 		let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		toolbar.items = [barButtonItem!, space, barButtomItemAdd]
+		toolbar.items = [barButtonItem!, space, barButtomItemAdd, space, barButtonItemResultOfCaculate]
 	}
 	
 	func layoutButtonShowRoutes() {}
@@ -209,13 +209,16 @@ extension PlacesViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if indexPath.section == 0 {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath)
+			let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
+			cell.imageView?.image = nil
 			if let userPlacemark = userPlacemark {
-				cell.textLabel?.text = userPlacemark.name
-				cell.textLabel?.textColor = UIColor.black
+				cell.textLabel?.text = "Current location".localized
+				cell.textLabel?.textColor = UIColor.brand
+				cell.detailTextLabel?.text = userPlacemark.title
 			} else {
 				cell.textLabel?.text = "Tap to select your source".localized
 				cell.textLabel?.textColor = UIColor.gray
+				cell.detailTextLabel?.text = nil
 			}
 			return cell
 		}

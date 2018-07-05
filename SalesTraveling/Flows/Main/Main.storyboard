@@ -94,11 +94,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="eyE-K3-QF6">
                         <barButtonItem key="backBarButtonItem" title=" " id="Azt-iq-BaB"/>
-                        <barButtonItem key="rightBarButtonItem" title="Result" id="thi-mw-c0C">
-                            <connections>
-                                <action selector="barButtonItemResultOfCaculateDidPressed:" destination="BYZ-38-t0r" id="V4S-4W-BqI"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="barButtomItemAdd" destination="471-aI-oTy" id="2fg-Bh-woy"/>
@@ -133,6 +128,12 @@
                         <barButtonItem title="Item" id="471-aI-oTy">
                             <connections>
                                 <action selector="rightBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="3vL-mM-QCL"/>
+                        <barButtonItem title="Result" id="thi-mw-c0C">
+                            <connections>
+                                <action selector="barButtonItemResultOfCaculateDidPressed:" destination="BYZ-38-t0r" id="V4S-4W-BqI"/>
                             </connections>
                         </barButtonItem>
                     </items>

@@ -106,7 +106,6 @@
                         <constraints>
                             <constraint firstItem="cbj-3k-2Gu" firstAttribute="leading" secondItem="CJi-0u-ZQW" secondAttribute="leading" id="0mS-9o-wb6"/>
                             <constraint firstItem="3y4-O0-Aar" firstAttribute="top" secondItem="cbj-3k-2Gu" secondAttribute="bottom" id="NYi-1N-9vI"/>
-                            <constraint firstItem="cbj-3k-2Gu" firstAttribute="top" secondItem="CJi-0u-ZQW" secondAttribute="top" id="OZY-0o-WfI"/>
                             <constraint firstItem="3y4-O0-Aar" firstAttribute="leading" secondItem="CJi-0u-ZQW" secondAttribute="leading" id="YpV-y1-p17"/>
                             <constraint firstItem="CJi-0u-ZQW" firstAttribute="trailing" secondItem="cbj-3k-2Gu" secondAttribute="trailing" id="asY-bW-byC"/>
                             <constraint firstItem="CJi-0u-ZQW" firstAttribute="trailing" secondItem="3y4-O0-Aar" secondAttribute="trailing" id="emU-hk-UzA"/>
