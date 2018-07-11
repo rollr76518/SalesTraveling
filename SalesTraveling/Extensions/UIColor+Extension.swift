@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIColor {
-	static let brand = #colorLiteral(red: 0.1764705882, green: 0.168627451, blue: 0.3411764706, alpha: 1)
+	static let brand = #colorLiteral(red: 0.7882352941, green: 0.2784313725, blue: 0.01960784314, alpha: 1) //(201, 71, 05)
 }
 
 extension UIColor {
