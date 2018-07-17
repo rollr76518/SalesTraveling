@@ -28,7 +28,15 @@ class LocateViewController: UIViewController {
 		super.viewDidLoad()
 		
 		setupUISearchController()
-		handleDefaultPlacemark()
+	}
+	
+	override func viewDidAppear(_ animated: Bool) {
+		if let tuple = tuple, let placemark = tuple.1 {
+			handleDefaultPlacemark(placemark: placemark)
+		} else {
+			//直接跑到 SearchBar 
+			searchController.searchBar.becomeFirstResponder()
+		}
 	}
 	
 	@IBAction func barButtonItemCloseDidPressed(_ sender: Any) {
@@ -42,11 +50,9 @@ class LocateViewController: UIViewController {
 		}
 	}
 	
-	func handleDefaultPlacemark() {
-		if let tuple = tuple, let placemark = tuple.1 {
-			MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
-			addAnnotation(placemark.coordinate)
-		}
+	func handleDefaultPlacemark(placemark: MKPlacemark) {
+		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
+		addAnnotation(placemark.coordinate)
 	}
 }
 
