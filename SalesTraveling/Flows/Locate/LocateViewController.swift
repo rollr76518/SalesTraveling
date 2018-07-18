@@ -27,14 +27,14 @@ class LocateViewController: UIViewController {
 		super.viewDidLoad()
 		
 		setupUISearchController()
+		handleDefaultPlacemark()
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
-		if let tuple = tuple, let placemark = tuple.1 {
-			handleDefaultPlacemark(placemark: placemark)
-		} else {
-			//直接跑到 SearchBar 
-			searchController.searchBar.becomeFirstResponder()
+		super.viewDidAppear(animated)
+
+		if tuple == nil {
+			searchController.isActive = true
 		}
 	}
 	
@@ -51,9 +51,11 @@ class LocateViewController: UIViewController {
 		}
 	}
 	
-	func handleDefaultPlacemark(placemark: MKPlacemark) {
-		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
-		addAnnotation(placemark.coordinate)
+	func handleDefaultPlacemark() {
+		if let tuple = tuple, let placemark = tuple.1 {
+			MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
+			addAnnotation(placemark.coordinate)
+		}
 	}
 }
 
@@ -73,7 +75,8 @@ fileprivate extension LocateViewController {
 	func setupUISearchController() {
 		searchController = UISearchController(searchResultsController: addressResultTableViewController)
 		searchController.searchResultsUpdater = addressResultTableViewController
-		
+		searchController.delegate = self
+
 		let searchBar = searchController.searchBar
 		searchBar.sizeToFit()
 		searchBar.placeholder = "Search".localized
@@ -96,7 +99,7 @@ fileprivate extension LocateViewController {
 					self?.mapView.selectAnnotation(newAnnotation, animated: false)
 				}
 			case .failure(let error):
-				self?.presentAlert(of: "reverseCoordinate: \(error)")
+				self?.presentAlert(of: "reverseCoordinate: \(error.localizedDescription)")
 			}
 		})
 	}
@@ -153,6 +156,26 @@ extension LocateViewController: MKMapViewDelegate {
 	}
 }
 
+//MARK: - UISearchControllerDelegate
+extension LocateViewController: UISearchControllerDelegate {
+	func didPresentSearchController(_ searchController: UISearchController) {
+		if tuple == nil {
+			UIView.animate(withDuration: 1.0, animations: {
+				//
+			}) { (finished) in
+				self.searchController.searchBar.becomeFirstResponder()
+			}
+		}
+	}
+}
+
+//MARK: - UIGestureRecognizerDelegate
+extension LocateViewController: UIGestureRecognizerDelegate {
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+		return !(touch.view is MKPinAnnotationView)
+	}
+}
+
 //MARK: - AddressResultTableViewControllerProtocol
 extension LocateViewController: AddressResultTableViewControllerProtocol {
 	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
@@ -167,9 +190,3 @@ extension LocateViewController: AddressResultTableViewControllerProtocol {
 	}
 }
 
-//MARK: - UIGestureRecognizerDelegate
-extension LocateViewController: UIGestureRecognizerDelegate {
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-		return !(touch.view is MKPinAnnotationView)
-	}
-}

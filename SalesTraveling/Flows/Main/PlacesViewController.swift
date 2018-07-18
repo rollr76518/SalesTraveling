@@ -312,7 +312,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { [weak self] (status) in
 			switch status {
 			case .failure(let error):
-				self?.presentAlert(of: "Can't calculate route with \(error)")
+				self?.presentAlert(of: "Can't calculate route with \(error.localizedDescription)")
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
 				self?.placemarks.append(placemark)
@@ -335,7 +335,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { [weak self] (status) in
 				switch status {
 				case .failure(let error):
-					self?.presentAlert(of: "Can't calculate route with \(error)")
+					self?.presentAlert(of: "Can't calculate route with \(error.localizedDescription)")
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					self?.userPlacemark = placemark
@@ -355,7 +355,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: userPlacemark, completeBlock: { [weak self] (status) in
 				switch status {
 				case .failure(let error):
-					self?.presentAlert(of: "Can't calculate route with \(error)")
+					self?.presentAlert(of: "Can't calculate route with \(error.localizedDescription)")
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					self?.placemarks[indexPath.row] = placemark
