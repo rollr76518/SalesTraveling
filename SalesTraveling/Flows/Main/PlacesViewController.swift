@@ -185,7 +185,7 @@ extension PlacesViewController: CLLocationManagerDelegate {
 	}
 
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		presentAlert(of: "manager didFailWithError: \(error)")
+		presentAlert(of: "manager didFailWithError: \(error.localizedDescription)")
 	}
 }
 

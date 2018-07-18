@@ -58,7 +58,7 @@ extension AddressResultTableViewController: UISearchResultsUpdating {
 			case .success(let response):
 				self?.matchingItems = response.mapItems
 			case .failure(let error):
-				print("fetch local search \(error)")
+				print("fetch local search \(error.localizedDescription)")
 				self?.matchingItems = []
 			}
 			self?.tableView.reloadData()

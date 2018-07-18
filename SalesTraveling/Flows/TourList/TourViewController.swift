@@ -40,7 +40,7 @@ class TourViewController: UIViewController {
 			try DataManager.shared.save(tourModel: tourModel)
 			presentAlert(of: "Save to favorite!".localized)
 		} catch {
-			print("Cant save tourModel with \(error)")
+			print("Cant save tourModel with \(error.localizedDescription)")
 		}
 	}
 	
