@@ -19,7 +19,6 @@ class LocateViewController: UIViewController {
 	var searchController: UISearchController!
 	var delegate: LocateViewControllerProtocol?
 	var selectedPlacemark: MKPlacemark?
-	var tappedPoint: CGPoint?
 	var tuple: (IndexPath, MKPlacemark?)?
 	
 	@IBOutlet weak var mapView: MKMapView!
@@ -37,8 +36,10 @@ class LocateViewController: UIViewController {
 		}
 	}
 	@IBAction func tapMap(_ sender: Any) {
-		if let recognizer = sender as? UITapGestureRecognizer {
-			tappedPoint = recognizer.location(in: view)
+		if let recognizer = sender as? UILongPressGestureRecognizer {
+			let tappedPoint = recognizer.location(in: view)
+			let coordinateTapped = mapView.convert(tappedPoint, toCoordinateFrom: view)
+			addAnnotation(coordinateTapped)
 		}
 	}
 	
@@ -142,14 +143,6 @@ extension LocateViewController: MKMapViewDelegate {
 					delegate.locateViewController(self, didSelect: selectedPlacemark, inRegion: image)
 				})
 			}
-		}
-	}
-	
-	func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-		if let point = tappedPoint {
-			let coordinateTapped = mapView.convert(point, toCoordinateFrom: self.view)
-			addAnnotation(coordinateTapped)
-			tappedPoint = nil
 		}
 	}
 }
