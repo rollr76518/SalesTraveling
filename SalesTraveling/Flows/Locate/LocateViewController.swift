@@ -43,11 +43,19 @@ class LocateViewController: UIViewController {
 			navigationController.dismiss(animated: true, completion: nil)
 		}
 	}
-	@IBAction func tapMap(_ sender: Any) {
+	@IBAction func longPressOnMap(_ sender: Any) {
 		if let recognizer = sender as? UILongPressGestureRecognizer {
-			let tappedPoint = recognizer.location(in: view)
-			let coordinateTapped = mapView.convert(tappedPoint, toCoordinateFrom: view)
-			addAnnotation(coordinateTapped)
+			switch recognizer.state {
+			case .began:
+				let tappedPoint = recognizer.location(in: view)
+				let coordinateTapped = mapView.convert(tappedPoint, toCoordinateFrom: view)
+				addAnnotation(coordinateTapped)
+			case .changed,
+				 .ended,
+				 .failed,
+				 .possible,
+				 .cancelled: break
+			}
 		}
 	}
 	
