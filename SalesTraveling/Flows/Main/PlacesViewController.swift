@@ -15,11 +15,20 @@ class PlacesViewController: UIViewController {
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
-	@IBOutlet var barButtonItemResultOfCaculate: UIBarButtonItem!
+	@IBOutlet var barButtonItemResultOfCaculate: UIBarButtonItem! {
+		didSet {
+			barButtonItemResultOfCaculate.title = "Result".localized
+			navigationItem.rightBarButtonItem = barButtonItemResultOfCaculate
+		}
+	}
 	@IBOutlet var constraintLabelRemaingQuotaClose: NSLayoutConstraint!
 	@IBOutlet var constraintLabelRemaingQuotaOpen: NSLayoutConstraint!
-	@IBOutlet var barButtomItemAdd: UIBarButtonItem!
 	@IBOutlet var toolbar: UIToolbar!
+	@IBOutlet var searchBar: UISearchBar! {
+		didSet {
+			searchBar.placeholder = "Where do you want to go?".localized
+		}
+	}
 	
 	lazy var firstFetch: Bool = activeAPIFetch()
 	var userPlacemark: MKPlacemark?
@@ -33,9 +42,7 @@ class PlacesViewController: UIViewController {
 		layoutLeftBarButtonItem()
 		layoutButtonShowRoutes()
 		setupLocationManager()
-		barButtonItemResultOfCaculate.title = "Result".localized
-		title = "Tour calculate".localized
-		barButtomItemAdd.title = "Add placemark".localized
+		title = "Tour calculate".localized		
 	}
 	
 	// MARK: - Navigation
@@ -58,17 +65,6 @@ class PlacesViewController: UIViewController {
 	}
 	
 	//MARK: - IBActions
-	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		let count = timesOfRequestShouldCalledWhenAddNewPlacemark
-		
-		if CountdownManager.shared.canCallRequest(count) {
-			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
-		}
-		else {
-			presentAlert(of: "API Request is reached limited".localized)
-		}
-	}
-	
 	@IBAction func leftBarButtonItemDidPressed(_ sender: Any) {
 		tableView.setEditing(!tableView.isEditing, animated: true)
 		perform(#selector(layoutLeftBarButtonItem), with: nil, afterDelay: 0.25)
@@ -76,7 +72,7 @@ class PlacesViewController: UIViewController {
 	
 	@IBAction func barButtonItemResultOfCaculateDidPressed(_ sender: Any) {
 		if placemarks.count < 2 {
-			presentAlert(of: "Placemark numbers should in 2~9".localized)
+			presentAlert(of: "Destinations should be in 2~9".localized)
 			return
 		}
 		showResultOfCaculate()
@@ -102,8 +98,7 @@ private extension PlacesViewController {
 fileprivate extension PlacesViewController {
 	@objc func layoutLeftBarButtonItem() {
 		let barButtonItem = tableView.isEditing ? barButtonItemDone:barButtonItemEdit
-		let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		toolbar.items = [barButtonItem!, space, barButtomItemAdd, space, barButtonItemResultOfCaculate]
+		navigationItem.leftBarButtonItem = barButtonItem!
 	}
 	
 	func layoutButtonShowRoutes() {}
@@ -240,7 +235,7 @@ extension PlacesViewController: UITableViewDataSource {
 			return "Source".localized
 		}
 		
-		return "Placemarks".localized
+		return "Destinations".localized
 	}
 }
 
@@ -289,14 +284,14 @@ extension PlacesViewController: UITableViewDelegate {
 			tableView.deleteRows(at: [indexPath], with: .automatic)
 		}
 	}
-	
+
 	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 		if section == 0 {
 			return nil
 		}
-		return toolbar
+		return searchBar
 	}
-	
+
 	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 		if section == 0 {
 			return CGFloat.leastNormalMagnitude
@@ -371,5 +366,20 @@ extension PlacesViewController: LocateViewControllerProtocol {
 				HYCLoadingView.shared.dismiss()
 			})
 		}
+	}
+}
+
+extension PlacesViewController: UISearchBarDelegate {
+	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+		let count = timesOfRequestShouldCalledWhenAddNewPlacemark
+		
+		if CountdownManager.shared.canCallRequest(count) {
+			performSegue(withIdentifier: LocateViewController.identifier, sender: nil)
+		}
+		else {
+			presentAlert(of: "API Request is reached limited".localized)
+		}
+		
+		return false
 	}
 }

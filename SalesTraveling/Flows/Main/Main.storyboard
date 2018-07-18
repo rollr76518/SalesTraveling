@@ -96,13 +96,13 @@
                         <barButtonItem key="backBarButtonItem" title=" " id="Azt-iq-BaB"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="barButtomItemAdd" destination="471-aI-oTy" id="2fg-Bh-woy"/>
                         <outlet property="barButtonItemDone" destination="s4n-oh-aRc" id="hiQ-lZ-nFz"/>
                         <outlet property="barButtonItemEdit" destination="6BD-DM-gR5" id="qt6-WY-OHV"/>
                         <outlet property="barButtonItemResultOfCaculate" destination="thi-mw-c0C" id="1If-EO-EIa"/>
                         <outlet property="constraintLabelRemaingQuotaClose" destination="HTQ-rd-8Ut" id="5Qe-1H-QQQ"/>
                         <outlet property="constraintLabelRemaingQuotaOpen" destination="z6e-v5-72P" id="axT-ZH-OZl"/>
                         <outlet property="labelRemainingQuota" destination="gfE-al-oEb" id="FGN-Ma-SNh"/>
+                        <outlet property="searchBar" destination="jCR-qC-UwH" id="jcA-M3-Zz8"/>
                         <outlet property="tableView" destination="2u4-Jb-Yfp" id="Mzt-Dr-Ocn"/>
                         <outlet property="toolbar" destination="bqg-7T-bpV" id="g2D-RY-VNO"/>
                         <segue destination="9qX-1u-wGR" kind="presentation" identifier="LocateViewController" id="HzF-X0-wfA"/>
@@ -120,24 +120,24 @@
                         <action selector="leftBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="SSd-S4-VaD"/>
                     </connections>
                 </barButtonItem>
+                <barButtonItem title="Result" id="thi-mw-c0C">
+                    <connections>
+                        <action selector="barButtonItemResultOfCaculateDidPressed:" destination="BYZ-38-t0r" id="V4S-4W-BqI"/>
+                    </connections>
+                </barButtonItem>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="bqg-7T-bpV">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <items>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="usd-a9-2vZ"/>
-                        <barButtonItem title="Item" id="471-aI-oTy">
-                            <connections>
-                                <action selector="rightBarButtonItemDidPressed:" destination="BYZ-38-t0r" id="QXE-b7-xLw"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="3vL-mM-QCL"/>
-                        <barButtonItem title="Result" id="thi-mw-c0C">
-                            <connections>
-                                <action selector="barButtonItemResultOfCaculateDidPressed:" destination="BYZ-38-t0r" id="V4S-4W-BqI"/>
-                            </connections>
-                        </barButtonItem>
-                    </items>
+                    <items/>
                 </toolbar>
+                <searchBar contentMode="redraw" id="jCR-qC-UwH">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="BYZ-38-t0r" id="5fJ-C1-L6u"/>
+                    </connections>
+                </searchBar>
             </objects>
             <point key="canvasLocation" x="-388" y="975"/>
         </scene>
