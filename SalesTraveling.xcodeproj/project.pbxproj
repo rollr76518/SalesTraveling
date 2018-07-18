@@ -25,6 +25,7 @@
 		9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */; };
 		945352B61FBC9F7A00176195 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 945352B51FBC9F7A00176195 /* Main.storyboard */; };
 		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
+		9474E21520FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift */; };
 		9481FCE020A7241200F8E842 /* HYCLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9481FCDF20A7241200F8E842 /* HYCLoadingView.swift */; };
 		94B2394820BEF32C00AE0E03 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */; };
 		94B2394A20BEF33A00AE0E03 /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B2394920BEF33A00AE0E03 /* TabBar.storyboard */; };
@@ -66,6 +67,7 @@
 		9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownManager.swift; sourceTree = "<group>"; };
 		945352B51FBC9F7A00176195 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extension.swift"; sourceTree = "<group>"; };
 		9481FCDF20A7241200F8E842 /* HYCLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HYCLoadingView.swift; sourceTree = "<group>"; };
 		94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		94B2394920BEF33A00AE0E03 /* TabBar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabBar.storyboard; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				94D00FFB1FC9B5850003E979 /* UIView+Extension.swift */,
 				94E2D10B1FC7019900F1FD36 /* UIViewController+Extension.swift */,
 				94D010031FC9D5490003E979 /* UserDefaults+Extension.swift */,
+				9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */,
 				945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */,
 				7EFBA27D1F9C55490011007E /* AddressResultTableViewController.swift in Sources */,
+				9474E21520FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

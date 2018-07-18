@@ -55,6 +55,9 @@ class LocateViewController: UIViewController {
 		if let tuple = tuple, let placemark = tuple.1 {
 			MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
 			addAnnotation(placemark.coordinate)
+		} else {
+		 	let center = MapMananger().defaultMapCenter
+			MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: center)
 		}
 	}
 }
@@ -102,6 +105,8 @@ fileprivate extension LocateViewController {
 				self?.presentAlert(of: "reverseCoordinate: \(error.localizedDescription)")
 			}
 		})
+		
+		MapMananger().defaultMapCenter = coordinate
 	}
 }
 
@@ -187,6 +192,7 @@ extension LocateViewController: AddressResultTableViewControllerProtocol {
 		mapView.selectAnnotation(annotation, animated: true)
 		
 		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
+		MapMananger().defaultMapCenter = placemark.coordinate
 	}
 }
 
