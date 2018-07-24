@@ -222,6 +222,7 @@ extension PlacesViewController: UITableViewDataSource {
 		
 		let placemark = placemarks[indexPath.row]
 		cell.textLabel?.text = placemark.name
+		cell.textLabel?.textColor = UIColor.black
 		cell.detailTextLabel?.text = placemark.title
 		cell.imageView?.image = regionImages[indexPath.row]
 		cell.imageView?.layer.cornerRadius = 10.0
