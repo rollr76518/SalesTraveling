@@ -17,14 +17,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		
-		UINavigationBar.appearance().tintColor = UIColor.white
-		UINavigationBar.appearance().barTintColor = UIColor.brand
+		UINavigationBar.appearance().tintColor = .white
+		UINavigationBar.appearance().barTintColor = .brand
 		UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
 		UINavigationBar.appearance().isTranslucent = true
-		UIToolbar.appearance().tintColor = UIColor.brand
-		UITabBar.appearance().tintColor = UIColor.brand
-		MKPinAnnotationView.appearance().tintColor = UIColor.brand
-		MKPinAnnotationView.appearance().pinTintColor = UIColor.brand
+		UIToolbar.appearance().tintColor = .brand
+		UITabBar.appearance().tintColor = .brand
+		MKPinAnnotationView.appearance().tintColor = .brand
+		MKPinAnnotationView.appearance().pinTintColor = .brand
+		UITextField.appearance().tintColor = .brand
 		
 		return true
 	}
