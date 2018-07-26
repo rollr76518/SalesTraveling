@@ -29,3 +29,5 @@
 "Tap to select your source"="點擊以選擇起始點";
 "Current location"="目前位置";
 "Where do you want to go?"="你想要去哪裡？";
+"Can't calculate route with %@"="因%@無法計算路徑";
+"Can't reverse coordinate with %@"="因%@無法反轉座標";

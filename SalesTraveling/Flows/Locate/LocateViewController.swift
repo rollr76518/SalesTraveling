@@ -110,7 +110,8 @@ fileprivate extension LocateViewController {
 					self?.mapView.selectAnnotation(newAnnotation, animated: false)
 				}
 			case .failure(let error):
-				self?.presentAlert(of: "reverseCoordinate: \(error.localizedDescription)")
+				let errorMessage = String.localizedStringWithFormat("Can't reverse coordinate with %@", error.localizedDescription)
+				self?.presentAlert(of: errorMessage)
 			}
 		})
 		

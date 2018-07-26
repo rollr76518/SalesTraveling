@@ -185,10 +185,10 @@ extension PlacesViewController: CLLocationManagerDelegate {
 	}
 
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		presentAlert(of: "manager didFailWithError: \(error.localizedDescription)")
+		print("manager didFailWithError: \(error.localizedDescription)")
 	}
 }
-
+              
 //MARK: - UITableViewDataSource
 extension PlacesViewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
@@ -313,7 +313,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { [weak self] (status) in
 			switch status {
 			case .failure(let error):
-				self?.presentAlert(of: "Can't calculate route with \(error.localizedDescription)")
+				let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
+				self?.presentAlert(of: errorMessage)
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
 				self?.placemarks.append(placemark)
@@ -327,7 +328,6 @@ extension PlacesViewController: LocateViewControllerProtocol {
 	
 	func locateViewController(_ vc: LocateViewController, change placemark: MKPlacemark, at indexPath: IndexPath, inRegion image: UIImage) {
 		
-		
 		HYCLoadingView.shared.show()
 
 		if indexPath.section == 0 {
@@ -336,7 +336,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { [weak self] (status) in
 				switch status {
 				case .failure(let error):
-					self?.presentAlert(of: "Can't calculate route with \(error.localizedDescription)")
+					let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
+					self?.presentAlert(of: errorMessage)
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					self?.userPlacemark = placemark
@@ -356,7 +357,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: userPlacemark, completeBlock: { [weak self] (status) in
 				switch status {
 				case .failure(let error):
-					self?.presentAlert(of: "Can't calculate route with \(error.localizedDescription)")
+					let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
+					self?.presentAlert(of: errorMessage)
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					self?.placemarks[indexPath.row] = placemark

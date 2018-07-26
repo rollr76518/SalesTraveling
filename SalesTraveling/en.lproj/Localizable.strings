@@ -29,3 +29,5 @@
 "Tap to select your source"="Tap to select your source";
 "Current location"="Current location";
 "Where do you want to go?"="Where do you want to go?";
+"Can't calculate route with %@"="Can't calculate route with %@";
+"Can't reverse coordinate with %@"="Can't reverse coordinate with %@";
