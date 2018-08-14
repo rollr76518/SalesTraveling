@@ -29,6 +29,16 @@ class TourViewController: UIViewController {
 		return routes.map{ $0.polyline }
 	}
 	
+	var isOpen: Bool = false {
+		didSet  {
+			if isOpen {
+				openMovableView()
+			} else {
+				closeMovableView()
+			}
+		}
+	}
+	
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
 	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
@@ -64,12 +74,7 @@ class TourViewController: UIViewController {
 	}
 	
 	@IBAction func tapGestureRecognizerDidPressed(_ sender: UITapGestureRecognizer) {
-		if isOpen() {
-			closeMovableView()
-		}
-		else {
-			openMovableView()
-		}
+		isOpen = !isOpen
 	}
 	
 	@IBAction func panGestureRecognizerDidPressed(_ sender: UIPanGestureRecognizer) {
@@ -77,16 +82,9 @@ class TourViewController: UIViewController {
 		switch sender.state {
 		case .began: break
 		case .changed:
-			UIView.beginAnimations(nil, context: nil)
 			movableView.frame.origin.y = touchPoint.y
-			UIView.commitAnimations()
 		case .ended, .failed, .cancelled:
-			if touchPoint.y < UIScreen.main.bounds.height/2 {
-				openMovableView()
-			}
-			else {
-				closeMovableView()
-			}
+			setOpenOrClose()
 		default: break
 		}
 
@@ -127,8 +125,20 @@ fileprivate extension TourViewController {
 		constriantOfMovableViewHeight.constant = view.frame.height
 	}
 	
-	func isOpen() -> Bool {
-		return movableView.frame.origin.y == toppestY
+	func setOpenOrClose() {
+		if isOpen {
+			if movableView.frame.origin.y > toppestY + 30 {
+				isOpen = false
+			} else {
+				isOpen = true
+			}
+		} else {
+			if movableView.frame.origin.y < lowestY - 30 {
+				isOpen = true
+			} else {
+				isOpen = false
+			}
+		}
 	}
 	
 	func openMovableView() {
@@ -206,7 +216,7 @@ extension TourViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 		
-		closeMovableView()
+		isOpen = false
 		
 		let placemark = tourModel.placemarks[indexPath.row]
 		
@@ -223,5 +233,19 @@ extension TourViewController: UITableViewDelegate {
 extension TourViewController: UIGestureRecognizerDelegate {
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		return !tableView.frame.contains(touch.location(in: movableView))
+	}
+}
+
+// MARK: - UIScrollViewDelegate
+extension TourViewController: UIScrollViewDelegate {
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		if (scrollView.contentOffset.y < 0) || (scrollView.contentSize.height <= scrollView.frame.size.height) {
+			movableView.frame.origin.y -= scrollView.contentOffset.y
+			scrollView.contentOffset = CGPoint.zero
+		}
+	}
+	
+	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+		setOpenOrClose()
 	}
 }
