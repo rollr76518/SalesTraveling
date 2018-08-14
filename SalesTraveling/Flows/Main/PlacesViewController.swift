@@ -102,6 +102,11 @@ fileprivate extension PlacesViewController {
 		navigationItem.leftBarButtonItem = barButtonItem!
 	}
 	
+	@objc func scrollToBottom() {
+		let rect = CGRect(origin: .zero, size: tableView.contentSize)
+		tableView.scrollRectToVisible(rect, animated: true)
+	}
+	
 	func layoutButtonShowRoutes() {}
 	
 	func showResultOfCaculate() {
@@ -312,18 +317,22 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		HYCLoadingView.shared.show()
 		
 		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: sourcePlacemark) { [weak self] (status) in
-			switch status {
-			case .failure(let error):
-				let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
-				self?.presentAlert(of: errorMessage)
-			case .success(let directionModels):
-				DataManager.shared.save(directions: directionModels)
-				self?.placemarks.append(placemark)
-				self?.regionImages.append(image)
-				self?.tableView.reloadData()
-			}
 			
 			HYCLoadingView.shared.dismiss()
+
+			if let `self` = self {
+				switch status {
+				case .failure(let error):
+					let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
+					self.presentAlert(of: errorMessage)
+				case .success(let directionModels):
+					DataManager.shared.save(directions: directionModels)
+					self.placemarks.append(placemark)
+					self.regionImages.append(image)
+					self.tableView.reloadData()
+					self.perform(#selector(self.scrollToBottom), with: nil, afterDelay: 0.25)
+				}
+			}
 		}
 	}
 	
@@ -335,18 +344,21 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			CountdownManager.shared.countTimes += timesOfRequestShouldCalledWhenChangeUserPlacemark
 
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { [weak self] (status) in
-				switch status {
-				case .failure(let error):
-					let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
-					self?.presentAlert(of: errorMessage)
-				case .success(let directionModels):
-					DataManager.shared.save(directions: directionModels)
-					self?.sourcePlacemark = placemark
-					self?.sourcePlacemarkName = "Source".localized
-					self?.tableView.reloadSections([indexPath.section], with: .automatic)
-				}
-				
+
 				HYCLoadingView.shared.dismiss()
+
+				if let `self` = self {
+					switch status {
+					case .failure(let error):
+						let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
+						self.presentAlert(of: errorMessage)
+					case .success(let directionModels):
+						DataManager.shared.save(directions: directionModels)
+						self.sourcePlacemark = placemark
+						self.sourcePlacemarkName = "Source".localized
+						self.tableView.reloadSections([indexPath.section], with: .automatic)
+					}
+				}
 			})
 		}
 		else {
@@ -357,18 +369,21 @@ extension PlacesViewController: LocateViewControllerProtocol {
 			})
 			
 			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: sourcePlacemark, completeBlock: { [weak self] (status) in
-				switch status {
-				case .failure(let error):
-					let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
-					self?.presentAlert(of: errorMessage)
-				case .success(let directionModels):
-					DataManager.shared.save(directions: directionModels)
-					self?.placemarks[indexPath.row] = placemark
-					self?.regionImages[indexPath.row] = image
-					self?.tableView.reloadSections([indexPath.section], with: .automatic)
-				}
-				
+
 				HYCLoadingView.shared.dismiss()
+
+				if let `self` = self {
+					switch status {
+					case .failure(let error):
+						let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
+						self.presentAlert(of: errorMessage)
+					case .success(let directionModels):
+						DataManager.shared.save(directions: directionModels)
+						self.placemarks[indexPath.row] = placemark
+						self.regionImages[indexPath.row] = image
+						self.tableView.reloadSections([indexPath.section], with: .automatic)
+					}
+				}
 			})
 		}
 	}
