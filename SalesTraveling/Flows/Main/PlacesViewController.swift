@@ -31,11 +31,12 @@ class PlacesViewController: UIViewController {
 	}
 	
 	lazy var firstFetch: Bool = activeAPIFetch()
-	var userPlacemark: MKPlacemark?
+	var sourcePlacemark: MKPlacemark?
 	var placemarks: [MKPlacemark] = []
 	let locationManager = CLLocationManager()
 	var regionImages: [UIImage] = []
 	var tourModels: [TourModel] = []
+	var sourcePlacemarkName = "Current location".localized
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -82,11 +83,11 @@ class PlacesViewController: UIViewController {
 //MARK: - Compute Properties
 private extension PlacesViewController {
 	var timesOfRequestShouldCalledWhenAddNewPlacemark: Int {
-		return CountdownManager.shared.timesOfRequestShouldCalledWhenAddNewPlacemark(placemarks: placemarks.count, userPlacemark: (userPlacemark != nil))
+		return CountdownManager.shared.timesOfRequestShouldCalledWhenAddNewPlacemark(placemarks: placemarks.count, userPlacemark: (sourcePlacemark != nil))
 	}
 
 	var timesOfRequestShouldCalledWhenChangeExistPlacemark: Int {
-		return CountdownManager.shared.timesOfRequestShouldCalledWhenChangeExistPlacemark(placemarks: placemarks.count, userPlacemark: (userPlacemark != nil))
+		return CountdownManager.shared.timesOfRequestShouldCalledWhenChangeExistPlacemark(placemarks: placemarks.count, userPlacemark: (sourcePlacemark != nil))
 	}
 	
 	var timesOfRequestShouldCalledWhenChangeUserPlacemark: Int {
@@ -119,8 +120,8 @@ fileprivate extension PlacesViewController {
 			tourModels.append(tourModel)
 			
 			for (index2, tuple) in tuples.enumerated() {
-				if index2 == 0, let userPlacemark = userPlacemark {
-					let source = userPlacemark
+				if index2 == 0, let sourcePlacemark = sourcePlacemark {
+					let source = sourcePlacemark
 					let destination = tuple.0
 					if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
 						tourModels[index].responses.append(directions)
@@ -175,7 +176,7 @@ extension PlacesViewController: CLLocationManagerDelegate {
 		MapMananger.reverseCoordinate(locations.first!.coordinate) { [weak self] (status) in
 			switch status {
 			case .success(let placemarks):
-				self?.userPlacemark = placemarks.first
+				self?.sourcePlacemark = placemarks.first
 				self?.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
 			case .failure(let error):
 				self?.presentAlert(of: error.localizedDescription)
@@ -206,10 +207,10 @@ extension PlacesViewController: UITableViewDataSource {
 		if indexPath.section == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
 			cell.imageView?.image = nil
-			if let userPlacemark = userPlacemark {
-				cell.textLabel?.text = "Current location".localized
+			if let sourcePlacemark = sourcePlacemark {
+				cell.textLabel?.text = sourcePlacemarkName
 				cell.textLabel?.textColor = UIColor.brand
-				cell.detailTextLabel?.text = userPlacemark.title
+				cell.detailTextLabel?.text = sourcePlacemark.title
 			} else {
 				cell.textLabel?.text = "Tap to select your source".localized
 				cell.textLabel?.textColor = UIColor.gray
@@ -249,7 +250,7 @@ extension PlacesViewController: UITableViewDelegate {
 			let count = timesOfRequestShouldCalledWhenChangeUserPlacemark
 			
 			if CountdownManager.shared.canCallRequest(count) {
-				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, userPlacemark))
+				performSegue(withIdentifier: LocateViewController.identifier, sender: (indexPath, sourcePlacemark))
 			}
 			else {
 				presentAlert(of: "API Request is reached limited".localized)
@@ -310,7 +311,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		
 		HYCLoadingView.shared.show()
 		
-		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { [weak self] (status) in
+		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: sourcePlacemark) { [weak self] (status) in
 			switch status {
 			case .failure(let error):
 				let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
@@ -340,7 +341,8 @@ extension PlacesViewController: LocateViewControllerProtocol {
 					self?.presentAlert(of: errorMessage)
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
-					self?.userPlacemark = placemark
+					self?.sourcePlacemark = placemark
+					self?.sourcePlacemarkName = "Source".localized
 					self?.tableView.reloadSections([indexPath.section], with: .automatic)
 				}
 				
@@ -354,7 +356,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 				return oldPlacemark != placemark
 			})
 			
-			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: userPlacemark, completeBlock: { [weak self] (status) in
+			DataManager.shared.fetchDirections(ofNew: placemark, toOld: oldPlacemarks, current: sourcePlacemark, completeBlock: { [weak self] (status) in
 				switch status {
 				case .failure(let error):
 					let errorMessage = String.localizedStringWithFormat("Can't calculate route with %@", error.localizedDescription)
