@@ -135,7 +135,7 @@ extension LocateViewController: MKMapViewDelegate {
 		return pinView
 	}
 	
-	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
 		switch newState {
 		case .ending:
 			view.dragState = .none

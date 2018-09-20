@@ -32,7 +32,7 @@ private extension HYCLoadingView {
 	}
 	
 	func addActivityIndicatorView(to superView: UIView) {
-		let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+		let view = UIActivityIndicatorView(style: .whiteLarge)
 		view.startAnimating()
 		view.center = superView.center
 		superView.addSubview(view)

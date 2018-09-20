@@ -116,7 +116,7 @@ fileprivate extension TourViewController {
 	func layoutPolylines() {
 		mapView.addOverlays(polylines, level: .aboveRoads)
 		let rect = MapMananger.boundingMapRect(polylines: polylines)
-		mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsetsMake(10, 10, 10, 10), animated: false)
+		mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), animated: false)
 	}
 	
 	func layoutMovableView() {

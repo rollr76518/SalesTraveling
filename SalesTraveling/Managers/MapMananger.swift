@@ -11,12 +11,12 @@ import MapKit
 class MapMananger { }
 extension MapMananger {
 	enum LocalSearchStatus {
-		case success(MKLocalSearchResponse)
+		case success(MKLocalSearch.Response)
 		case failure(Error)
 	}
 	
 	class func fetchLocalSearch(with keywords: String, region: MKCoordinateRegion,  completion: @escaping (_ status: LocalSearchStatus) -> ()) {
-		let request = MKLocalSearchRequest()
+		let request = MKLocalSearch.Request()
 		request.naturalLanguageQuery = keywords
 		request.region = region
 		
@@ -35,13 +35,13 @@ extension MapMananger {
 
 extension MapMananger {
 	enum DirectResponseStatus {
-		case success(MKDirectionsResponse)
+		case success(MKDirections.Response)
 		case failure(Error)
 	}
 	
 	class func calculateDirections(from source: MKPlacemark, to destination: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
 		
-		let request = MKDirectionsRequest()
+		let request = MKDirections.Request()
 		request.source = source.toMapItem
 		request.destination = destination.toMapItem
 		request.transportType = .automobile
@@ -87,14 +87,14 @@ extension MapMananger {
 
 extension MapMananger {
 	class func addPolyline(_ mapView: MKMapView, route: MKRoute) {
-		mapView.add(route.polyline, level: .aboveRoads)
+		mapView.addOverlay(route.polyline, level: .aboveRoads)
 		let rect = route.polyline.boundingMapRect
-		mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
+		mapView.setRegion(MKCoordinateRegion(rect), animated: true)
 	}
 	
 	class func showRegion(_ mapView: MKMapView, spanDegrees: Double,  coordinate: CLLocationCoordinate2D) {
-		let span = MKCoordinateSpanMake(spanDegrees, spanDegrees)
-		let region = MKCoordinateRegionMake(coordinate, span)
+		let span = MKCoordinateSpan(latitudeDelta: spanDegrees, longitudeDelta: spanDegrees)
+		let region = MKCoordinateRegion(center: coordinate, span: span)
 		mapView.setRegion(region, animated: true)
 	}
 	
@@ -128,8 +128,8 @@ extension MapMananger {
 			}
 		}
 		
-		return MKMapRect(origin: MKMapPointMake(westPoint!, northPoint!),
-						 size: MKMapSizeMake(eastPoint! - westPoint!, southPoint! - northPoint!))
+		return MKMapRect(origin: MKMapPoint(x: westPoint!, y: northPoint!),
+						 size: MKMapSize(width: eastPoint! - westPoint!, height: southPoint! - northPoint!))
 	}
 }
 

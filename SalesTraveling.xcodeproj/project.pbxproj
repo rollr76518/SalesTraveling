@@ -264,6 +264,7 @@
 				TargetAttributes = {
 					7EFBA25D1F9C4B480011007E = {
 						CreatedOnToolsVersion = 9.0.1;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -490,7 +491,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "bd40195c-5ef6-4e44-9244-5b8308f9b92f";
 				PROVISIONING_PROFILE_SPECIFIER = Shodo_development;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -509,7 +510,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "b9e3d4fe-d4e6-43d5-93b4-44e03b8ace37";
 				PROVISIONING_PROFILE_SPECIFIER = Shodo_distribution;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
