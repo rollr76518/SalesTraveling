@@ -7,6 +7,7 @@
 //
 
 import MapKit
+import Contacts.CNPostalAddress
 
 struct DirectionsModel: Codable {
 	var source: HYCPlacemark
@@ -19,7 +20,8 @@ struct DirectionsModel: Codable {
 			source = HYCPlacemark(mkPlacemark: newValue)
 		}
 		get {
-			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(source.latitude, source.longitude), addressDictionary: source.addressDictionary.dictionary)
+			let postalAddress = DirectionsModel.postalAddress(placemark: source)
+			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(source.latitude, source.longitude), postalAddress: postalAddress)
 		}
 	}
 	
@@ -28,7 +30,8 @@ struct DirectionsModel: Codable {
 			destination = HYCPlacemark(mkPlacemark: newValue)
 		}
 		get {
-			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(destination.latitude, destination.longitude), addressDictionary: destination.addressDictionary.dictionary)
+			let postalAddress = DirectionsModel.postalAddress(placemark: destination)
+			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(destination.latitude, destination.longitude), postalAddress: postalAddress)
 		}
 	}
 	
@@ -38,6 +41,19 @@ struct DirectionsModel: Codable {
 		self.distance = routes.first!.distance
 		self.expectedTravelTime = routes.first!.expectedTravelTime
 	}
+	
+	private static func postalAddress(placemark: HYCPlacemark) -> CNPostalAddress {
+		let postalAddress = CNMutablePostalAddress()
+		postalAddress.street = placemark.street ?? ""
+		postalAddress.city = placemark.city ?? ""
+		postalAddress.state = placemark.state ?? ""
+		postalAddress.postalCode = placemark.postalCode ?? ""
+		postalAddress.country = placemark.country ?? ""
+		postalAddress.isoCountryCode = placemark.isoCountryCode ?? ""
+		postalAddress.subAdministrativeArea = placemark.subAdministrativeArea ?? ""
+		postalAddress.subLocality = placemark.subLocality ?? ""
+		return postalAddress.copy() as! CNPostalAddress
+	}
 }
 
 struct HYCPlacemark: Codable {
@@ -45,18 +61,34 @@ struct HYCPlacemark: Codable {
 	var title: String?
 	var latitude: Double
 	var longitude: Double
-	var addressDictionary: HYCAddress
-//	var addressDictionary: [String: Any] <-- 不符合 Codable
+	
+	var street: String?
+	var city: String?
+	var state: String?
+	var postalCode: String?
+	var country: String?
+	var isoCountryCode: String?
+	var subAdministrativeArea: String?
+	var subLocality: String?
+
 	
 	init(mkPlacemark: MKPlacemark) {
 		name = mkPlacemark.name
 		title = mkPlacemark.title
 		latitude = mkPlacemark.coordinate.latitude
 		longitude = mkPlacemark.coordinate.longitude
-		addressDictionary = HYCAddress(dictionary: mkPlacemark.addressDictionary! as! [String: Any])
+		street = mkPlacemark.postalAddress?.street
+		city = mkPlacemark.postalAddress?.city
+		state = mkPlacemark.postalAddress?.state
+		postalCode = mkPlacemark.postalAddress?.postalCode
+		country = mkPlacemark.postalAddress?.country
+		isoCountryCode = mkPlacemark.postalAddress?.isoCountryCode
+		subAdministrativeArea = mkPlacemark.postalAddress?.subAdministrativeArea
+		subLocality = mkPlacemark.postalAddress?.subLocality
 	}
 }
 
+/*
 struct HYCAddress: Codable {
 	var street: String?
 	var zip: String?
@@ -64,7 +96,7 @@ struct HYCAddress: Codable {
 	var subThoroughfare: String?
 	var state: String?
 	var name: String?
-	var subAdministratieArea: String?
+	var subAdministrativeArea: String?
 	var thoroughfare: String?
 	var formattedAddressLines: [String]?
 	var city: String?
@@ -78,7 +110,7 @@ struct HYCAddress: Codable {
 		subThoroughfare = dictionary["SubThoroughfare"] as? String
 		state = dictionary["State"] as? String
 		name = dictionary["Name"] as? String
-		subAdministratieArea = dictionary["SubAdministrativeArea"] as? String
+		subAdministrativeArea = dictionary["SubAdministrativeArea"] as? String
 		thoroughfare = dictionary["Thoroughfare"] as? String
 		formattedAddressLines = dictionary["FormattedAddressLines"] as? [String]
 		city = dictionary["City"] as? String
@@ -140,3 +172,4 @@ struct HYCAddress: Codable {
 		return dic
 	}
 }
+*/
