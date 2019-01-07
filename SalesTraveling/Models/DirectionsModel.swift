@@ -173,3 +173,24 @@ struct HYCAddress: Codable {
 	}
 }
 */
+
+/*
+class DirectionsModel2: NSObject, NSCopying {
+	var source: MKPlacemark
+	var destination: MKPlacemark
+	var distance: CLLocationDistance
+	var expectedTravelTime: TimeInterval
+	
+	init(source: MKPlacemark, destination: MKPlacemark, distance: CLLocationDistance, expectedTravelTime: TimeInterval) {
+		self.source = source
+		self.destination = destination
+		self.distance = distance
+		self.expectedTravelTime = expectedTravelTime
+	}
+	
+	func copy(with zone: NSZone? = nil) -> Any {
+		let copy = DirectionsModel2(source: source, destination: destination, distance: distance, expectedTravelTime: expectedTravelTime)
+		return copy
+	}
+}
+*/
