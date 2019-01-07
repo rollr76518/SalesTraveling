@@ -26,6 +26,8 @@
 		945352B61FBC9F7A00176195 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 945352B51FBC9F7A00176195 /* Main.storyboard */; };
 		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
 		9474E21520FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift */; };
+		94798C1221E3A863004627BC /* Map.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94798C1121E3A862004627BC /* Map.storyboard */; };
+		94798C1521E3AB9C004627BC /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94798C1421E3AB9C004627BC /* MapViewController.swift */; };
 		9481FCE020A7241200F8E842 /* HYCLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9481FCDF20A7241200F8E842 /* HYCLoadingView.swift */; };
 		94B2394820BEF32C00AE0E03 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */; };
 		94B2394A20BEF33A00AE0E03 /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B2394920BEF33A00AE0E03 /* TabBar.storyboard */; };
@@ -68,6 +70,8 @@
 		945352B51FBC9F7A00176195 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extension.swift"; sourceTree = "<group>"; };
+		94798C1121E3A862004627BC /* Map.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Map.storyboard; sourceTree = "<group>"; };
+		94798C1421E3AB9C004627BC /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9481FCDF20A7241200F8E842 /* HYCLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HYCLoadingView.swift; sourceTree = "<group>"; };
 		94B2394720BEF32C00AE0E03 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		94B2394920BEF33A00AE0E03 /* TabBar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabBar.storyboard; sourceTree = "<group>"; };
@@ -182,8 +186,18 @@
 				7EFBA2821F9C8D730011007E /* Locate */,
 				7EFBA2831F9C8D870011007E /* Main */,
 				94C0559F20D0074000CD0F6E /* TourList */,
+				94798C1321E3A876004627BC /* Map */,
 			);
 			path = Flows;
+			sourceTree = "<group>";
+		};
+		94798C1321E3A876004627BC /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				94798C1121E3A862004627BC /* Map.storyboard */,
+				94798C1421E3AB9C004627BC /* MapViewController.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		94B2394D20BEF68600AE0E03 /* Favorites */ = {
@@ -300,6 +314,7 @@
 				7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */,
 				945352B61FBC9F7A00176195 /* Main.storyboard in Resources */,
 				94B2394A20BEF33A00AE0E03 /* TabBar.storyboard in Resources */,
+				94798C1221E3A863004627BC /* Map.storyboard in Resources */,
 				94B2394C20BEF68000AE0E03 /* Favorites.storyboard in Resources */,
 				7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */,
 			);
@@ -339,6 +354,7 @@
 				945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */,
 				7EFBA27D1F9C55490011007E /* AddressResultTableViewController.swift in Sources */,
 				9474E21520FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift in Sources */,
+				94798C1521E3AB9C004627BC /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
