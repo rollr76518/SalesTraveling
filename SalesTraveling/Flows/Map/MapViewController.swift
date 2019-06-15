@@ -50,7 +50,7 @@ class MapViewController: UIViewController {
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
 	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
-	@IBOutlet var labelOfPlacemarks: UILabel!
+	@IBOutlet weak var titleOfPlacemarks: UIBarButtonItem!
 	
 	@IBOutlet var barButtonItemSave: UIBarButtonItem!
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
@@ -62,7 +62,7 @@ class MapViewController: UIViewController {
 		
 		setupUISearchController()
 
-		labelOfPlacemarks.text = "Placemarks".localized
+		titleOfPlacemarks.title = "Placemarks".localized
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {

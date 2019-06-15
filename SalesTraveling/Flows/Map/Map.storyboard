@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QSL-5X-ru3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QSL-5X-ru3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -50,6 +50,22 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="474"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jVO-Zo-0h8">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <items>
+                                                <barButtonItem title="Edit" style="plain" id="ECX-8J-GGq"/>
+                                                <barButtonItem style="plain" systemItem="flexibleSpace" id="nnW-rO-l0D"/>
+                                                <barButtonItem title="Label" style="plain" id="SgG-hq-wk7">
+                                                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                </barButtonItem>
+                                                <barButtonItem style="plain" systemItem="flexibleSpace" id="4WY-RT-fH7"/>
+                                                <barButtonItem systemItem="save" id="Kw1-c4-eiG">
+                                                    <connections>
+                                                        <action selector="rightBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="aSd-EJ-xAt"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                            </items>
+                                        </toolbar>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NT5-7T-dT4">
                                             <rect key="frame" x="165.5" y="3" width="44" height="3"/>
                                             <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
@@ -58,16 +74,6 @@
                                                 <constraint firstAttribute="width" constant="44" id="gca-n0-MzW"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jjk-vb-HQS">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                            <gestureRecognizers/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="44" id="gvf-KH-VLp"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="xnY-mM-7yX">
                                             <rect key="frame" x="0.0" y="44" width="375" height="430"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -107,14 +113,14 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="NT5-7T-dT4" firstAttribute="top" secondItem="9Jz-V7-On3" secondAttribute="top" constant="3" id="0X5-5Y-K8b"/>
-                                        <constraint firstAttribute="trailing" secondItem="Jjk-vb-HQS" secondAttribute="trailing" id="99X-ps-P1n"/>
+                                        <constraint firstItem="jVO-Zo-0h8" firstAttribute="leading" secondItem="9Jz-V7-On3" secondAttribute="leading" id="A5V-34-F9z"/>
+                                        <constraint firstItem="jVO-Zo-0h8" firstAttribute="top" secondItem="9Jz-V7-On3" secondAttribute="top" id="CbC-bF-6vA"/>
                                         <constraint firstItem="NT5-7T-dT4" firstAttribute="centerX" secondItem="9Jz-V7-On3" secondAttribute="centerX" id="D2A-C5-TvQ"/>
                                         <constraint firstAttribute="trailing" secondItem="xnY-mM-7yX" secondAttribute="trailing" id="D4S-yA-nOf"/>
                                         <constraint firstAttribute="bottom" secondItem="xnY-mM-7yX" secondAttribute="bottom" id="UXW-rq-moB"/>
                                         <constraint firstItem="xnY-mM-7yX" firstAttribute="leading" secondItem="9Jz-V7-On3" secondAttribute="leading" id="atv-ex-lKU"/>
-                                        <constraint firstItem="Jjk-vb-HQS" firstAttribute="leading" secondItem="9Jz-V7-On3" secondAttribute="leading" id="dAk-ZP-pjz"/>
-                                        <constraint firstItem="xnY-mM-7yX" firstAttribute="top" secondItem="Jjk-vb-HQS" secondAttribute="bottom" id="mdS-sO-PJ6"/>
-                                        <constraint firstItem="Jjk-vb-HQS" firstAttribute="top" secondItem="9Jz-V7-On3" secondAttribute="top" id="oz4-EC-NuJ"/>
+                                        <constraint firstItem="xnY-mM-7yX" firstAttribute="top" secondItem="jVO-Zo-0h8" secondAttribute="bottom" id="iZT-dy-axa"/>
+                                        <constraint firstAttribute="trailing" secondItem="jVO-Zo-0h8" secondAttribute="trailing" id="pa4-Lq-feG"/>
                                     </constraints>
                                 </view>
                                 <blurEffect style="extraLight"/>
@@ -141,10 +147,10 @@
                     <connections>
                         <outlet property="barButtonItemSave" destination="Kw1-c4-eiG" id="4bo-Pu-nac"/>
                         <outlet property="constriantOfMovableViewHeight" destination="VwS-Gv-REg" id="WX1-eN-3g7"/>
-                        <outlet property="labelOfPlacemarks" destination="Jjk-vb-HQS" id="ef0-NP-tJy"/>
                         <outlet property="mapView" destination="20s-Vq-Z6W" id="hqY-yI-dhP"/>
                         <outlet property="movableView" destination="YBi-l3-ajR" id="Zgb-Lw-KCB"/>
                         <outlet property="tableView" destination="xnY-mM-7yX" id="PcP-a0-7CH"/>
+                        <outlet property="titleOfPlacemarks" destination="SgG-hq-wk7" id="sNS-ad-trf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V6Z-6h-dck" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -159,11 +165,6 @@
                         <outlet property="delegate" destination="4Np-yJ-KqG" id="HRz-yM-uIx"/>
                     </connections>
                 </tapGestureRecognizer>
-                <barButtonItem systemItem="save" id="Kw1-c4-eiG">
-                    <connections>
-                        <action selector="rightBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="aSd-EJ-xAt"/>
-                    </connections>
-                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="2176.8000000000002" y="1412.7436281859073"/>
         </scene>

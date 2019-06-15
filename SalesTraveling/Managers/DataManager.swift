@@ -247,7 +247,8 @@ extension DataManager {
 					let semaphore = DispatchSemaphore(value: 0)
 					MapMananger.calculateDirections(from: source, to: destination, completion: { (status) in
 						switch status {
-						case .failure(let error): 								completeBlock(.failure(error))
+						case .failure(let error):
+							completeBlock(.failure(error))
 						case .success(let response):
 							if let route = response.routes.first {
 								routes.append(route)
