@@ -133,3 +133,27 @@ extension MapMananger {
 		}
 	}
 }
+
+// MARK: - HYCPlacemark
+extension MapMananger {
+	
+	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
+		
+		let request = MKDirections.Request()
+		request.source = source.toMapItem
+		request.destination = destination.toMapItem
+		request.transportType = .automobile
+		
+		let directions = MKDirections(request: request)
+		directions.calculate { (response, error) in
+			if let response = response {
+				completion(.success(response))
+			}
+			
+			if let error = error {
+				completion(.failure(error))
+			}
+		}
+	}
+
+}

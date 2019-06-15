@@ -34,7 +34,7 @@ class MapViewController: UIViewController {
 		}
 	}
 	
-	var placemarks: [MKPlacemark] = [] {
+	var placemarks: [HYCPlacemark] = [] {
 		didSet {
 			self.mapView.removeAnnotations(mapView.annotations)
 			self.mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
@@ -43,7 +43,7 @@ class MapViewController: UIViewController {
 			self.tableView.reloadData()
 		}
 	}
-	var sortedPlacemarks: [MKPlacemark] {
+	var sortedPlacemarks: [HYCPlacemark] {
 		return placemarks
 	}
 	
@@ -120,8 +120,47 @@ extension MapViewController {
 //MARK: - AddressResultTableViewControllerProtocol
 extension MapViewController: AddressResultTableViewControllerProtocol {
 	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
-		placemarks.append(placemark)
+		searchController.searchBar.text = nil
+		searchController.searchBar.resignFirstResponder()
+		
+		let hycPlacemark = HYCPlacemark(mkPlacemark: placemark)
+		
 		MapMananger().defaultMapCenter = placemark.coordinate
+		if placemarks.count == 0 {
+			placemarks.append(hycPlacemark)
+		} else {
+			HYCLoadingView.shared.show()
+			DataManager.shared.fetchDirections(ofNew: hycPlacemark, toOld: placemarks, current: nil) { [weak self] (status) in
+				guard let self = self else { return }
+				switch status {
+				case .failure(let error):
+					print(error.localizedDescription)
+					HYCLoadingView.shared.dismiss()
+				case .success(let directionModels):
+					DataManager.shared.save(directions: directionModels)
+					self.placemarks.append(HYCPlacemark(mkPlacemark: placemark))
+					let tourModels = self.showResultOfCaculate(placemarks: self.placemarks)
+					guard let shortest = tourModels.sorted().first else { return }
+					self.placemarks = shortest.hycPlacemarks
+					DataManager.shared.fetchRoutes(placemarks: shortest.placemarks, completeBlock: { [weak self] (status) in
+						guard let self = self else { return }
+						switch status {
+						case .failure(let error):
+							print(error.localizedDescription)
+							HYCLoadingView.shared.dismiss()
+						case .success(let routes):
+							print(routes)
+							let polylines = routes.map{ $0.polyline }
+							self.mapView.addOverlays(polylines, level: .aboveRoads)
+							let rect = MapMananger.boundingMapRect(polylines: polylines)
+							self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), animated: false)
+							HYCLoadingView.shared.dismiss()
+						}
+					})
+				}
+			}
+			
+		}
 	}
 }
 
@@ -260,5 +299,40 @@ extension MapViewController: UIScrollViewDelegate {
 	
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		setOpenOrClose()
+	}
+}
+
+extension MapViewController {
+	func showResultOfCaculate(placemarks: [HYCPlacemark]) -> [TourModel] {
+		var tourModels: [TourModel] = []
+		
+		let permutations = AlgorithmManager.permutations(placemarks)
+		//[1, 2, 3] -> [[1, 2, 3], [1, 3, 2], [2, 3, 1], [2, 1, 3], [3, 1, 2], [3, 2, 1]]
+		
+		let tuplesCollection = permutations.map { (placemarks) -> [(HYCPlacemark, HYCPlacemark)] in
+			return placemarks.toTuple()
+		}
+		//[[(1, 2), (2, 3)], [(1, 3), (3, 2)], [(2, 3), (3, 1)], [(2, 1), (1, 3)], [(3, 1), (1, 2)], [(3, 2), (2, 1)]]
+		
+		for (index, tuples) in tuplesCollection.enumerated() {
+			let tourModel = TourModel()
+			tourModels.append(tourModel)
+			
+			for (index2, tuple) in tuples.enumerated() {
+//				if index2 == 0, let sourcePlacemark = sourcePlacemark {
+//					let source = sourcePlacemark
+//					let destination = tuple.0
+//					if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
+//						tourModels[index].responses.append(directions)
+//					}
+//				}
+				let source = tuple.0
+				let destination = tuple.1
+				if let directions = DataManager.shared.findDirections(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+					tourModels[index].responses.append(directions)
+				}
+			}
+		}
+		return tourModels
 	}
 }

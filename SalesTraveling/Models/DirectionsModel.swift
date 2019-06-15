@@ -42,7 +42,14 @@ struct DirectionsModel: Codable {
 		self.expectedTravelTime = routes.first!.expectedTravelTime
 	}
 	
-	private static func postalAddress(placemark: HYCPlacemark) -> CNPostalAddress {
+	init(source: HYCPlacemark, destination: HYCPlacemark, routes: [MKRoute]) {
+		self.source = source
+		self.destination = destination
+		self.distance = routes.first!.distance
+		self.expectedTravelTime = routes.first!.expectedTravelTime
+	}
+	
+	static func postalAddress(placemark: HYCPlacemark) -> CNPostalAddress {
 		let postalAddress = CNMutablePostalAddress()
 		postalAddress.street = placemark.street ?? ""
 		postalAddress.city = placemark.city ?? ""
@@ -53,38 +60,6 @@ struct DirectionsModel: Codable {
 		postalAddress.subAdministrativeArea = placemark.subAdministrativeArea ?? ""
 		postalAddress.subLocality = placemark.subLocality ?? ""
 		return postalAddress.copy() as! CNPostalAddress
-	}
-}
-
-struct HYCPlacemark: Codable {
-	var name: String?
-	var title: String?
-	var latitude: Double
-	var longitude: Double
-	
-	var street: String?
-	var city: String?
-	var state: String?
-	var postalCode: String?
-	var country: String?
-	var isoCountryCode: String?
-	var subAdministrativeArea: String?
-	var subLocality: String?
-
-	
-	init(mkPlacemark: MKPlacemark) {
-		name = mkPlacemark.name
-		title = mkPlacemark.title
-		latitude = mkPlacemark.coordinate.latitude
-		longitude = mkPlacemark.coordinate.longitude
-		street = mkPlacemark.postalAddress?.street
-		city = mkPlacemark.postalAddress?.city
-		state = mkPlacemark.postalAddress?.state
-		postalCode = mkPlacemark.postalAddress?.postalCode
-		country = mkPlacemark.postalAddress?.country
-		isoCountryCode = mkPlacemark.postalAddress?.isoCountryCode
-		subAdministrativeArea = mkPlacemark.postalAddress?.subAdministrativeArea
-		subLocality = mkPlacemark.postalAddress?.subLocality
 	}
 }
 

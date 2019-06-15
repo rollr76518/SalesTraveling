@@ -13,6 +13,18 @@ struct TourModel: Codable {
 }
 
 extension TourModel {
+	
+	var hycPlacemarks: [HYCPlacemark] {
+		var placemarks = responses.map{ $0.source }
+		if let last = responses.last {
+			placemarks.append(last.destination)
+		}
+		return placemarks
+	}
+	
+}
+
+extension TourModel {
 	var placemarks: [MKPlacemark] {
 		var placemarks = responses.map{ $0.sourcePlacemark }
 		if let last = responses.last {
