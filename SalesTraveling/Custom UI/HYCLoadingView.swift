@@ -17,14 +17,14 @@ class HYCLoadingView {
 
 private extension HYCLoadingView {
 	func createVisualEffectView() -> UIVisualEffectView {
-		let view = UIVisualEffectView(frame: UIScreen.main.bounds)
+		let view = UIVisualEffectView(frame: .zero)
 		view.effect = UIBlurEffect(style: .dark)
 		addActivityIndicatorView(to: view.contentView)
 		return view
 	}
 	
 	func createTranslucentView() -> UIView {
-		let view = UIView(frame: UIScreen.main.bounds)
+		let view = UIView(frame: .zero)
 		view.backgroundColor = .gray
 		view.alpha = 0.7
 		addActivityIndicatorView(to: view)
@@ -34,8 +34,12 @@ private extension HYCLoadingView {
 	func addActivityIndicatorView(to superView: UIView) {
 		let view = UIActivityIndicatorView(style: .whiteLarge)
 		view.startAnimating()
-		view.center = superView.center
 		superView.addSubview(view)
+		view.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			view.centerXAnchor.constraint(equalTo: superView.centerXAnchor),
+			view.centerYAnchor.constraint(equalTo: superView.centerYAnchor)
+			])
 	}
 	
 }
@@ -44,6 +48,13 @@ extension HYCLoadingView {
 	func show() {
 		guard let topWindow = UIApplication.shared.windows.last else { return }
 		topWindow.insertSubview(backgroundView, at: topWindow.subviews.count)
+		backgroundView.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			backgroundView.topAnchor.constraint(equalTo: topWindow.topAnchor),
+			backgroundView.bottomAnchor.constraint(equalTo: topWindow.bottomAnchor),
+			backgroundView.leadingAnchor.constraint(equalTo: topWindow.leadingAnchor),
+			backgroundView.trailingAnchor.constraint(equalTo: topWindow.trailingAnchor)
+			])
 	}
 	
 	func startIndicatorAnimation() {
