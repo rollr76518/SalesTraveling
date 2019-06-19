@@ -14,6 +14,12 @@ struct DirectionsModel: Codable {
 	var destination: HYCPlacemark
 	var distance: CLLocationDistance
 	var expectedTravelTime: TimeInterval
+	var polylineData: Data
+	var polyline: MKPolyline {
+		let buf = UnsafeMutableBufferPointer<MKMapPoint>.allocate(capacity: polylineData.count / MemoryLayout<MKMapPoint>.size)
+		let _ = polylineData.copyBytes(to: buf)
+		return MKPolyline(points: buf.baseAddress!, count: buf.count)
+	}
 	
 	var sourcePlacemark: MKPlacemark {
 		set {
@@ -40,6 +46,8 @@ struct DirectionsModel: Codable {
 		self.destination = HYCPlacemark(mkPlacemark: destination)
 		self.distance = routes.first!.distance
 		self.expectedTravelTime = routes.first!.expectedTravelTime
+		let polyline = routes.first!.polyline
+		self.polylineData = Data(buffer: UnsafeBufferPointer(start: polyline.points(), count: polyline.pointCount))
 	}
 	
 	init(source: HYCPlacemark, destination: HYCPlacemark, routes: [MKRoute]) {
@@ -47,6 +55,8 @@ struct DirectionsModel: Codable {
 		self.destination = destination
 		self.distance = routes.first!.distance
 		self.expectedTravelTime = routes.first!.expectedTravelTime
+		let polyline = routes.first!.polyline
+		self.polylineData = Data(buffer: UnsafeBufferPointer(start: polyline.points(), count: polyline.pointCount))
 	}
 	
 	static func postalAddress(placemark: HYCPlacemark) -> CNPostalAddress {

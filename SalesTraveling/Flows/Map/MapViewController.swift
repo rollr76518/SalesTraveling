@@ -142,21 +142,11 @@ extension MapViewController: AddressResultTableViewControllerProtocol {
 					let tourModels = self.showResultOfCaculate(placemarks: self.placemarks)
 					guard let shortest = tourModels.sorted().first else { return }
 					self.placemarks = shortest.hycPlacemarks
-					DataManager.shared.fetchRoutes(placemarks: shortest.placemarks, completeBlock: { [weak self] (status) in
-						guard let self = self else { return }
-						switch status {
-						case .failure(let error):
-							print(error.localizedDescription)
-							HYCLoadingView.shared.dismiss()
-						case .success(let routes):
-							print(routes)
-							let polylines = routes.map{ $0.polyline }
-							self.mapView.addOverlays(polylines, level: .aboveRoads)
-							let rect = MapMananger.boundingMapRect(polylines: polylines)
-							self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), animated: false)
-							HYCLoadingView.shared.dismiss()
-						}
-					})
+					let polylines = shortest.polylines
+					self.mapView.addOverlays(polylines, level: .aboveRoads)
+					let rect = MapMananger.boundingMapRect(polylines: polylines)
+					self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), animated: false)
+					HYCLoadingView.shared.dismiss()
 				}
 			}
 			

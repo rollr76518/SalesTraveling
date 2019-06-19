@@ -22,6 +22,12 @@ extension TourModel {
 		return placemarks
 	}
 	
+	var polylines: [MKPolyline] {
+		return responses.map({ (direction) -> MKPolyline in
+			return direction.polyline
+		})
+	}
+	
 }
 
 extension TourModel {
