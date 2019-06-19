@@ -24,6 +24,7 @@
 		9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */; };
 		9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */; };
 		945352B61FBC9F7A00176195 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 945352B51FBC9F7A00176195 /* Main.storyboard */; };
+		94598E1F22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94598E1E22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift */; };
 		945D12461FBC95CF009E0A88 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */; };
 		9474E21520FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift */; };
 		94798C1221E3A863004627BC /* Map.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94798C1121E3A862004627BC /* Map.storyboard */; };
@@ -69,6 +70,7 @@
 		9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsModel.swift; sourceTree = "<group>"; };
 		9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownManager.swift; sourceTree = "<group>"; };
 		945352B51FBC9F7A00176195 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		94598E1E22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HYCPlacemark+PostalAddress.swift"; sourceTree = "<group>"; };
 		945D12451FBC95CF009E0A88 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extension.swift"; sourceTree = "<group>"; };
 		94798C1121E3A862004627BC /* Map.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Map.storyboard; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				7EB0D6091F9E341B00268E3B /* TourModel.swift */,
 				9445682B1FC45E9A00D4C7FD /* DirectionsModel.swift */,
 				94822C8522B5402700DB4E88 /* HYCPlacemark.swift */,
+				94598E1E22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -346,6 +349,7 @@
 				9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */,
 				94D010041FC9D5490003E979 /* UserDefaults+Extension.swift in Sources */,
 				9481FCE020A7241200F8E842 /* HYCLoadingView.swift in Sources */,
+				94598E1F22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift in Sources */,
 				9445682C1FC45E9A00D4C7FD /* DirectionsModel.swift in Sources */,
 				94E2D10A1FC6F83700F1FD36 /* String+Extension.swift in Sources */,
 				7E63349120720270007A2A85 /* NotificationName+Extension.swift in Sources */,
