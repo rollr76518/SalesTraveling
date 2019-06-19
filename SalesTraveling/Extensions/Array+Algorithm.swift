@@ -9,6 +9,7 @@
 import Foundation
 
 extension Array {
+	
     func decompose() -> (Iterator.Element, [Iterator.Element])? {
         guard let first = first else { return nil }
         return (first, Array(self[1..<count]))

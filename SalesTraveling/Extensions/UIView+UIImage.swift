@@ -9,6 +9,7 @@
 import UIKit
 
 extension UIView {
+	
 	func toImage() -> UIImage {
 		let renderer = UIGraphicsImageRenderer(size: bounds.size)
 		let image = renderer.image { context in
