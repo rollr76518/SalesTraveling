@@ -34,19 +34,6 @@ class MapViewController: UIViewController {
 		}
 	}
 	
-	var placemarks: [HYCPlacemark] = [] {
-		didSet {
-			self.mapView.removeAnnotations(mapView.annotations)
-			self.mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
-				return placemark.pointAnnotation
-			}))
-			self.tableView.reloadData()
-		}
-	}
-	var sortedPlacemarks: [HYCPlacemark] {
-		return placemarks
-	}
-	
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
 	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
@@ -57,12 +44,16 @@ class MapViewController: UIViewController {
 
 	}
 	
+	private var viewModel = MapViewModel()
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		setupUISearchController()
 
 		titleOfPlacemarks.title = "Placemarks".localized
+		
+		viewModel.delegate = self
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -123,34 +114,9 @@ extension MapViewController: AddressResultTableViewControllerProtocol {
 		searchController.searchBar.text = nil
 		searchController.searchBar.resignFirstResponder()
 		
-		let hycPlacemark = HYCPlacemark(mkPlacemark: placemark)
-		
 		MapMananger().defaultMapCenter = placemark.coordinate
-		if placemarks.count == 0 {
-			placemarks.append(hycPlacemark)
-		} else {
-			HYCLoadingView.shared.show()
-			DataManager.shared.fetchDirections(ofNew: hycPlacemark, toOld: placemarks, current: nil) { [weak self] (status) in
-				guard let self = self else { return }
-				switch status {
-				case .failure(let error):
-					print(error.localizedDescription)
-					HYCLoadingView.shared.dismiss()
-				case .success(let directionModels):
-					DataManager.shared.save(directions: directionModels)
-					self.placemarks.append(HYCPlacemark(mkPlacemark: placemark))
-					let tourModels = self.showResultOfCaculate(placemarks: self.placemarks)
-					guard let shortest = tourModels.sorted().first else { return }
-					self.placemarks = shortest.hycPlacemarks
-					let polylines = shortest.polylines
-					self.mapView.addOverlays(polylines, level: .aboveRoads)
-					let rect = MapMananger.boundingMapRect(polylines: polylines)
-					self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), animated: false)
-					HYCLoadingView.shared.dismiss()
-				}
-			}
-			
-		}
+		
+		viewModel.add(placemark: placemark)
 	}
 }
 
@@ -220,7 +186,7 @@ extension MapViewController: MKMapViewDelegate {
 	
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
 		if let annotation = view.annotation {
-			for placemark in sortedPlacemarks {
+			for placemark in viewModel.placemarks {
 				if placemark.coordinate.latitude == annotation.coordinate.latitude &&
 					placemark.coordinate.longitude == annotation.coordinate.longitude {
 					
@@ -238,12 +204,12 @@ extension MapViewController: MKMapViewDelegate {
 // MARK: - UITableViewDataSource
 extension MapViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return sortedPlacemarks.count
+		return viewModel.placemarks.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		let placemark = sortedPlacemarks[indexPath.row]
+		let placemark = viewModel.placemarks[indexPath.row]
 		cell.textLabel?.text = "\(indexPath.row + 1). "
 		if let name = placemark.name {
 			cell.textLabel?.text?.append(name)
@@ -260,7 +226,7 @@ extension MapViewController: UITableViewDelegate {
 		
 		isOpen = false
 		
-		let placemark = sortedPlacemarks[indexPath.row]
+		let placemark = viewModel.placemarks[indexPath.row]
 		
 		for annotation in mapView.annotations {
 			if annotation.coordinate.latitude == placemark.coordinate.latitude &&
@@ -292,37 +258,31 @@ extension MapViewController: UIScrollViewDelegate {
 	}
 }
 
-extension MapViewController {
-	func showResultOfCaculate(placemarks: [HYCPlacemark]) -> [TourModel] {
-		var tourModels: [TourModel] = []
-		
-		let permutations = AlgorithmManager.permutations(placemarks)
-		//[1, 2, 3] -> [[1, 2, 3], [1, 3, 2], [2, 3, 1], [2, 1, 3], [3, 1, 2], [3, 2, 1]]
-		
-		let tuplesCollection = permutations.map { (placemarks) -> [(HYCPlacemark, HYCPlacemark)] in
-			return placemarks.toTuple()
+extension MapViewController: MapViewModelDelegate {
+	
+	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark]) {
+		self.mapView.removeAnnotations(mapView.annotations)
+		self.mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
+			return placemark.pointAnnotation
+		}))
+		self.tableView.reloadData()
+	}
+	
+	func viewModel(_ viewModel: MapViewModel, isFetching: Bool) {
+		if isFetching {
+			HYCLoadingView.shared.show()
+		} else {
+			HYCLoadingView.shared.dismiss()
 		}
-		//[[(1, 2), (2, 3)], [(1, 3), (3, 2)], [(2, 3), (3, 1)], [(2, 1), (1, 3)], [(3, 1), (1, 2)], [(3, 2), (2, 1)]]
-		
-		for (index, tuples) in tuplesCollection.enumerated() {
-			let tourModel = TourModel()
-			tourModels.append(tourModel)
-			
-			for (index2, tuple) in tuples.enumerated() {
-//				if index2 == 0, let sourcePlacemark = sourcePlacemark {
-//					let source = sourcePlacemark
-//					let destination = tuple.0
-//					if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
-//						tourModels[index].responses.append(directions)
-//					}
-//				}
-				let source = tuple.0
-				let destination = tuple.1
-				if let direction = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
-					tourModels[index].directions.append(direction)
-				}
-			}
-		}
-		return tourModels
+	}
+	
+	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline]) {
+		self.mapView.addOverlays(polylines, level: .aboveRoads)
+		let rect = MapMananger.boundingMapRect(polylines: polylines)
+		self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), animated: false)
+	}
+
+	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error) {
+		print(error.localizedDescription)
 	}
 }
