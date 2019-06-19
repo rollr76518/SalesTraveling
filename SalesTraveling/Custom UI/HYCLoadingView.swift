@@ -46,14 +46,14 @@ private extension HYCLoadingView {
 
 extension HYCLoadingView {
 	func show() {
-		guard let topWindow = UIApplication.shared.windows.last else { return }
-		topWindow.insertSubview(backgroundView, at: topWindow.subviews.count)
+		guard let mainWindow = UIApplication.shared.windows.first else { return }
+		mainWindow.insertSubview(backgroundView, at: mainWindow.subviews.count)
 		backgroundView.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
-			backgroundView.topAnchor.constraint(equalTo: topWindow.topAnchor),
-			backgroundView.bottomAnchor.constraint(equalTo: topWindow.bottomAnchor),
-			backgroundView.leadingAnchor.constraint(equalTo: topWindow.leadingAnchor),
-			backgroundView.trailingAnchor.constraint(equalTo: topWindow.trailingAnchor)
+			backgroundView.topAnchor.constraint(equalTo: mainWindow.topAnchor),
+			backgroundView.bottomAnchor.constraint(equalTo: mainWindow.bottomAnchor),
+			backgroundView.leadingAnchor.constraint(equalTo: mainWindow.leadingAnchor),
+			backgroundView.trailingAnchor.constraint(equalTo: mainWindow.trailingAnchor)
 			])
 	}
 	
