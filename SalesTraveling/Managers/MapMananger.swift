@@ -39,7 +39,7 @@ extension MapMananger {
 		case failure(Error)
 	}
 	
-	class func calculateDirections(from source: MKPlacemark, to destination: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
+	class func calculateDirection(from source: MKPlacemark, to destination: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
 		
 		let request = MKDirections.Request()
 		request.source = source.toMapItem

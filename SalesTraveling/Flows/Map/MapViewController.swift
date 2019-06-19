@@ -318,8 +318,8 @@ extension MapViewController {
 //				}
 				let source = tuple.0
 				let destination = tuple.1
-				if let directions = DataManager.shared.findDirections(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
-					tourModels[index].responses.append(directions)
+				if let direction = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+					tourModels[index].directions.append(direction)
 				}
 			}
 		}

@@ -9,21 +9,21 @@
 import MapKit.MKPlacemark
 
 struct TourModel: Codable {
-	var responses: [DirectionsModel] = []
+	var directions: [DirectionModel] = []
 }
 
 extension TourModel {
 	
 	var hycPlacemarks: [HYCPlacemark] {
-		var placemarks = responses.map{ $0.source }
-		if let last = responses.last {
+		var placemarks = directions.map{ $0.source }
+		if let last = directions.last {
 			placemarks.append(last.destination)
 		}
 		return placemarks
 	}
 	
 	var polylines: [MKPolyline] {
-		return responses.map({ (direction) -> MKPolyline in
+		return directions.map({ (direction) -> MKPolyline in
 			return direction.polyline
 		})
 	}
@@ -32,21 +32,21 @@ extension TourModel {
 
 extension TourModel {
 	var placemarks: [MKPlacemark] {
-		var placemarks = responses.map{ $0.sourcePlacemark }
-		if let last = responses.last {
+		var placemarks = directions.map{ $0.sourcePlacemark }
+		if let last = directions.last {
 			placemarks.append(last.destinationPlacemark)
 		}
 		return placemarks
 	}
 	
 	var distances: CLLocationDistance {
-		return responses.reduce(0, { (result, directionResponse) -> CLLocationDistance in
+		return directions.reduce(0, { (result, directionResponse) -> CLLocationDistance in
 			return result + directionResponse.distance
 		})
 	}
 	
 	var sumOfExpectedTravelTime: TimeInterval {
-		return responses.reduce(0, { (result, directionResponse) -> TimeInterval in
+		return directions.reduce(0, { (result, directionResponse) -> TimeInterval in
 			return result + directionResponse.expectedTravelTime
 		})
 	}

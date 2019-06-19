@@ -1,5 +1,5 @@
 //
-//  DirectionsModel.swift
+//  DirectionModel.swift
 //  SalesTraveling
 //
 //  Created by Ryan on 2017/11/21.
@@ -8,7 +8,7 @@
 
 import MapKit
 
-struct DirectionsModel: Codable {
+struct DirectionModel: Codable {
 	let source: HYCPlacemark
 	let destination: HYCPlacemark
 	let distance: CLLocationDistance
