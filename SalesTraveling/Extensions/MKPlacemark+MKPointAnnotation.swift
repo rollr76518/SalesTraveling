@@ -1,19 +1,14 @@
 //
-//  MKPlacemark+Extension.swift
+//  MKPlacemark+MKPointAnnotation.swift
 //  SalesTraveling
 //
-//  Created by Ryan on 2017/11/25.
-//  Copyright © 2017年 Hanyu. All rights reserved.
+//  Created by Ryan on 2019/6/19.
+//  Copyright © 2019 Hanyu. All rights reserved.
 //
 
 import MapKit
 
 extension MKPlacemark {
-	var toMapItem: MKMapItem {
-		let item = MKMapItem(placemark: self)
-		item.name = name
-		return item
-	}
 	
 	var pointAnnotation: MKPointAnnotation {
 		let annotation = MKPointAnnotation()

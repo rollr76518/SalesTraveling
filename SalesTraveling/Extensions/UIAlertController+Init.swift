@@ -9,6 +9,7 @@
 import UIKit
 
 extension UIAlertController {
+	
 	convenience init(title: String?, message: String?, handler: ((UIAlertAction) -> Swift.Void)? = nil) {
 		self.init(title: title, message: message, preferredStyle: .alert)
 		let action = UIAlertAction(title: "OK".localized, style: .default, handler: handler)
