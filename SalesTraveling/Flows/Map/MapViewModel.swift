@@ -26,21 +26,29 @@ class MapViewModel {
 	
 	var delegate: MapViewModelDelegate?
 	
+	private(set) var preferResult: PreferResult = .distance {
+		didSet {
+			tourModel = tourModel(preferResult: preferResult, in: tourModels)
+		}
+	}
+	
 	private(set) var tourModels: [TourModel] = [] {
 		didSet {
-			updatePlacemarks()
+			tourModel = tourModel(preferResult: preferResult, in: tourModels)
+		}
+	}
+	
+	private(set) var tourModel: TourModel? {
+		didSet {
+			guard let tourModel = tourModel else { return }
+			placemarks = tourModel.hycPlacemarks
+			delegate?.viewModel(self, didUpdatePolylines: tourModel.polylines)
 		}
 	}
 	
 	private(set) var placemarks: [HYCPlacemark] = [] {
 		didSet {
 			delegate?.viewModel(self, didUpdatePlacemarks: placemarks)
-		}
-	}
-	
-	private(set) var solution: PreferResult = .distance {
-		didSet {
-			updatePlacemarks()
 		}
 	}
 }
@@ -65,8 +73,9 @@ extension MapViewModel {
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					
-					self.placemarks.append(placemark)
-					self.tourModels = self.showResultOfCaculate(placemarks: self.placemarks)
+					var placemarks = self.placemarks
+					placemarks.append(placemark)
+					self.tourModels = self.showResultOfCaculate(placemarks: placemarks)
 				}
 			}
 
@@ -110,20 +119,14 @@ private extension MapViewModel {
 		return tourModels
 	}
 	
-	func updatePlacemarks() {
-		switch solution {
+	func tourModel(preferResult: PreferResult, in tourModels: [TourModel]) -> TourModel? {
+		switch preferResult {
 		case .distance:
-			guard let shortest = tourModels.sorted().first else { return }
-			placemarks = shortest.hycPlacemarks
-			let polylines = shortest.polylines
-			delegate?.viewModel(self, didUpdatePolylines: polylines)
+			return tourModels.sorted().first
 		case .time:
-			guard let fastest = tourModels.sorted(by: { (lhs, rhs) -> Bool in
+			return tourModels.sorted(by: { (lhs, rhs) -> Bool in
 				return lhs.sumOfExpectedTravelTime < rhs.sumOfExpectedTravelTime
-			}).first else { return }
-			placemarks = fastest.hycPlacemarks
-			let polylines = fastest.polylines
-			delegate?.viewModel(self, didUpdatePolylines: polylines)
+			}).first
 		}
 	}
 }
