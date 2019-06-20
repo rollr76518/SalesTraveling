@@ -15,6 +15,7 @@ protocol MapViewModelDelegate {
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error)
+	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool)
 }
 
 class MapViewModel {
@@ -51,6 +52,12 @@ class MapViewModel {
 			delegate?.viewModel(self, didUpdatePlacemarks: placemarks)
 		}
 	}
+	
+	private(set) var shouldShowTableView: Bool = false {
+		didSet {
+			delegate?.viewModel(self, shouldShowTableView: shouldShowTableView)
+		}
+	}
 }
 
 extension MapViewModel {
@@ -78,8 +85,11 @@ extension MapViewModel {
 					self.tourModels = self.showResultOfCaculate(placemarks: placemarks)
 				}
 			}
-
 		}
+	}
+	
+	func showTableView(show: Bool) {
+		shouldShowTableView = show
 	}
 }
 

@@ -10,46 +10,31 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController {
-	
-	var toppestY: CGFloat {
-		return 20.0 + self.navigationController!.navigationBar.frame.maxY
-	}
-	
-	var lowestY: CGFloat {
-		return self.tabBarController!.tabBar.frame.minY - 80.0
-	}
-	
-	lazy var addressResultTableViewController = makeAddressResultTableViewController()
-	var searchController: UISearchController!
 
 	@IBOutlet var tableView: UITableView!
-
-	var isOpen: Bool = false {
-		didSet  {
-			if isOpen {
-				openMovableView()
-			} else {
-				closeMovableView()
-			}
-		}
-	}
-	
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
 	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
 	@IBOutlet weak var titleOfPlacemarks: UIBarButtonItem!
-	
 	@IBOutlet var barButtonItemSave: UIBarButtonItem!
-	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-
-	}
 	
 	private var viewModel = MapViewModel()
 	
+	private lazy var addressResultTableViewController = makeAddressResultTableViewController()
+	private lazy var searchController: UISearchController = makeSearchController()
+	
+	private var toppestY: CGFloat {
+		return mapView.frame.minY + 20
+	}
+	
+	private var lowestY: CGFloat {
+		return mapView.frame.maxY - 80.0
+	}
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		setupUISearchController()
+	
+		let _ = searchController
 
 		titleOfPlacemarks.title = "Placemarks".localized
 		
@@ -63,28 +48,40 @@ class MapViewController: UIViewController {
 	}
 	
 	@IBAction func tapGestureRecognizerDidPressed(_ sender: UITapGestureRecognizer) {
-		isOpen = !isOpen
+		viewModel.showTableView(show: !viewModel.shouldShowTableView)
 	}
 	
 	@IBAction func panGestureRecognizerDidPressed(_ sender: UIPanGestureRecognizer) {
 		let touchPoint = sender.location(in: sender.view?.superview)
 		switch sender.state {
-		case .began: break
+		case .began:
+			break
 		case .changed:
 			movableView.frame.origin.y = touchPoint.y
 		case .ended, .failed, .cancelled:
-			setOpenOrClose()
-		default: break
+			if viewModel.shouldShowTableView {
+				let shouldHide = (movableView.frame.origin.y > toppestY + 30)
+				viewModel.showTableView(show: !shouldHide)
+			} else {
+				let shouldShow = (movableView.frame.origin.y < lowestY - 30)
+				viewModel.showTableView(show: shouldShow)
+			}
+		default:
+			break
 		}
+	}
+	
+	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
 		
 	}
 }
 
-extension MapViewController {
+// MARK: - Lazy var func
+private extension MapViewController {
+	
 	func makeAddressResultTableViewController() -> AddressResultTableViewController {
-		guard let vc = UIStoryboard(name: "Locate", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController
-			else {
-				fatalError("AddressResultTableViewController doesn't exist")
+		guard let vc = UIStoryboard(name: "Locate", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController else {
+			fatalError("AddressResultTableViewController doesn't exist")
 		}
 		
 		vc.delegate = self
@@ -92,8 +89,8 @@ extension MapViewController {
 		return vc
 	}
 	
-	func setupUISearchController() {
-		searchController = UISearchController(searchResultsController: addressResultTableViewController)
+	func makeSearchController() -> UISearchController {
+		let searchController = UISearchController(searchResultsController: addressResultTableViewController)
 		searchController.searchResultsUpdater = addressResultTableViewController
 		searchController.delegate = self
 		
@@ -105,11 +102,13 @@ extension MapViewController {
 		searchController.hidesNavigationBarDuringPresentation = false
 		searchController.dimsBackgroundDuringPresentation = true
 		definesPresentationContext = true
+		return searchController
 	}
 }
 
 //MARK: - AddressResultTableViewControllerProtocol
 extension MapViewController: AddressResultTableViewControllerProtocol {
+	
 	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
 		searchController.searchBar.text = nil
 		searchController.searchBar.resignFirstResponder()
@@ -127,43 +126,17 @@ extension MapViewController: UISearchControllerDelegate {
 
 // MARK: - Private func
 fileprivate extension MapViewController {
+	
 	func layoutMovableView() {
 		movableView.layer.cornerRadius = 22.0
 		movableView.layer.masksToBounds = true
 		constriantOfMovableViewHeight.constant = view.frame.height
 	}
-	
-	func setOpenOrClose() {
-		if isOpen {
-			if movableView.frame.origin.y > toppestY + 30 {
-				isOpen = false
-			} else {
-				isOpen = true
-			}
-		} else {
-			if movableView.frame.origin.y < lowestY - 30 {
-				isOpen = true
-			} else {
-				isOpen = false
-			}
-		}
-	}
-	
-	func openMovableView() {
-		UIView.beginAnimations(nil, context: nil)
-		movableView.frame.origin.y = toppestY
-		UIView.commitAnimations()
-	}
-	
-	func closeMovableView() {
-		UIView.beginAnimations(nil, context: nil)
-		movableView.frame.origin.y = lowestY
-		UIView.commitAnimations()
-	}
 }
 
 // MARK: - MKMapViewDelegate
 extension MapViewController: MKMapViewDelegate {
+	
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		if annotation is MKUserLocation {
 			return nil
@@ -203,6 +176,7 @@ extension MapViewController: MKMapViewDelegate {
 
 // MARK: - UITableViewDataSource
 extension MapViewController: UITableViewDataSource {
+	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return viewModel.placemarks.count
 	}
@@ -221,10 +195,11 @@ extension MapViewController: UITableViewDataSource {
 
 // MARK: UITableViewDelegate
 extension MapViewController: UITableViewDelegate {
+	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 		
-		isOpen = false
+		viewModel.showTableView(show: false)
 		
 		let placemark = viewModel.placemarks[indexPath.row]
 		
@@ -239,6 +214,7 @@ extension MapViewController: UITableViewDelegate {
 
 // MARK: - UIGestureRecognizerDelegate
 extension MapViewController: UIGestureRecognizerDelegate {
+	
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		return !tableView.frame.contains(touch.location(in: movableView))
 	}
@@ -246,6 +222,7 @@ extension MapViewController: UIGestureRecognizerDelegate {
 
 // MARK: - UIScrollViewDelegate
 extension MapViewController: UIScrollViewDelegate {
+	
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		if (scrollView.contentOffset.y < 0) || (scrollView.contentSize.height <= scrollView.frame.size.height) {
 			movableView.frame.origin.y -= scrollView.contentOffset.y
@@ -254,18 +231,24 @@ extension MapViewController: UIScrollViewDelegate {
 	}
 	
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-		setOpenOrClose()
+		if viewModel.shouldShowTableView {
+			let shouldShow = (scrollView.frame.origin.y > toppestY + 30)
+			viewModel.showTableView(show: shouldShow)
+		} else {
+			let shouldShow = (scrollView.frame.origin.y < lowestY - 30)
+			viewModel.showTableView(show: shouldShow)
+		}
 	}
 }
 
 extension MapViewController: MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark]) {
-		self.mapView.removeAnnotations(mapView.annotations)
-		self.mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
+		mapView.removeAnnotations(mapView.annotations)
+		mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
 			return placemark.pointAnnotation
 		}))
-		self.tableView.reloadData()
+		tableView.reloadData()
 	}
 	
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool) {
@@ -277,12 +260,34 @@ extension MapViewController: MapViewModelDelegate {
 	}
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline]) {
-		self.mapView.addOverlays(polylines, level: .aboveRoads)
+		mapView.addOverlays(polylines, level: .aboveRoads)
 		let rect = MapMananger.boundingMapRect(polylines: polylines)
-		self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), animated: false)
+		let verticalInset = mapView.frame.height / 10
+		let horizatonInset = mapView.frame.width / 10
+		mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: verticalInset, left: horizatonInset, bottom: verticalInset, right: horizatonInset), animated: false)
 	}
 
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error) {
 		print(error.localizedDescription)
+	}
+	
+	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool) {
+		func openMovableView() {
+			UIView.beginAnimations(nil, context: nil)
+			movableView.frame.origin.y = toppestY
+			UIView.commitAnimations()
+		}
+		
+		func closeMovableView() {
+			UIView.beginAnimations(nil, context: nil)
+			movableView.frame.origin.y = lowestY
+			UIView.commitAnimations()
+		}
+		
+		if show {
+			openMovableView()
+		} else {
+			closeMovableView()
+		}
 	}
 }
