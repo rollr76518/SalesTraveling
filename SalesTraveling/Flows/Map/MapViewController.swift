@@ -62,13 +62,7 @@ class MapViewController: UIViewController {
 		case .changed:
 			movableView.frame.origin.y = touchPoint.y
 		case .ended, .failed, .cancelled:
-			if viewModel.shouldShowTableView {
-				let shouldHide = (movableView.frame.origin.y > toppestY + 30)
-				viewModel.showTableView(show: !shouldHide)
-			} else {
-				let shouldShow = (movableView.frame.origin.y < lowestY - 30)
-				viewModel.showTableView(show: shouldShow)
-			}
+			magnetTableView()
 		default:
 			break
 		}
@@ -141,6 +135,16 @@ fileprivate extension MapViewController {
 		locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
 		locationManager.requestWhenInUseAuthorization()
 		locationManager.requestLocation()
+	}
+	
+	func  magnetTableView() {
+		if viewModel.shouldShowTableView {
+			let shouldHide = (movableView.frame.origin.y > toppestY + 30)
+			viewModel.showTableView(show: !shouldHide)
+		} else {
+			let shouldShow = (movableView.frame.origin.y < lowestY - 30)
+			viewModel.showTableView(show: shouldShow)
+		}
 	}
 }
 
@@ -245,13 +249,7 @@ extension MapViewController: UIScrollViewDelegate {
 	}
 	
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-		if viewModel.shouldShowTableView {
-			let shouldShow = (scrollView.frame.origin.y > toppestY + 30)
-			viewModel.showTableView(show: shouldShow)
-		} else {
-			let shouldShow = (scrollView.frame.origin.y < lowestY - 30)
-			viewModel.showTableView(show: shouldShow)
-		}
+		 magnetTableView()
 	}
 }
 
