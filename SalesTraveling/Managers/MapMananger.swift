@@ -117,8 +117,8 @@ extension MapMananger {
 			}
 		}
 		
-		return MKMapRect(origin: MKMapPoint(x: westPoint!, y: northPoint!),
-						 size: MKMapSize(width: eastPoint! - westPoint!, height: southPoint! - northPoint!))
+		return MKMapRect(origin: MKMapPoint(x: westPoint ?? 0, y: northPoint ?? 0),
+						 size: MKMapSize(width: (eastPoint ?? 0) - (westPoint ?? 0), height: (southPoint ?? 0) - (northPoint ?? 0)))
 	}
 }
 

@@ -162,7 +162,7 @@ extension MapViewController: MKMapViewDelegate {
 	
 	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
 		let renderer = MKPolylineRenderer(overlay: overlay)
-		renderer.strokeColor = .orange
+		renderer.strokeColor = UIColor.blue.withAlphaComponent(0.35)
 		renderer.lineWidth = 4.0
 		return renderer
 	}
@@ -255,6 +255,7 @@ extension MapViewController: UIScrollViewDelegate {
 	}
 }
 
+// MARK: - MapViewModelDelegate
 extension MapViewController: MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark]) {
