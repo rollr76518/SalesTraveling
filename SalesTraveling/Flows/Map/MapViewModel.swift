@@ -58,6 +58,13 @@ class MapViewModel {
 			delegate?.viewModel(self, shouldShowTableView: shouldShowTableView)
 		}
 	}
+	
+	private var error: Error? {
+		didSet {
+			guard let error = error else { return }
+			delegate?.viewModel(self, didRecevice: error)
+		}
+	}
 }
 
 extension MapViewModel {
@@ -77,6 +84,7 @@ extension MapViewModel {
 				switch status {
 				case .failure(let error):
 					self.delegate?.viewModel(self, didRecevice: error)
+					self.error = error
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					
