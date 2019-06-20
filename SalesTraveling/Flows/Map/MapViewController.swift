@@ -22,7 +22,8 @@ class MapViewController: UIViewController {
 	
 	private lazy var addressResultTableViewController = makeAddressResultTableViewController()
 	private lazy var searchController: UISearchController = makeSearchController()
-	
+	private let locationManager = CLLocationManager()
+
 	private var toppestY: CGFloat {
 		return mapView.frame.minY + 20
 	}
@@ -39,6 +40,8 @@ class MapViewController: UIViewController {
 		titleOfPlacemarks.title = "Placemarks".localized
 		
 		viewModel.delegate = self
+		
+		setupLocationManager()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -132,6 +135,13 @@ fileprivate extension MapViewController {
 		movableView.layer.masksToBounds = true
 		constriantOfMovableViewHeight.constant = view.frame.height
 	}
+	
+	func setupLocationManager() {
+		locationManager.delegate = self
+		locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+		locationManager.requestWhenInUseAuthorization()
+		locationManager.requestLocation()
+	}
 }
 
 // MARK: - MKMapViewDelegate
@@ -184,7 +194,11 @@ extension MapViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 		let placemark = viewModel.placemarks[indexPath.row]
-		cell.textLabel?.text = "\(indexPath.row + 1). "
+		if indexPath.row == 0 {
+			cell.textLabel?.text = "Current location".localized + ": "
+		} else {
+			cell.textLabel?.text = "\(indexPath.row). "
+		}
 		if let name = placemark.name {
 			cell.textLabel?.text?.append(name)
 		}
@@ -289,5 +303,26 @@ extension MapViewController: MapViewModelDelegate {
 		} else {
 			closeMovableView()
 		}
+	}
+}
+
+// MARK: - CLLocationManagerDelegate
+extension MapViewController: CLLocationManagerDelegate {
+	
+	private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+		if status != .authorizedWhenInUse {
+			manager.requestLocation()
+		}
+	}
+	
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		if let deviceLocation = locations.first {
+			viewModel.update(device: deviceLocation)
+		}
+		manager.stopUpdatingLocation()
+	}
+	
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+		print("manager didFailWithError: \(error.localizedDescription)")
 	}
 }
