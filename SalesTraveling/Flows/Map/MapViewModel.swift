@@ -58,6 +58,48 @@ class MapViewModel {
 			delegate?.viewModel(self, shouldShowTableView: shouldShowTableView)
 		}
 	}
+	
+	private var error: Error? {
+		didSet {
+			guard let error = error else { return }
+			delegate?.viewModel(self, didRecevice: error)
+		}
+	}
+	
+	private var deviceLocation: CLLocation? {
+		didSet {
+			guard let deviceLocation = deviceLocation else { return }
+			
+			delegate?.viewModel(self, isFetching: true)
+			
+			MapMananger.reverseCoordinate(deviceLocation.coordinate) { [weak self] (status) in
+				guard let self = self else { return }
+
+				self.delegate?.viewModel(self, isFetching: false)
+
+				switch status {
+				case .failure(let error):
+					self.error = error
+				case .success(let placemarks):
+					guard let first = placemarks.first else { return }
+					let placemark = HYCPlacemark(mkPlacemark: first)
+					self.userPlacemark = placemark
+				}
+			}
+		}
+	}
+	
+	private var userPlacemark: HYCPlacemark? {
+		didSet {
+			if let oldValue = oldValue {
+				placemarks.removeAll { (placemark) -> Bool in
+					return placemark == oldValue
+				}
+			}
+			guard let placemark = userPlacemark else { return }
+			placemarks.insert(placemark, at: 0)
+		}
+	}
 }
 
 extension MapViewModel {
@@ -76,7 +118,7 @@ extension MapViewModel {
 
 				switch status {
 				case .failure(let error):
-					self.delegate?.viewModel(self, didRecevice: error)
+					self.error = error
 				case .success(let directionModels):
 					DataManager.shared.save(directions: directionModels)
 					
@@ -91,6 +133,10 @@ extension MapViewModel {
 	func showTableView(show: Bool) {
 		shouldShowTableView = show
 	}
+	
+	func update(device location: CLLocation) {
+		deviceLocation = location
+	}
 }
 
 // MARK: - Private method
@@ -99,33 +145,34 @@ private extension MapViewModel {
 	func showResultOfCaculate(placemarks: [HYCPlacemark]) -> [TourModel] {
 		var tourModels: [TourModel] = []
 		
-		let permutations = AlgorithmManager.permutations(placemarks)
 		//[1, 2, 3] -> [[1, 2, 3], [1, 3, 2], [2, 3, 1], [2, 1, 3], [3, 1, 2], [3, 2, 1]]
+		let permutations = AlgorithmManager.permutations(placemarks)
 		
+		//[[(1, 2), (2, 3)], [(1, 3), (3, 2)], [(2, 3), (3, 1)], [(2, 1), (1, 3)], [(3, 1), (1, 2)], [(3, 2), (2, 1)]]
 		let tuplesCollection = permutations.map { (placemarks) -> [(HYCPlacemark, HYCPlacemark)] in
 			return placemarks.toTuple()
 		}
-		//[[(1, 2), (2, 3)], [(1, 3), (3, 2)], [(2, 3), (3, 1)], [(2, 1), (1, 3)], [(3, 1), (1, 2)], [(3, 2), (2, 1)]]
 		
 		for (index, tuples) in tuplesCollection.enumerated() {
 			let tourModel = TourModel()
 			tourModels.append(tourModel)
 			
-			for (index2, tuple) in tuples.enumerated() {
-				//				if index2 == 0, let sourcePlacemark = sourcePlacemark {
-				//					let source = sourcePlacemark
-				//					let destination = tuple.0
-				//					if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
-				//						tourModels[index].responses.append(directions)
-				//					}
-				//				}
-				let source = tuple.0
-				let destination = tuple.1
+			for (nestedIndex, tuple) in tuples.enumerated() {
+				//先弄起點
+				if nestedIndex == 0, let userPlacemark = userPlacemark {
+					let source = userPlacemark, destination = tuple.0
+					if let directions = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+						tourModels[index].directions.append(directions)
+					}
+				}
+				//再弄中間點
+				let source = tuple.0, destination = tuple.1
 				if let direction = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
 					tourModels[index].directions.append(direction)
 				}
 			}
 		}
+		
 		return tourModels
 	}
 	
