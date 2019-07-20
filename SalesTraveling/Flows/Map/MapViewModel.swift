@@ -143,7 +143,9 @@ private extension MapViewModel {
 		if placemarks.count == 1 {
 			if let source = userPlacemark, let destination = placemarks.first {
 				if let directions = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
-					tourModels[0].directions.append(directions)
+					var tourModel = TourModel()
+					tourModel.directions.append(directions)
+					tourModels.append(tourModel)
 				}
 			}
 		} else {
