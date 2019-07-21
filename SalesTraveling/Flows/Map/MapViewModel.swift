@@ -11,6 +11,7 @@ import MapKit.MKPlacemark
 
 protocol MapViewModelDelegate {
 	
+	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark])
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
@@ -42,7 +43,6 @@ class MapViewModel {
 	private(set) var tourModel: TourModel? {
 		didSet {
 			guard let tourModel = tourModel else { return }
-			placemarks = tourModel.hycPlacemarks
 			delegate?.viewModel(self, didUpdatePolylines: tourModel.polylines)
 		}
 	}
@@ -89,15 +89,10 @@ class MapViewModel {
 		}
 	}
 	
-	private var userPlacemark: HYCPlacemark? {
+	private(set) var userPlacemark: HYCPlacemark? {
 		didSet {
-			if let oldValue = oldValue {
-				placemarks.removeAll { (placemark) -> Bool in
-					return placemark == oldValue
-				}
-			}
 			guard let placemark = userPlacemark else { return }
-			placemarks.insert(placemark, at: 0)
+			delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
 		}
 	}
 }
@@ -107,25 +102,23 @@ extension MapViewModel {
 	func add(placemark: MKPlacemark) {
 		let placemark = HYCPlacemark(mkPlacemark: placemark)
 
-		if placemarks.isEmpty {
-			placemarks = [placemark]
-		} else {
-			delegate?.viewModel(self, isFetching: true)
-			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: nil) { [weak self] (status) in
-				guard let self = self else { return }
-				
-				self.delegate?.viewModel(self, isFetching: false)
+		delegate?.viewModel(self, isFetching: true)
 
-				switch status {
-				case .failure(let error):
-					self.error = error
-				case .success(let directionModels):
-					DataManager.shared.save(directions: directionModels)
-					
-					var placemarks = self.placemarks
-					placemarks.append(placemark)
-					self.tourModels = self.showResultOfCaculate(placemarks: placemarks)
-				}
+		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { [weak self] (status) in
+			guard let self = self else { return }
+			
+			self.delegate?.viewModel(self, isFetching: false)
+			
+			switch status {
+			case .failure(let error):
+				self.error = error
+			case .success(let directionModels):
+				DataManager.shared.save(directions: directionModels)
+				
+				var placemarks = self.placemarks
+				placemarks.append(placemark)
+				self.placemarks = placemarks
+				self.tourModels = self.showResultOfCaculate(startAt: self.userPlacemark, placemarks: placemarks)
 			}
 		}
 	}
@@ -142,33 +135,43 @@ extension MapViewModel {
 // MARK: - Private method
 private extension MapViewModel {
 	
-	func showResultOfCaculate(placemarks: [HYCPlacemark]) -> [TourModel] {
+	func showResultOfCaculate(startAt userPlacemark: HYCPlacemark?, placemarks: [HYCPlacemark]) -> [TourModel] {
 		var tourModels: [TourModel] = []
 		
-		//[1, 2, 3] -> [[1, 2, 3], [1, 3, 2], [2, 3, 1], [2, 1, 3], [3, 1, 2], [3, 2, 1]]
-		let permutations = AlgorithmManager.permutations(placemarks)
-		
-		//[[(1, 2), (2, 3)], [(1, 3), (3, 2)], [(2, 3), (3, 1)], [(2, 1), (1, 3)], [(3, 1), (1, 2)], [(3, 2), (2, 1)]]
-		let tuplesCollection = permutations.map { (placemarks) -> [(HYCPlacemark, HYCPlacemark)] in
-			return placemarks.toTuple()
-		}
-		
-		for (index, tuples) in tuplesCollection.enumerated() {
-			let tourModel = TourModel()
-			tourModels.append(tourModel)
-			
-			for (nestedIndex, tuple) in tuples.enumerated() {
-				//先弄起點
-				if nestedIndex == 0, let userPlacemark = userPlacemark {
-					let source = userPlacemark, destination = tuple.0
-					if let directions = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
-						tourModels[index].directions.append(directions)
-					}
+		//TODO: 改成比較清楚的處理流
+		//只有一個點的時候不需要做排列組合的計算
+		if placemarks.count == 1 {
+			if let source = userPlacemark, let destination = placemarks.first {
+				if let directions = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+					tourModels[0].directions.append(directions)
 				}
-				//再弄中間點
-				let source = tuple.0, destination = tuple.1
-				if let direction = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
-					tourModels[index].directions.append(direction)
+			}
+		} else {
+			//[1, 2, 3] -> [[1, 2, 3], [1, 3, 2], [2, 3, 1], [2, 1, 3], [3, 1, 2], [3, 2, 1]]
+			let permutations = AlgorithmManager.permutations(placemarks)
+			
+			//[[(1, 2), (2, 3)], [(1, 3), (3, 2)], [(2, 3), (3, 1)], [(2, 1), (1, 3)], [(3, 1), (1, 2)], [(3, 2), (2, 1)]]
+			let tuplesCollection = permutations.map { (placemarks) -> [(HYCPlacemark, HYCPlacemark)] in
+				return placemarks.toTuple()
+			}
+			
+			for (index, tuples) in tuplesCollection.enumerated() {
+				let tourModel = TourModel()
+				tourModels.append(tourModel)
+				
+				for (nestedIndex, tuple) in tuples.enumerated() {
+					//先弄起點
+					if nestedIndex == 0, let userPlacemark = userPlacemark {
+						let source = userPlacemark, destination = tuple.0
+						if let directions = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+							tourModels[index].directions.append(directions)
+						}
+					}
+					//再弄中間點
+					let source = tuple.0, destination = tuple.1
+					if let direction = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+						tourModels[index].directions.append(direction)
+					}
 				}
 			}
 		}
