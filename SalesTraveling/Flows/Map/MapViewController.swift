@@ -10,6 +10,11 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController {
+	
+	enum SectionType: Int, CaseIterable {
+		case source = 0
+		case destination = 1
+	}
 
 	@IBOutlet var tableView: UITableView!
 	@IBOutlet weak var mapView: MKMapView!
@@ -191,22 +196,38 @@ extension MapViewController: MKMapViewDelegate {
 // MARK: - UITableViewDataSource
 extension MapViewController: UITableViewDataSource {
 	
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return SectionType.allCases.count
+	}
+	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return viewModel.placemarks.count
+		guard let type = SectionType(rawValue: section) else {
+			return 0
+		}
+		switch type {
+		case .source:
+			return (viewModel.userPlacemark != nil) ? 1 : 0
+		case .destination:
+			return viewModel.placemarks.count
+		}
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		let placemark = viewModel.placemarks[indexPath.row]
-		if indexPath.row == 0 {
-			cell.textLabel?.text = "Current location".localized + ": "
-		} else {
-			cell.textLabel?.text = "\(indexPath.row). "
+
+		guard let type = SectionType(rawValue: indexPath.section) else {
+			return cell
 		}
-		if let name = placemark.name {
-			cell.textLabel?.text?.append(name)
+		switch type {
+		case .source:
+			let placemark = viewModel.userPlacemark
+			cell.textLabel?.text = "Current location".localized + ": " + (placemark?.name ?? "")
+			cell.detailTextLabel?.text = placemark?.title
+		case .destination:
+			let placemark = viewModel.placemarks[indexPath.row]
+			cell.textLabel?.text = "\(indexPath.row + 1). " + (placemark.name ?? "")
+			cell.detailTextLabel?.text = placemark.title
 		}
-		cell.detailTextLabel?.text = placemark.title
 		return cell
 	}
 }
@@ -216,15 +237,27 @@ extension MapViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		
 		viewModel.showTableView(show: false)
-		
-		let placemark = viewModel.placemarks[indexPath.row]
-		
-		for annotation in mapView.annotations {
-			if annotation.coordinate.latitude == placemark.coordinate.latitude &&
-				annotation.coordinate.longitude == placemark.coordinate.longitude {
-				mapView.selectAnnotation(annotation, animated: true)
+
+		guard let type = SectionType(rawValue: indexPath.section) else {
+			return
+		}
+		switch type {
+		case .source:
+			let placemark = viewModel.userPlacemark
+			for annotation in mapView.annotations {
+				if annotation.coordinate.latitude == placemark?.coordinate.latitude &&
+					annotation.coordinate.longitude == placemark?.coordinate.longitude {
+					mapView.selectAnnotation(annotation, animated: true)
+				}
+			}
+		case .destination:
+			let placemark = viewModel.placemarks[indexPath.row]
+			for annotation in mapView.annotations {
+				if annotation.coordinate.latitude == placemark.coordinate.latitude &&
+					annotation.coordinate.longitude == placemark.coordinate.longitude {
+					mapView.selectAnnotation(annotation, animated: true)
+				}
 			}
 		}
 	}
@@ -255,13 +288,31 @@ extension MapViewController: UIScrollViewDelegate {
 
 // MARK: - MapViewModelDelegate
 extension MapViewController: MapViewModelDelegate {
+	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?) {
+		//清除現有資料，避免重覆
+		if let annotation = mapView.annotations.first(where: { (annotation) -> Bool in
+			return (annotation.coordinate.latitude == oldValue?.coordinate.latitude &&
+				annotation.coordinate.longitude == oldValue?.coordinate.longitude)
+		}) {
+			mapView.removeAnnotation(annotation)
+		}
+		//載入最新的資料
+		mapView.addAnnotation(placemark.pointAnnotation)
+		tableView.reloadSections([SectionType.source.rawValue], with: .automatic)
+	}
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark]) {
-		mapView.removeAnnotations(mapView.annotations)
+		//清除現有資料，避免重覆
+		let anntationsBesideUser = mapView.annotations.filter { (annotation) -> Bool in
+			return (annotation.coordinate.latitude != viewModel.userPlacemark?.coordinate.latitude &&
+				annotation.coordinate.longitude != viewModel.userPlacemark?.coordinate.longitude)
+		}
+		mapView.removeAnnotations(anntationsBesideUser)
+		//載入最新的資料
 		mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
 			return placemark.pointAnnotation
 		}))
-		tableView.reloadData()
+		tableView.reloadSections([SectionType.destination.rawValue], with: .automatic)
 	}
 	
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool) {
