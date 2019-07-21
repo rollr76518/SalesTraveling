@@ -12,7 +12,7 @@ import MapKit.MKPlacemark
 protocol MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
-	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark])
+	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark], oldValue: [HYCPlacemark])
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error)
@@ -49,7 +49,7 @@ class MapViewModel {
 	
 	private(set) var placemarks: [HYCPlacemark] = [] {
 		didSet {
-			delegate?.viewModel(self, didUpdatePlacemarks: placemarks)
+			delegate?.viewModel(self, didUpdatePlacemarks: placemarks, oldValue: oldValue)
 		}
 	}
 	
@@ -134,6 +134,11 @@ extension MapViewModel {
 	
 	func update(device location: CLLocation) {
 		deviceLocation = location
+	}
+	
+	func deletePlacemark(at index: Int) {
+		placemarks.remove(at: index)
+		tourModels = showResultOfCaculate(startAt: userPlacemark, placemarks: placemarks)
 	}
 }
 

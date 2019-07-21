@@ -289,6 +289,29 @@ extension MapViewController: UITableViewDelegate {
 			}
 		}
 	}
+	
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		guard let type = SectionType(rawValue: indexPath.section) else {
+			return false
+		}
+		switch type {
+		case .source:
+			return false
+		case .destination:
+			return true
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+		return .delete
+	}
+	
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			viewModel.deletePlacemark(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .automatic)
+		}
+	}
 }
 
 // MARK: - UIGestureRecognizerDelegate
@@ -316,6 +339,7 @@ extension MapViewController: UIScrollViewDelegate {
 
 // MARK: - MapViewModelDelegate
 extension MapViewController: MapViewModelDelegate {
+	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?) {
 		//清除現有資料，避免重覆
 		if let annotation = mapView.annotations.first(where: { (annotation) -> Bool in
@@ -329,7 +353,7 @@ extension MapViewController: MapViewModelDelegate {
 		tableView.reloadSections([SectionType.source.rawValue], with: .automatic)
 	}
 	
-	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark]) {
+	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark], oldValue: [HYCPlacemark]) {
 		//清除現有資料，避免重覆
 		let anntationsBesideUser = mapView.annotations.filter { (annotation) -> Bool in
 			return (annotation.coordinate.latitude != viewModel.userPlacemark?.coordinate.latitude &&
@@ -340,7 +364,11 @@ extension MapViewController: MapViewModelDelegate {
 		mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
 			return placemark.pointAnnotation
 		}))
-		tableView.reloadSections([SectionType.destination.rawValue], with: .automatic)
+		
+		//刪除的話不進行更新
+		if placemarks.count >= oldValue.count {
+			tableView.reloadSections([SectionType.destination.rawValue], with: .automatic)
+		}
 	}
 	
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool) {
@@ -352,6 +380,7 @@ extension MapViewController: MapViewModelDelegate {
 	}
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline]) {
+		mapView.removeOverlays(mapView.overlays)
 		mapView.addOverlays(polylines, level: .aboveRoads)
 		let rect = MapMananger.boundingMapRect(polylines: polylines)
 		let verticalInset = mapView.frame.height / 10
