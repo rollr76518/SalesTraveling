@@ -84,6 +84,11 @@ class MapViewModel {
 					guard let first = placemarks.first else { return }
 					let placemark = HYCPlacemark(mkPlacemark: first)
 					self.userPlacemark = placemark
+					if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
+						self.add(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074))) //西門町
+						self.add(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731))) //木柵動物園
+						self.add(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736))) //內湖好市多
+					}
 				}
 			}
 		}
