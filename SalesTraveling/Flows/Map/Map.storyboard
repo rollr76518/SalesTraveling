@@ -45,26 +45,14 @@
                                 </connections>
                             </mapView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YBi-l3-ajR">
-                                <rect key="frame" x="0.0" y="538" width="375" height="474"/>
+                                <rect key="frame" x="0.0" y="538" width="375" height="554"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="9Jz-V7-On3">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="474"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jVO-Zo-0h8">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                            <items>
-                                                <barButtonItem title="Edit" style="plain" id="ECX-8J-GGq"/>
-                                                <barButtonItem style="plain" systemItem="flexibleSpace" id="nnW-rO-l0D"/>
-                                                <barButtonItem title="Label" style="plain" id="SgG-hq-wk7">
-                                                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                </barButtonItem>
-                                                <barButtonItem style="plain" systemItem="flexibleSpace" id="4WY-RT-fH7"/>
-                                                <barButtonItem systemItem="save" id="Kw1-c4-eiG">
-                                                    <connections>
-                                                        <action selector="rightBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="aSd-EJ-xAt"/>
-                                                    </connections>
-                                                </barButtonItem>
-                                            </items>
+                                            <items/>
                                         </toolbar>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NT5-7T-dT4">
                                             <rect key="frame" x="165.5" y="3" width="44" height="3"/>
@@ -75,7 +63,7 @@
                                             </constraints>
                                         </view>
                                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="xnY-mM-7yX">
-                                            <rect key="frame" x="0.0" y="44" width="375" height="430"/>
+                                            <rect key="frame" x="0.0" y="44" width="375" height="510"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <prototypes>
                                                 <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="GaZ-ab-KeK" detailTextLabel="165-dg-0S9" style="IBUITableViewCellStyleSubtitle" id="pde-NV-HUu">
@@ -132,11 +120,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="YBi-l3-ajR" firstAttribute="top" secondItem="bJo-Iw-A2w" secondAttribute="bottomMargin" constant="-80" id="1hR-NS-bVq"/>
                             <constraint firstItem="Ve7-Bx-Gx7" firstAttribute="bottom" secondItem="20s-Vq-Z6W" secondAttribute="bottom" id="6YS-GJ-m6c"/>
                             <constraint firstItem="20s-Vq-Z6W" firstAttribute="top" secondItem="Ve7-Bx-Gx7" secondAttribute="top" id="B6r-mD-qOC"/>
-                            <constraint firstItem="YBi-l3-ajR" firstAttribute="height" secondItem="Ve7-Bx-Gx7" secondAttribute="height" constant="-80" id="VwS-Gv-REg"/>
+                            <constraint firstItem="YBi-l3-ajR" firstAttribute="height" secondItem="Ve7-Bx-Gx7" secondAttribute="height" id="VwS-Gv-REg"/>
                             <constraint firstItem="Ve7-Bx-Gx7" firstAttribute="trailing" secondItem="YBi-l3-ajR" secondAttribute="trailing" id="YAl-9b-5i9"/>
+                            <constraint firstItem="YBi-l3-ajR" firstAttribute="top" secondItem="20s-Vq-Z6W" secondAttribute="bottom" constant="-80" id="aFm-JF-7cU"/>
                             <constraint firstItem="20s-Vq-Z6W" firstAttribute="leading" secondItem="Ve7-Bx-Gx7" secondAttribute="leading" id="omv-Cb-vQJ"/>
                             <constraint firstItem="Ve7-Bx-Gx7" firstAttribute="trailing" secondItem="20s-Vq-Z6W" secondAttribute="trailing" id="qeE-D1-j4m"/>
                             <constraint firstItem="YBi-l3-ajR" firstAttribute="leading" secondItem="Ve7-Bx-Gx7" secondAttribute="leading" id="thq-vv-8tx"/>
@@ -145,15 +133,30 @@
                     </view>
                     <navigationItem key="navigationItem" id="Gir-vW-qcY"/>
                     <connections>
+                        <outlet property="barButtonItemDone" destination="aty-bD-WXG" id="yQ5-Gn-8ot"/>
+                        <outlet property="barButtonItemEdit" destination="ECX-8J-GGq" id="Jhh-EO-E9A"/>
                         <outlet property="barButtonItemSave" destination="Kw1-c4-eiG" id="4bo-Pu-nac"/>
                         <outlet property="constriantOfMovableViewHeight" destination="VwS-Gv-REg" id="WX1-eN-3g7"/>
                         <outlet property="mapView" destination="20s-Vq-Z6W" id="hqY-yI-dhP"/>
                         <outlet property="movableView" destination="YBi-l3-ajR" id="Zgb-Lw-KCB"/>
                         <outlet property="tableView" destination="xnY-mM-7yX" id="PcP-a0-7CH"/>
-                        <outlet property="titleOfPlacemarks" destination="SgG-hq-wk7" id="sNS-ad-trf"/>
+                        <outlet property="titleOfPlacemarks" destination="F09-Fz-ndH" id="mkv-FN-mxA"/>
+                        <outlet property="toolbar" destination="jVO-Zo-0h8" id="MH9-RI-1x3"/>
+                        <outlet property="topOfMovableView" destination="aFm-JF-7cU" id="iKV-uo-kib"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V6Z-6h-dck" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem style="plain" systemItem="edit" id="ECX-8J-GGq">
+                    <connections>
+                        <action selector="leftBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="cU9-40-Dob"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem systemItem="save" id="Kw1-c4-eiG">
+                    <connections>
+                        <action selector="rightBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="XTd-Kj-LAJ"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem enabled="NO" title="Item" id="F09-Fz-ndH"/>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="bHQ-lV-Ihk">
                     <connections>
                         <action selector="panGestureRecognizerDidPressed:" destination="4Np-yJ-KqG" id="Jo7-J9-d2l"/>
@@ -165,6 +168,11 @@
                         <outlet property="delegate" destination="4Np-yJ-KqG" id="HRz-yM-uIx"/>
                     </connections>
                 </tapGestureRecognizer>
+                <barButtonItem style="plain" systemItem="done" id="aty-bD-WXG">
+                    <connections>
+                        <action selector="leftBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="K8S-UV-ThB"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="2176.8000000000002" y="1412.7436281859073"/>
         </scene>

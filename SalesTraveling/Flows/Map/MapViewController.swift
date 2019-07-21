@@ -20,33 +20,44 @@ class MapViewController: UIViewController {
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet var movableView: UIVisualEffectView!
 	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
-	@IBOutlet weak var titleOfPlacemarks: UIBarButtonItem!
+	@IBOutlet weak var topOfMovableView: NSLayoutConstraint!
+	@IBOutlet weak var titleOfPlacemarks: UIBarButtonItem! {
+		didSet {
+			let attributed = [
+				NSAttributedString.Key.foregroundColor: UIColor.black,
+				NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17.0, weight: UIFont.Weight.bold)]
+			titleOfPlacemarks.title = "Placemarks".localized
+			titleOfPlacemarks.setTitleTextAttributes(attributed, for: .disabled)
+		}
+	}
 	@IBOutlet var barButtonItemSave: UIBarButtonItem!
+	@IBOutlet var barButtonItemDone: UIBarButtonItem!
+	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
+	@IBOutlet weak var toolbar: UIToolbar!
 	
 	private var viewModel = MapViewModel()
-	
 	private lazy var addressResultTableViewController = makeAddressResultTableViewController()
 	private lazy var searchController: UISearchController = makeSearchController()
 	private let locationManager = CLLocationManager()
 
 	private var toppestY: CGFloat {
-		return mapView.frame.minY + 20
+		return -(mapView.bounds.height - 20)
 	}
 	
 	private var lowestY: CGFloat {
-		return mapView.frame.maxY - 80.0
+		return -80.0
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 	
 		let _ = searchController
-
-		titleOfPlacemarks.title = "Placemarks".localized
 		
 		viewModel.delegate = self
 		
 		setupLocationManager()
+		
+		layoutLeftBarButtonItem()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -55,17 +66,18 @@ class MapViewController: UIViewController {
 		layoutMovableView()
 	}
 	
+	//MARK: - IBActions
 	@IBAction func tapGestureRecognizerDidPressed(_ sender: UITapGestureRecognizer) {
 		viewModel.showTableView(show: !viewModel.shouldShowTableView)
 	}
 	
 	@IBAction func panGestureRecognizerDidPressed(_ sender: UIPanGestureRecognizer) {
-		let touchPoint = sender.location(in: sender.view?.superview)
+		let touchPoint = sender.location(in: mapView)
 		switch sender.state {
 		case .began:
 			break
 		case .changed:
-			movableView.frame.origin.y = touchPoint.y
+			topOfMovableView.constant = -(mapView.bounds.height - touchPoint.y)
 		case .ended, .failed, .cancelled:
 			magnetTableView()
 		default:
@@ -75,6 +87,21 @@ class MapViewController: UIViewController {
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
 		
+	}
+	
+	@IBAction func leftBarButtonItemDidPressed(_ sender: Any) {
+		tableView.setEditing(!tableView.isEditing, animated: true)
+		perform(#selector(layoutLeftBarButtonItem), with: nil, afterDelay: 0.25)
+	}
+	
+	@objc
+	func layoutLeftBarButtonItem() {
+		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		toolbar.setItems([leftBarButtonItem(), flexibleSpace, titleOfPlacemarks, flexibleSpace, barButtonItemSave], animated: false)
+	}
+	
+	func leftBarButtonItem() -> UIBarButtonItem {
+		return tableView.isEditing ? barButtonItemDone:barButtonItemEdit
 	}
 }
 
@@ -143,11 +170,12 @@ fileprivate extension MapViewController {
 	}
 	
 	func  magnetTableView() {
+		let buffer: CGFloat = 30.0
 		if viewModel.shouldShowTableView {
-			let shouldHide = (movableView.frame.origin.y > toppestY + 30)
+			let shouldHide = (topOfMovableView.constant > toppestY - buffer)
 			viewModel.showTableView(show: !shouldHide)
 		} else {
-			let shouldShow = (movableView.frame.origin.y < lowestY - 30)
+			let shouldShow = (topOfMovableView.constant < lowestY + buffer)
 			viewModel.showTableView(show: shouldShow)
 		}
 	}
@@ -276,7 +304,7 @@ extension MapViewController: UIScrollViewDelegate {
 	
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		if (scrollView.contentOffset.y < 0) || (scrollView.contentSize.height <= scrollView.frame.size.height) {
-			movableView.frame.origin.y -= scrollView.contentOffset.y
+			topOfMovableView.constant -= scrollView.contentOffset.y
 			scrollView.contentOffset = CGPoint.zero
 		}
 	}
@@ -337,15 +365,17 @@ extension MapViewController: MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool) {
 		func openMovableView() {
-			UIView.beginAnimations(nil, context: nil)
-			movableView.frame.origin.y = toppestY
-			UIView.commitAnimations()
+			UIView.animate(withDuration: 0.25) {
+				self.topOfMovableView.constant = self.toppestY
+				self.view.layoutIfNeeded()
+			}
 		}
 		
 		func closeMovableView() {
-			UIView.beginAnimations(nil, context: nil)
-			movableView.frame.origin.y = lowestY
-			UIView.commitAnimations()
+			UIView.animate(withDuration: 0.25) {
+				self.topOfMovableView.constant = self.lowestY
+				self.view.layoutIfNeeded()
+			}
 		}
 		
 		if show {
