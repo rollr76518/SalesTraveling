@@ -85,9 +85,7 @@ class MapViewModel {
 					let placemark = HYCPlacemark(mkPlacemark: first)
 					self.userPlacemark = placemark
 					if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
-						self.add(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074))) //西門町
-						self.add(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731))) //木柵動物園
-						self.add(placemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736))) //內湖好市多
+						self.addMockPlacemarks()
 					}
 				}
 			}
@@ -104,7 +102,7 @@ class MapViewModel {
 
 extension MapViewModel {
 	
-	func add(placemark: MKPlacemark) {
+	func add(placemark: MKPlacemark, completion: (() -> Void)?) {
 		let placemark = HYCPlacemark(mkPlacemark: placemark)
 
 		delegate?.viewModel(self, isFetching: true)
@@ -117,6 +115,7 @@ extension MapViewModel {
 			switch status {
 			case .failure(let error):
 				self.error = error
+				completion?()
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
 				
@@ -124,6 +123,7 @@ extension MapViewModel {
 				placemarks.append(placemark)
 				self.placemarks = placemarks
 				self.tourModels = self.showResultOfCaculate(startAt: self.userPlacemark, placemarks: placemarks)
+				completion?()
 			}
 		}
 	}
@@ -199,6 +199,37 @@ private extension MapViewModel {
 			return tourModels.sorted(by: { (lhs, rhs) -> Bool in
 				return lhs.sumOfExpectedTravelTime < rhs.sumOfExpectedTravelTime
 			}).first
+		}
+	}
+}
+
+extension MapViewModel {
+	
+	func addMockPlacemarks() {
+		DispatchQueue.global().async {
+			let queue = OperationQueue()
+			
+			let placemarks = [
+				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
+				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)), //木柵動物園
+				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736)) //內湖好市多
+			]
+			
+			placemarks.forEach({ (placemark) in
+				let blockOperation = BlockOperation(block: { [weak self] in
+					guard let self = self else { return }
+					let semaphore = DispatchSemaphore(value: 0)
+					DispatchQueue.main.async { [weak self] in
+						self?.add(placemark: placemark, completion: {
+							semaphore.signal()
+						})
+					}
+					semaphore.wait()
+				})
+				queue.addOperation(blockOperation)
+			})
+			
+			queue.waitUntilAllOperationsAreFinished()
 		}
 	}
 }

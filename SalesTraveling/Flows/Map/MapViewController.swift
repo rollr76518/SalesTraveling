@@ -144,7 +144,7 @@ extension MapViewController: AddressResultTableViewControllerProtocol {
 		
 		MapMananger().defaultMapCenter = placemark.coordinate
 		
-		viewModel.add(placemark: placemark)
+		viewModel.add(placemark: placemark, completion: nil)
 	}
 }
 
