@@ -143,9 +143,11 @@ extension MapViewController: AddressResultTableViewControllerProtocol {
 		searchController.searchBar.text = nil
 		searchController.searchBar.resignFirstResponder()
 		
-		MapMananger().defaultMapCenter = placemark.coordinate
-		
 		viewModel.add(placemark: placemark, completion: nil)
+	}
+	
+	func favoritePlacemarksAtVC(_ vc: AddressResultTableViewController) -> [HYCPlacemark] {
+		return viewModel.favoritePlacemarks()
 	}
 }
 
@@ -207,25 +209,20 @@ extension MapViewController: MKMapViewDelegate {
 	}
 	
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+		guard
+			let annotation = view.annotation,
+			let placemark = viewModel.placemark(at: annotation.coordinate)
+			else {
+				print("view.annotation is nil")
+				return
+		}
 		switch control {
 		case let left where left == view.leftCalloutAccessoryView:
-			print("leftCalloutAccessoryView")
-			// TODO: 加到 favorite
-			break
+			viewModel.addToFavorite(placemark)
 		case let right where right == view.rightCalloutAccessoryView:
-			if let annotation = view.annotation {
-				for placemark in viewModel.placemarks {
-					if placemark.coordinate.latitude == annotation.coordinate.latitude &&
-						placemark.coordinate.longitude == annotation.coordinate.longitude {
-						
-						let mapItems = [placemark.toMapItem]
-						let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-						MKMapItem.openMaps(with: mapItems, launchOptions: options)
-					}
-				}
-			} else {
-				print("view.annotation is nil")
-			}
+			let mapItems = [placemark.toMapItem]
+			let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
+			MKMapItem.openMaps(with: mapItems, launchOptions: options)
 		default:
 			break
 		}

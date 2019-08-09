@@ -256,3 +256,36 @@ extension MapViewModel {
 		}
 	}
 }
+
+extension MapViewModel {
+	
+	func placemark(at coordinate: CLLocationCoordinate2D) -> HYCPlacemark? {
+		return placemarks.first { (placemark) -> Bool in
+			return placemark.coordinate.latitude == coordinate.latitude &&
+				placemark.coordinate.longitude == coordinate.longitude
+		}
+	}
+	
+	func addToFavorite(_ placemark: HYCPlacemark) {
+		do {
+			try DataManager.shared.addToFavorites(placemark: placemark)
+		} catch {
+			self.error = error
+		}
+	}
+	
+	func favoritePlacemarks() -> [HYCPlacemark] {
+		let userCoordinate = self.userPlacemark?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+		let set = DataManager.shared.favoritePlacemarks()
+		return set
+			//用與目前使用者的距離來排序
+			.sorted(by: { (lhs, rhs) -> Bool in
+				func distance(source: CLLocationCoordinate2D, destination: CLLocationCoordinate2D) -> Double {
+					return sqrt(pow((source.latitude - destination.latitude), 2) + pow((source.longitude - destination.longitude), 2))
+				}
+				let distanceOflhs = distance(source: lhs.coordinate, destination: userCoordinate)
+				let distanceOfrhs = distance(source: rhs.coordinate, destination: userCoordinate)
+				return distanceOflhs > distanceOfrhs
+			})
+	}
+}
