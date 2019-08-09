@@ -82,3 +82,12 @@ extension TourModel: Comparable {
 	}
 }
 
+extension TourModel: Hashable {
+	
+	func hash(into hasher: inout Hasher) {
+		polylines.forEach { (polyline) in
+			let coordinate = polyline.coordinate
+			hasher.combine("\(coordinate.latitude)" + "+" + "\(coordinate.longitude)")
+		}
+	}
+}

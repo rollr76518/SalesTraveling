@@ -10,11 +10,13 @@ import Foundation
 import MapKit.MKPlacemark
 
 class DataManager {
+	
 	static let shared = DataManager()
 }
 
 // MARK: - Direction
 extension DataManager {
+	
 	func save(direction: DirectionModel) {
 		do {
 			let data = try JSONEncoder().encode(direction)
@@ -41,9 +43,10 @@ extension DataManager {
 
 // MARK: - TourModel
 extension DataManager {
+	
 	func save(tourModel: TourModel) throws {
-		var favoriteTours = self.savedTours()
-		favoriteTours.append(tourModel)
+		var favoriteTours = Set(self.savedTours())
+		favoriteTours.insert(tourModel)
 		do {
 			let data = try JSONEncoder().encode(favoriteTours)
 			let key = UserDefaults.Keys.SavedTours
@@ -64,9 +67,8 @@ extension DataManager {
 	}
 	
 	func delete(tourModel: TourModel) {
-		let newTours = self.savedTours().filter { (oldTourModel) -> Bool in
-			return oldTourModel != tourModel
-		}
+		var newTours = Set(self.savedTours())
+		newTours.remove(tourModel)
 		do {
 			let data = try JSONEncoder().encode(newTours)
 			let key = UserDefaults.Keys.SavedTours
@@ -78,13 +80,18 @@ extension DataManager {
 	
 	func savedTours() -> [TourModel] {
 		let key = UserDefaults.Keys.SavedTours
-		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
-			let tourModels = try? JSONDecoder().decode([TourModel].self, from: data) else { return [TourModel]() }
-		return tourModels
+		guard
+			let data = UserDefaults.standard.object(forKey: key) as? Data,
+			let setOfTourModel = try? JSONDecoder().decode(Set<TourModel>.self, from: data)
+			else {
+				return [TourModel]()
+		}
+		return Array(setOfTourModel)
 	}
 }
 
 extension DataManager {
+	
 	func saveDefaultMapCenter(point: CLLocationCoordinate2D) {
 		do {
 			let data = try JSONEncoder().encode(point)
@@ -109,6 +116,7 @@ extension DataManager {
 
 // MARK: - Fetch Diretcions with Queue
 extension DataManager {
+	
 	enum FetchDirectionStatus {
 		case success([DirectionModel])
 		case failure(Error)
@@ -269,6 +277,7 @@ extension DataManager {
 }
 
 private extension DataManager {
+	
 	func createKeyBy(source: MKPlacemark, destination: MKPlacemark) -> String {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
@@ -344,7 +353,4 @@ extension DataManager {
 			queue.waitUntilAllOperationsAreFinished()
 		}
 	}
-	
-	
-	
 }

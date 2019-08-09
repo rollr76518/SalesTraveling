@@ -55,6 +55,11 @@ class TourListViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
+		if isInTabBar {
+			let savedTours = DataManager.shared.savedTours()
+			tourModels = savedTours
+		}
+		
 		tableView.reloadData()
 	}
 	
