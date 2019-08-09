@@ -31,3 +31,4 @@
 "Where do you want to go?"="Where do you want to go?";
 "Can't calculate route with %@"="Can't calculate route with %@";
 "Can't reverse coordinate with %@"="Can't reverse coordinate with %@";
+"There is no calculated tour can be saved."="There is no calculated tour can be saved.";

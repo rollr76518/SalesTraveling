@@ -27,7 +27,7 @@ class MapViewModel {
 		var errorDescription: String? {
 			switch self {
 			case .tourModelIsNil:
-				return "目前尚無計算完成的旅途可儲存"
+				return "There is no calculated tour can be saved.".localized
 			}
 		}
 	}
