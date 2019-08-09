@@ -170,12 +170,12 @@ fileprivate extension MapViewController {
 	}
 	
 	func  magnetTableView() {
-		let buffer: CGFloat = 30.0
+		let buffer = self.toolbar.bounds.height //覺得 44.0 是一個不錯的數值(一個 cell 高)
 		if viewModel.shouldShowTableView {
-			let shouldHide = (topOfMovableView.constant > toppestY - buffer)
+			let shouldHide = (topOfMovableView.constant > (toppestY + buffer))
 			viewModel.showTableView(show: !shouldHide)
 		} else {
-			let shouldShow = (topOfMovableView.constant < lowestY + buffer)
+			let shouldShow = (topOfMovableView.constant < (lowestY - buffer))
 			viewModel.showTableView(show: shouldShow)
 		}
 	}
