@@ -395,7 +395,7 @@ extension MapViewController: MapViewModelDelegate {
 	}
 
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error) {
-		print(error.localizedDescription)
+		self.presentAlert(of: error.localizedDescription)
 	}
 	
 	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool) {
