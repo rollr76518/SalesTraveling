@@ -54,7 +54,10 @@ class LocateViewController: UIViewController {
 				 .ended,
 				 .failed,
 				 .possible,
-				 .cancelled: break
+				 .cancelled:
+				break
+			default:
+				break
 			}
 		}
 	}
