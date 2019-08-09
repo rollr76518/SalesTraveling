@@ -97,10 +97,11 @@ class MapViewController: UIViewController {
 	@objc
 	func layoutLeftBarButtonItem() {
 		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		toolbar.setItems([leftBarButtonItem(), flexibleSpace, titleOfPlacemarks, flexibleSpace, barButtonItemSave], animated: false)
+		let userTrackingBarButtonItem = MKUserTrackingBarButtonItem(mapView: self.mapView)
+		toolbar.setItems([leftBarButtonItem(), flexibleSpace, titleOfPlacemarks, flexibleSpace, userTrackingBarButtonItem], animated: false)
 	}
 	
-	func leftBarButtonItem() -> UIBarButtonItem {
+	private func leftBarButtonItem() -> UIBarButtonItem {
 		return tableView.isEditing ? barButtonItemDone:barButtonItemEdit
 	}
 }
@@ -193,6 +194,7 @@ extension MapViewController: MKMapViewDelegate {
 		pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
 		pinView?.pinTintColor = .orange
 		pinView?.canShowCallout = true
+		pinView?.leftCalloutAccessoryView = UIButton(type: .contactAdd)
 		pinView?.rightCalloutAccessoryView = UIButton(type: .infoLight)
 		return pinView
 	}
@@ -205,18 +207,27 @@ extension MapViewController: MKMapViewDelegate {
 	}
 	
 	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-		if let annotation = view.annotation {
-			for placemark in viewModel.placemarks {
-				if placemark.coordinate.latitude == annotation.coordinate.latitude &&
-					placemark.coordinate.longitude == annotation.coordinate.longitude {
-					
-					let mapItems = [placemark.toMapItem]
-					let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
-					MKMapItem.openMaps(with: mapItems, launchOptions: options)
+		switch control {
+		case let left where left == view.leftCalloutAccessoryView:
+			print("leftCalloutAccessoryView")
+			// TODO: 加到 favorite
+			break
+		case let right where right == view.rightCalloutAccessoryView:
+			if let annotation = view.annotation {
+				for placemark in viewModel.placemarks {
+					if placemark.coordinate.latitude == annotation.coordinate.latitude &&
+						placemark.coordinate.longitude == annotation.coordinate.longitude {
+						
+						let mapItems = [placemark.toMapItem]
+						let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
+						MKMapItem.openMaps(with: mapItems, launchOptions: options)
+					}
 				}
+			} else {
+				print("view.annotation is nil")
 			}
-		} else {
-			print("view.annotation is nil")
+		default:
+			break
 		}
 	}
 }
@@ -249,7 +260,7 @@ extension MapViewController: UITableViewDataSource {
 		switch type {
 		case .source:
 			let placemark = viewModel.userPlacemark
-			cell.textLabel?.text = "Current location".localized + ": " + (placemark?.name ?? "")
+			cell.textLabel?.text = "Source".localized + ": " + "Current location".localized
 			cell.detailTextLabel?.text = placemark?.title
 		case .destination:
 			let placemark = viewModel.placemarks[indexPath.row]
@@ -347,15 +358,7 @@ extension MapViewController: UIScrollViewDelegate {
 extension MapViewController: MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?) {
-		//清除現有資料，避免重覆
-		if let annotation = mapView.annotations.first(where: { (annotation) -> Bool in
-			return (annotation.coordinate.latitude == oldValue?.coordinate.latitude &&
-				annotation.coordinate.longitude == oldValue?.coordinate.longitude)
-		}) {
-			mapView.removeAnnotation(annotation)
-		}
-		//載入最新的資料
-		mapView.addAnnotation(placemark.pointAnnotation)
+		mapView.setUserTrackingMode(.follow, animated: false)
 		tableView.reloadSections([SectionType.source.rawValue], with: .automatic)
 	}
 	
