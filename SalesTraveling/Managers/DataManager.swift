@@ -45,10 +45,10 @@ extension DataManager {
 extension DataManager {
 	
 	func save(tourModel: TourModel) throws {
-		var favoriteTours = Set(self.savedTours())
-		favoriteTours.insert(tourModel)
+		var tourModels = self.savedTours()
+		tourModels.insert(tourModel)
 		do {
-			let data = try JSONEncoder().encode(favoriteTours)
+			let data = try JSONEncoder().encode(tourModels)
 			let key = UserDefaults.Keys.SavedTours
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
@@ -67,10 +67,10 @@ extension DataManager {
 	}
 	
 	func delete(tourModel: TourModel) {
-		var newTours = Set(self.savedTours())
-		newTours.remove(tourModel)
+		var tourModels = self.savedTours()
+		tourModels.remove(tourModel)
 		do {
-			let data = try JSONEncoder().encode(newTours)
+			let data = try JSONEncoder().encode(tourModels)
 			let key = UserDefaults.Keys.SavedTours
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
@@ -78,15 +78,15 @@ extension DataManager {
 		}
 	}
 	
-	func savedTours() -> [TourModel] {
+	func savedTours() -> Set<TourModel> {
 		let key = UserDefaults.Keys.SavedTours
 		guard
 			let data = UserDefaults.standard.object(forKey: key) as? Data,
-			let setOfTourModel = try? JSONDecoder().decode(Set<TourModel>.self, from: data)
+			let tourModels = try? JSONDecoder().decode(Set<TourModel>.self, from: data)
 			else {
-				return [TourModel]()
+				return Set<TourModel>()
 		}
-		return Array(setOfTourModel)
+		return tourModels
 	}
 }
 
@@ -109,7 +109,6 @@ extension DataManager {
 				let locationOfTaipei101 = CLLocationCoordinate2D(latitude: 25.034175, longitude: 121.564488)
 				return locationOfTaipei101
 		}
-		
 		return point
 	}
 }

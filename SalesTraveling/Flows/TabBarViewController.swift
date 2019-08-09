@@ -24,7 +24,7 @@ class TabBarViewController: UITabBarController {
 		super.viewWillAppear(animated)
 		
 		let savedTours = DataManager.shared.savedTours()
-		favoritesViewController.tourModels = savedTours
+		favoritesViewController.tourModels = savedTours.sorted()
 		favoritesViewController.isInTabBar = true
 	}
 }
