@@ -10,11 +10,13 @@ import Foundation
 import MapKit.MKPlacemark
 
 class DataManager {
+	
 	static let shared = DataManager()
 }
 
 // MARK: - Direction
 extension DataManager {
+	
 	func save(direction: DirectionModel) {
 		do {
 			let data = try JSONEncoder().encode(direction)
@@ -41,11 +43,12 @@ extension DataManager {
 
 // MARK: - TourModel
 extension DataManager {
+	
 	func save(tourModel: TourModel) throws {
-		var favoriteTours = self.savedTours()
-		favoriteTours.append(tourModel)
+		var tourModels = self.savedTours()
+		tourModels.insert(tourModel)
 		do {
-			let data = try JSONEncoder().encode(favoriteTours)
+			let data = try JSONEncoder().encode(tourModels)
 			let key = UserDefaults.Keys.SavedTours
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
@@ -64,11 +67,10 @@ extension DataManager {
 	}
 	
 	func delete(tourModel: TourModel) {
-		let newTours = self.savedTours().filter { (oldTourModel) -> Bool in
-			return oldTourModel != tourModel
-		}
+		var tourModels = self.savedTours()
+		tourModels.remove(tourModel)
 		do {
-			let data = try JSONEncoder().encode(newTours)
+			let data = try JSONEncoder().encode(tourModels)
 			let key = UserDefaults.Keys.SavedTours
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
@@ -76,15 +78,20 @@ extension DataManager {
 		}
 	}
 	
-	func savedTours() -> [TourModel] {
+	func savedTours() -> Set<TourModel> {
 		let key = UserDefaults.Keys.SavedTours
-		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
-			let tourModels = try? JSONDecoder().decode([TourModel].self, from: data) else { return [TourModel]() }
+		guard
+			let data = UserDefaults.standard.object(forKey: key) as? Data,
+			let tourModels = try? JSONDecoder().decode(Set<TourModel>.self, from: data)
+			else {
+				return Set<TourModel>()
+		}
 		return tourModels
 	}
 }
 
 extension DataManager {
+	
 	func saveDefaultMapCenter(point: CLLocationCoordinate2D) {
 		do {
 			let data = try JSONEncoder().encode(point)
@@ -102,13 +109,13 @@ extension DataManager {
 				let locationOfTaipei101 = CLLocationCoordinate2D(latitude: 25.034175, longitude: 121.564488)
 				return locationOfTaipei101
 		}
-		
 		return point
 	}
 }
 
 // MARK: - Fetch Diretcions with Queue
 extension DataManager {
+	
 	enum FetchDirectionStatus {
 		case success([DirectionModel])
 		case failure(Error)
@@ -269,6 +276,7 @@ extension DataManager {
 }
 
 private extension DataManager {
+	
 	func createKeyBy(source: MKPlacemark, destination: MKPlacemark) -> String {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
@@ -344,7 +352,4 @@ extension DataManager {
 			queue.waitUntilAllOperationsAreFinished()
 		}
 	}
-	
-	
-	
 }

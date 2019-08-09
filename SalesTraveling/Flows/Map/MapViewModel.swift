@@ -21,6 +21,17 @@ protocol MapViewModelDelegate {
 
 class MapViewModel {
 	
+	enum ViewModelError: Error, LocalizedError {
+		case tourModelIsNil
+		
+		var errorDescription: String? {
+			switch self {
+			case .tourModelIsNil:
+				return "There is no calculated tour can be saved.".localized
+			}
+		}
+	}
+	
 	enum PreferResult {
 		case distance
 		case time
@@ -139,6 +150,17 @@ extension MapViewModel {
 	func deletePlacemark(at index: Int) {
 		placemarks.remove(at: index)
 		tourModels = showResultOfCaculate(startAt: userPlacemark, placemarks: placemarks)
+	}
+	
+	func saveCurrentTourToFavorite() {
+		do {
+			guard let tourModel = tourModel else {
+				throw ViewModelError.tourModelIsNil
+			}
+			try DataManager.shared.save(tourModel: tourModel)
+		} catch {
+			self.error = error
+		}
 	}
 }
 

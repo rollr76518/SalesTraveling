@@ -86,7 +86,7 @@ class MapViewController: UIViewController {
 	}
 	
 	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		
+		viewModel.saveCurrentTourToFavorite()
 	}
 	
 	@IBAction func leftBarButtonItemDidPressed(_ sender: Any) {
