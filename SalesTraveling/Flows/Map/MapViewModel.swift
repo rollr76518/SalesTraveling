@@ -208,6 +208,7 @@ extension MapViewModel {
 	func addMockPlacemarks() {
 		DispatchQueue.global().async {
 			let queue = OperationQueue()
+			queue.maxConcurrentOperationCount = 1
 			
 			let placemarks = [
 				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
