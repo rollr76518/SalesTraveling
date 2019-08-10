@@ -12,8 +12,9 @@ import MapKit
 class MapViewController: UIViewController {
 	
 	enum SectionType: Int, CaseIterable {
-		case source = 0
-		case destination = 1
+		case result = 0
+		case source = 1
+		case destination = 2
 	}
 
 	@IBOutlet var tableView: UITableView!
@@ -34,6 +35,12 @@ class MapViewController: UIViewController {
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
 	@IBOutlet weak var toolbar: UIToolbar!
+	@IBOutlet var segmentedControl: UISegmentedControl! {
+		didSet {
+			segmentedControl.setTitle("Distance".localized, forSegmentAt: 0)
+			segmentedControl.setTitle("Time".localized, forSegmentAt: 1)
+		}
+	}
 	
 	private var viewModel = MapViewModel()
 	private lazy var addressResultTableViewController = makeAddressResultTableViewController()
@@ -41,11 +48,11 @@ class MapViewController: UIViewController {
 	private let locationManager = CLLocationManager()
 
 	private var toppestY: CGFloat {
-		return -(mapView.bounds.height - 20)
+		return -(mapView.bounds.height - 44.0)
 	}
 	
 	private var lowestY: CGFloat {
-		return -80.0
+		return -88.0
 	}
 	
 	override func viewDidLoad() {
@@ -98,11 +105,18 @@ class MapViewController: UIViewController {
 	func layoutLeftBarButtonItem() {
 		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		let userTrackingBarButtonItem = MKUserTrackingBarButtonItem(mapView: self.mapView)
-		toolbar.setItems([leftBarButtonItem(), flexibleSpace, titleOfPlacemarks, flexibleSpace, userTrackingBarButtonItem], animated: false)
+		let container = UIBarButtonItem(customView: segmentedControl)
+		toolbar.setItems([leftBarButtonItem(), flexibleSpace, container, flexibleSpace, userTrackingBarButtonItem], animated: false)
 	}
 	
 	private func leftBarButtonItem() -> UIBarButtonItem {
 		return tableView.isEditing ? barButtonItemDone:barButtonItemEdit
+	}
+	
+	@IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+		let index = sender.selectedSegmentIndex
+		guard let preferResult = MapViewModel.PreferResult(rawValue: index) else { return }
+		viewModel.set(preferResult: preferResult)
 	}
 }
 
@@ -241,6 +255,8 @@ extension MapViewController: UITableViewDataSource {
 			return 0
 		}
 		switch type {
+		case .result:
+			return (viewModel.tourModel != nil) ? 1 : 0
 		case .source:
 			return (viewModel.userPlacemark != nil) ? 1 : 0
 		case .destination:
@@ -255,6 +271,10 @@ extension MapViewController: UITableViewDataSource {
 			return cell
 		}
 		switch type {
+		case .result:
+			let cell2 = UITableViewCell(style: .default, reuseIdentifier: nil)
+			cell2.textLabel?.text = viewModel.result
+			return cell2
 		case .source:
 			let placemark = viewModel.userPlacemark
 			cell.textLabel?.text = "Source".localized + ": " + "Current location".localized
@@ -279,6 +299,8 @@ extension MapViewController: UITableViewDelegate {
 			return
 		}
 		switch type {
+		case .result:
+			break
 		case .source:
 			let placemark = viewModel.userPlacemark
 			for annotation in mapView.annotations {
@@ -303,6 +325,8 @@ extension MapViewController: UITableViewDelegate {
 			return false
 		}
 		switch type {
+		case .result:
+			return false
 		case .source:
 			return false
 		case .destination:
@@ -377,6 +401,11 @@ extension MapViewController: MapViewModelDelegate {
 		}
 	}
 	
+	func viewModel(_ viewModel: MapViewModel, didUpdateTourModel tourModel: TourModel?) {
+
+	}
+
+	
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool) {
 		if isFetching {
 			HYCLoadingView.shared.show()
@@ -418,6 +447,10 @@ extension MapViewController: MapViewModelDelegate {
 		} else {
 			closeMovableView()
 		}
+	}
+	
+	func viewModel(_ viewModel: MapViewModel, didUpdateResult result: String?) {
+		tableView.reloadSections([SectionType.result.rawValue], with: .automatic)
 	}
 }
 

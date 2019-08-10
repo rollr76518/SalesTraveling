@@ -13,10 +13,12 @@ protocol MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark], oldValue: [HYCPlacemark])
+	func viewModel(_ viewModel: MapViewModel, didUpdateTourModel tourModel: TourModel?)
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error)
 	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool)
+	func viewModel(_ viewModel: MapViewModel, didUpdateResult result: String?)
 }
 
 class MapViewModel {
@@ -32,9 +34,9 @@ class MapViewModel {
 		}
 	}
 	
-	enum PreferResult {
-		case distance
-		case time
+	enum PreferResult: Int {
+		case distance = 0
+		case time = 1
 	}
 	
 	var delegate: MapViewModelDelegate?
@@ -53,8 +55,25 @@ class MapViewModel {
 	
 	private(set) var tourModel: TourModel? {
 		didSet {
+			delegate?.viewModel(self, didUpdateTourModel: tourModel)
 			guard let tourModel = tourModel else { return }
 			delegate?.viewModel(self, didUpdatePolylines: tourModel.polylines)
+			
+			let formatter = NumberFormatter()
+			formatter.maximumFractionDigits = 2
+			let km = formatter.string(from: NSNumber(value: tourModel.distances/1000)) ?? "0"
+			let min = formatter.string(from: NSNumber(value: tourModel.sumOfExpectedTravelTime/60)) ?? "0"
+			result = [["Distance".localized, "\(km) \("km".localized)"], ["Time".localized, "\(min) \("min".localized)"]]
+				.map { (strings) -> String in
+					return strings.joined(separator: ": ")
+				}
+				.joined(separator: ", ")
+		}
+	}
+	
+	private(set) var result: String? {
+		didSet {
+			delegate?.viewModel(self, didUpdateResult: result)
 		}
 	}
 	
@@ -160,6 +179,10 @@ extension MapViewModel {
 		} catch {
 			self.error = error
 		}
+	}
+	
+	func set(preferResult: PreferResult) {
+		self.preferResult = preferResult
 	}
 }
 
