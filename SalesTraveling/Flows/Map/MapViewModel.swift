@@ -13,10 +13,12 @@ protocol MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark], oldValue: [HYCPlacemark])
+	func viewModel(_ viewModel: MapViewModel, didUpdateTourModel tourModel: TourModel?)
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error)
 	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool)
+	func viewModel(_ viewModel: MapViewModel, didUpdateResult result: String?)
 }
 
 class MapViewModel {
@@ -32,9 +34,9 @@ class MapViewModel {
 		}
 	}
 	
-	enum PreferResult {
-		case distance
-		case time
+	enum PreferResult: Int {
+		case distance = 0
+		case time = 1
 	}
 	
 	var delegate: MapViewModelDelegate?
@@ -53,8 +55,25 @@ class MapViewModel {
 	
 	private(set) var tourModel: TourModel? {
 		didSet {
+			delegate?.viewModel(self, didUpdateTourModel: tourModel)
 			guard let tourModel = tourModel else { return }
 			delegate?.viewModel(self, didUpdatePolylines: tourModel.polylines)
+			
+			let formatter = NumberFormatter()
+			formatter.maximumFractionDigits = 2
+			let km = formatter.string(from: NSNumber(value: tourModel.distances/1000)) ?? "0"
+			let min = formatter.string(from: NSNumber(value: tourModel.sumOfExpectedTravelTime/60)) ?? "0"
+			result = [["Distance".localized, "\(km) \("km".localized)"], ["Time".localized, "\(min) \("min".localized)"]]
+				.map { (strings) -> String in
+					return strings.joined(separator: ": ")
+				}
+				.joined(separator: ", ")
+		}
+	}
+	
+	private(set) var result: String? {
+		didSet {
+			delegate?.viewModel(self, didUpdateResult: result)
 		}
 	}
 	
@@ -95,9 +114,6 @@ class MapViewModel {
 					guard let first = placemarks.first else { return }
 					let placemark = HYCPlacemark(mkPlacemark: first)
 					self.userPlacemark = placemark
-					if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
-						self.addMockPlacemarks()
-					}
 				}
 			}
 		}
@@ -107,14 +123,32 @@ class MapViewModel {
 		didSet {
 			guard let placemark = userPlacemark else { return }
 			delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
+			
+			guard placemark != oldValue else { return }
+			if self.placemarks.count == 0 {
+				if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
+					self.addMockPlacemarks()
+				}
+			} else {
+				let tempPlacemarks = placemarks
+				placemarks = []
+				add(placemarks: tempPlacemarks) { [weak self] (result) in
+					guard let self = self else { return }
+					switch result {
+					case .failure(let error):
+						self.error = error
+					case .success:
+						self.delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
+					}
+				}
+			}
 		}
 	}
 }
 
 extension MapViewModel {
 	
-	func add(placemark: MKPlacemark, completion: (() -> Void)?) {
-		let placemark = HYCPlacemark(mkPlacemark: placemark)
+	func add(placemark: HYCPlacemark, completion: ((Result<Void, Error>) -> Void)?) {
 
 		delegate?.viewModel(self, isFetching: true)
 
@@ -125,8 +159,7 @@ extension MapViewModel {
 			
 			switch status {
 			case .failure(let error):
-				self.error = error
-				completion?()
+				completion?(.failure(error))
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
 				
@@ -134,7 +167,7 @@ extension MapViewModel {
 				placemarks.append(placemark)
 				self.placemarks = placemarks
 				self.tourModels = self.showResultOfCaculate(startAt: self.userPlacemark, placemarks: placemarks)
-				completion?()
+				completion?(.success(Void()))
 			}
 		}
 	}
@@ -161,6 +194,10 @@ extension MapViewModel {
 		} catch {
 			self.error = error
 		}
+	}
+	
+	func set(preferResult: PreferResult) {
+		self.preferResult = preferResult
 	}
 }
 
@@ -228,23 +265,42 @@ private extension MapViewModel {
 extension MapViewModel {
 	
 	func addMockPlacemarks() {
+		let placemarks = [
+			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
+			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)), //木柵動物園
+			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736)) //內湖好市多
+			]
+			.map{ HYCPlacemark(mkPlacemark: $0) }
+		
+		add(placemarks: placemarks) { [weak self] (result) in
+			switch result {
+			case .failure(let error):
+				self?.error = error
+			case .success:
+				break
+			}
+		}
+	}
+	
+	func add(placemarks: [HYCPlacemark], completion: ((Result<Void, Error>) -> Void)?) {
 		DispatchQueue.global().async {
 			let queue = OperationQueue()
 			queue.maxConcurrentOperationCount = 1
-			
-			let placemarks = [
-				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
-				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)), //木柵動物園
-				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736)) //內湖好市多
-			]
 			
 			placemarks.forEach({ (placemark) in
 				let blockOperation = BlockOperation(block: { [weak self] in
 					guard let self = self else { return }
 					let semaphore = DispatchSemaphore(value: 0)
 					DispatchQueue.main.async { [weak self] in
-						self?.add(placemark: placemark, completion: {
-							semaphore.signal()
+						self?.add(placemark: placemark, completion: { (result) in
+							switch result {
+							case .failure(let error):
+								completion?(.failure(error))
+								semaphore.signal()
+								queue.cancelAllOperations()
+							case .success:
+								semaphore.signal()
+							}
 						})
 					}
 					semaphore.wait()
@@ -253,6 +309,42 @@ extension MapViewModel {
 			})
 			
 			queue.waitUntilAllOperationsAreFinished()
+			DispatchQueue.main.async {
+				completion?(.success(Void()))
+			}
 		}
+	}
+}
+
+extension MapViewModel {
+	
+	func placemark(at coordinate: CLLocationCoordinate2D) -> HYCPlacemark? {
+		return placemarks.first { (placemark) -> Bool in
+			return placemark.coordinate.latitude == coordinate.latitude &&
+				placemark.coordinate.longitude == coordinate.longitude
+		}
+	}
+	
+	func addToFavorite(_ placemark: HYCPlacemark) {
+		do {
+			try DataManager.shared.addToFavorites(placemark: placemark)
+		} catch {
+			self.error = error
+		}
+	}
+	
+	func favoritePlacemarks() -> [HYCPlacemark] {
+		let userCoordinate = self.userPlacemark?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+		let set = DataManager.shared.favoritePlacemarks()
+		return set
+			//用與目前使用者的距離來排序
+			.sorted(by: { (lhs, rhs) -> Bool in
+				func distance(source: CLLocationCoordinate2D, destination: CLLocationCoordinate2D) -> Double {
+					return sqrt(pow((source.latitude - destination.latitude), 2) + pow((source.longitude - destination.longitude), 2))
+				}
+				let distanceOflhs = distance(source: lhs.coordinate, destination: userCoordinate)
+				let distanceOfrhs = distance(source: rhs.coordinate, destination: userCoordinate)
+				return distanceOflhs > distanceOfrhs
+			})
 	}
 }

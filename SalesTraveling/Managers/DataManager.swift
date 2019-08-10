@@ -327,8 +327,6 @@ extension DataManager {
 				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
 					let source = tuple.0
 					let destination = tuple.1
-					print(source)
-					print(destination)
 					let blockOperation = BlockOperation(block: {
 						let semaphore = DispatchSemaphore(value: 0)
 						MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
@@ -351,5 +349,42 @@ extension DataManager {
 			queue.addOperation(callbackFinishOperation)
 			queue.waitUntilAllOperationsAreFinished()
 		}
+	}
+}
+
+//Favorite placemark
+extension DataManager {
+	
+	func addToFavorites(placemark: HYCPlacemark) throws {
+		do {
+			try addToFavorites(placemarks: [placemark])
+		} catch {
+			throw error
+		}
+	}
+	
+	func addToFavorites(placemarks: [HYCPlacemark]) throws {
+		var favorites = favoritePlacemarks()
+		placemarks.forEach { (placemark) in
+			favorites.insert(placemark)
+		}
+		do {
+			let data = try JSONEncoder().encode(favorites)
+			let key = UserDefaults.Keys.favoritePlacemarks
+			UserDefaults.standard.set(data, forKey: key)
+		} catch {
+			throw error
+		}
+	}
+	
+	func favoritePlacemarks() -> Set<HYCPlacemark> {
+		let key = UserDefaults.Keys.favoritePlacemarks
+		guard
+			let data = UserDefaults.standard.object(forKey: key) as? Data,
+			let placemarks = try? JSONDecoder().decode(Set<HYCPlacemark>.self, from: data)
+			else {
+				return Set<HYCPlacemark>()
+		}
+		return placemarks
 	}
 }

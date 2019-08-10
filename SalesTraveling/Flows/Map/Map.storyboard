@@ -53,6 +53,9 @@
                                         <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jVO-Zo-0h8">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <items/>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="bHQ-lV-Ihk" appends="YES" id="THm-c0-BJT"/>
+                                            </connections>
                                         </toolbar>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NT5-7T-dT4">
                                             <rect key="frame" x="165.5" y="3" width="44" height="3"/>
@@ -113,7 +116,6 @@
                                 </view>
                                 <blurEffect style="extraLight"/>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="bHQ-lV-Ihk" appends="YES" id="cFX-9N-9P8"/>
                                     <outletCollection property="gestureRecognizers" destination="sqq-ra-wRF" appends="YES" id="el2-f2-2Cq"/>
                                 </connections>
                             </visualEffectView>
@@ -139,6 +141,7 @@
                         <outlet property="constriantOfMovableViewHeight" destination="VwS-Gv-REg" id="WX1-eN-3g7"/>
                         <outlet property="mapView" destination="20s-Vq-Z6W" id="hqY-yI-dhP"/>
                         <outlet property="movableView" destination="YBi-l3-ajR" id="Zgb-Lw-KCB"/>
+                        <outlet property="segmentedControl" destination="yC1-J6-IMV" id="EJ1-OX-HMy"/>
                         <outlet property="tableView" destination="xnY-mM-7yX" id="PcP-a0-7CH"/>
                         <outlet property="titleOfPlacemarks" destination="F09-Fz-ndH" id="mkv-FN-mxA"/>
                         <outlet property="toolbar" destination="jVO-Zo-0h8" id="MH9-RI-1x3"/>
@@ -173,6 +176,17 @@
                         <action selector="leftBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="K8S-UV-ThB"/>
                     </connections>
                 </barButtonItem>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="yC1-J6-IMV">
+                    <rect key="frame" x="0.0" y="0.0" width="121" height="28"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="First"/>
+                        <segment title="Second"/>
+                    </segments>
+                    <connections>
+                        <action selector="segmentedControlValueChanged:" destination="4Np-yJ-KqG" eventType="valueChanged" id="ddU-Un-ZSI"/>
+                    </connections>
+                </segmentedControl>
             </objects>
             <point key="canvasLocation" x="2176.8000000000002" y="1412.7436281859073"/>
         </scene>

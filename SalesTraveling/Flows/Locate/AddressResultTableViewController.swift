@@ -10,28 +10,35 @@ import UIKit
 import MapKit
 
 protocol AddressResultTableViewControllerProtocol {
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark)
+	
+	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark)
+	
+	func favoritePlacemarksAtVC(_ vc: AddressResultTableViewController) -> [HYCPlacemark]
 }
 
 class AddressResultTableViewController: UITableViewController {
-	var matchingItems: [MKMapItem] = []
+	
+	var matchingPlacemarks = [HYCPlacemark]()
 	var mapView: MKMapView?
 	var delegate: AddressResultTableViewControllerProtocol?
 	
     override func viewDidLoad() {
         super.viewDidLoad()
+		
+		matchingPlacemarks = self.delegate?.favoritePlacemarksAtVC(self) ?? []
     }
 }
 
 // MARK: - UITableViewDataSource
 extension AddressResultTableViewController {
+	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return matchingItems.count
+		return matchingPlacemarks.count
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		let placemark = matchingItems[indexPath.row].placemark
+		let placemark = matchingPlacemarks[indexPath.row]
 		cell.textLabel?.text = placemark.name
 		cell.detailTextLabel?.text = placemark.title
 		return cell
@@ -40,8 +47,9 @@ extension AddressResultTableViewController {
 
 // MARK: - UITableViewDelegate
 extension AddressResultTableViewController {
+	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let placemark = matchingItems[indexPath.row].placemark
+		let placemark = matchingPlacemarks[indexPath.row]
 		delegate?.addressResultTableViewController(self, placemark: placemark)
 		dismiss(animated: true, completion: nil)
 	}
@@ -49,19 +57,29 @@ extension AddressResultTableViewController {
 
 // MARK: - UISearchResultsUpdating
 extension AddressResultTableViewController: UISearchResultsUpdating {
+	
 	func updateSearchResults(for searchController: UISearchController) {
-		guard let keywords = searchController.searchBar.text,
-			let mapView = mapView else { return }
+		//https://stackoverflow.com/questions/30790244/uisearchcontroller-show-results-even-when-search-bar-is-empty
+		//為了讓 Favorites 顯示出來
+		view.isHidden = false
+		
+		guard
+			let keywords = searchController.searchBar.text,
+			let mapView = mapView
+			else {
+				return
+		}
 		
 		MapMananger.fetchLocalSearch(with: keywords, region: mapView.region) { [weak self] (status) in
+			guard let self = self else { return }
 			switch status {
 			case .success(let response):
-				self?.matchingItems = response.mapItems
+				self.matchingPlacemarks = response.mapItems.map{ HYCPlacemark(mkPlacemark: $0.placemark) }
 			case .failure(let error):
 				print("fetch local search \(error.localizedDescription)")
-				self?.matchingItems = []
+				self.matchingPlacemarks = self.delegate?.favoritePlacemarksAtVC(self) ?? []
 			}
-			self?.tableView.reloadData()
+			self.tableView.reloadData()
 		}
 	}
 }
