@@ -113,8 +113,7 @@ class MapViewModel {
 
 extension MapViewModel {
 	
-	func add(placemark: MKPlacemark, completion: (() -> Void)?) {
-		let placemark = HYCPlacemark(mkPlacemark: placemark)
+	func add(placemark: HYCPlacemark, completion: (() -> Void)?) {
 
 		delegate?.viewModel(self, isFetching: true)
 
@@ -236,7 +235,8 @@ extension MapViewModel {
 				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
 				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)), //木柵動物園
 				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736)) //內湖好市多
-			]
+				]
+				.map{ HYCPlacemark(mkPlacemark: $0) }
 			
 			placemarks.forEach({ (placemark) in
 				let blockOperation = BlockOperation(block: { [weak self] in

@@ -139,7 +139,7 @@ private extension MapViewController {
 //MARK: - AddressResultTableViewControllerProtocol
 extension MapViewController: AddressResultTableViewControllerProtocol {
 	
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
+	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark) {
 		searchController.searchBar.text = nil
 		searchController.searchBar.resignFirstResponder()
 		

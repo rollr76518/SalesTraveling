@@ -196,8 +196,8 @@ extension LocateViewController: UIGestureRecognizerDelegate {
 //MARK: - AddressResultTableViewControllerProtocol
 extension LocateViewController: AddressResultTableViewControllerProtocol {
 	
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
-		selectedPlacemark = placemark
+	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark) {
+		selectedPlacemark = placemark.toMKPlacemark
 		
 		let annotation = placemark.pointAnnotation
 		mapView.removeAnnotations(mapView.annotations)

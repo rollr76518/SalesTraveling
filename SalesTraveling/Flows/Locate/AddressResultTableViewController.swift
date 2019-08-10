@@ -11,7 +11,7 @@ import MapKit
 
 protocol AddressResultTableViewControllerProtocol {
 	
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark)
+	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark)
 	
 	func favoritePlacemarksAtVC(_ vc: AddressResultTableViewController) -> [HYCPlacemark]
 }
@@ -50,7 +50,7 @@ extension AddressResultTableViewController {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let placemark = matchingPlacemarks[indexPath.row]
-		delegate?.addressResultTableViewController(self, placemark: placemark.toMKPlacemark)
+		delegate?.addressResultTableViewController(self, placemark: placemark)
 		dismiss(animated: true, completion: nil)
 	}
 }
