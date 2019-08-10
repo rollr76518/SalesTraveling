@@ -54,7 +54,10 @@ class LocateViewController: UIViewController {
 				 .ended,
 				 .failed,
 				 .possible,
-				 .cancelled: break
+				 .cancelled:
+				break
+			default:
+				break
 			}
 		}
 	}
@@ -192,8 +195,9 @@ extension LocateViewController: UIGestureRecognizerDelegate {
 
 //MARK: - AddressResultTableViewControllerProtocol
 extension LocateViewController: AddressResultTableViewControllerProtocol {
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: MKPlacemark) {
-		selectedPlacemark = placemark
+	
+	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark) {
+		selectedPlacemark = placemark.toMKPlacemark
 		
 		let annotation = placemark.pointAnnotation
 		mapView.removeAnnotations(mapView.annotations)
@@ -202,6 +206,10 @@ extension LocateViewController: AddressResultTableViewControllerProtocol {
 		
 		MapMananger.showRegion(mapView, spanDegrees: 0.01, coordinate: placemark.coordinate)
 		MapMananger().defaultMapCenter = placemark.coordinate
+	}
+	
+	func favoritePlacemarksAtVC(_ vc: AddressResultTableViewController) -> [HYCPlacemark] {
+		return []
 	}
 }
 

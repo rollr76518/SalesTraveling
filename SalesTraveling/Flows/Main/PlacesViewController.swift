@@ -60,7 +60,7 @@ class PlacesViewController: UIViewController {
 			let vc = nvc.viewControllers.first as? TourListViewController,
 			let tourModels = sender as? [TourModel] {
 			vc.tourModels = tourModels.filter({ (tourModel) -> Bool in
-				tourModel.responses.count > 0
+				tourModel.directions.count > 0
 			})
 		}
 	}
@@ -128,14 +128,14 @@ fileprivate extension PlacesViewController {
 				if index2 == 0, let sourcePlacemark = sourcePlacemark {
 					let source = sourcePlacemark
 					let destination = tuple.0
-					if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
-						tourModels[index].responses.append(directions)
+					if let directions = DataManager.shared.findDirection(source: source, destination: destination) {
+						tourModels[index].directions.append(directions)
 					}
 				}
 				let source = tuple.0
 				let destination = tuple.1
-				if let directions = DataManager.shared.findDirections(source: source, destination: destination) {
-					tourModels[index].responses.append(directions)
+				if let directions = DataManager.shared.findDirection(source: source, destination: destination) {
+					tourModels[index].directions.append(directions)
 				}
 			}
 		}
@@ -343,7 +343,7 @@ extension PlacesViewController: LocateViewControllerProtocol {
 		if indexPath.section == 0 {
 			CountdownManager.shared.countTimes += timesOfRequestShouldCalledWhenChangeUserPlacemark
 
-			DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, completeBlock: { [weak self] (status) in
+			DataManager.shared.fetchDirection(ofNew: placemark, toOld: placemarks, completeBlock: { [weak self] (status) in
 
 				HYCLoadingView.shared.dismiss()
 

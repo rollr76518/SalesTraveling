@@ -55,6 +55,11 @@ class TourListViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
+		if isInTabBar {
+			let savedTours = DataManager.shared.savedTours()
+			tourModels = savedTours.sorted()
+		}
+		
 		tableView.reloadData()
 	}
 	
@@ -151,7 +156,7 @@ extension TourListViewController: UITableViewDelegate {
 		if editingStyle == .delete {
 			let tourModel = tourModelsSorted[indexPath.row]
 			DataManager.shared.delete(tourModel: tourModel)
-			tourModels = DataManager.shared.savedTours()
+			tourModels = DataManager.shared.savedTours().sorted()
 			tableView.deleteRows(at: [indexPath], with: .automatic)
 		}
 	}

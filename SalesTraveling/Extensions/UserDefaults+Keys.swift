@@ -9,8 +9,10 @@
 import Foundation
 
 extension UserDefaults {
+	
 	enum Keys {
 		static let SavedTours = "SavedTours"
 		static let DefaultMapCenter = "DefaultMapCenter"
+		static let favoritePlacemarks = "favoritePlacemarks"
 	}
 }

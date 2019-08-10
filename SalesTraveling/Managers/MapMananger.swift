@@ -39,7 +39,7 @@ extension MapMananger {
 		case failure(Error)
 	}
 	
-	class func calculateDirections(from source: MKPlacemark, to destination: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
+	class func calculateDirection(from source: MKPlacemark, to destination: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
 		
 		let request = MKDirections.Request()
 		request.source = source.toMapItem
@@ -71,9 +71,7 @@ extension MapMananger {
 		geocoder.reverseGeocodeLocation(location) { (clPlacemarks, error) in
 			if let clPlacemarks = clPlacemarks {
 				let placemarks = clPlacemarks.map { (clPlacemark) -> MKPlacemark in
-					let location = clPlacemark.location!
-					let dic = clPlacemark.addressDictionary as! [String: Any]
-					return MKPlacemark(coordinate: location.coordinate, addressDictionary: dic)
+					return MKPlacemark(placemark: clPlacemark)
 				}
 				completion(.success(placemarks))
 			}
@@ -106,30 +104,21 @@ extension MapMananger {
 		
 		for polyline in polylines {
 			if let west = westPoint, let north = northPoint, let east = eastPoint, let south = southPoint {
-				
-				if polyline.boundingMapRect.origin.x < west {
-					westPoint = polyline.boundingMapRect.origin.x
-				}
-				if polyline.boundingMapRect.origin.y < north {
-					northPoint = polyline.boundingMapRect.origin.y
-				}
-				if polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width > east {
-					eastPoint = polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width
-				}
-				if polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height > south {
-					southPoint = polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height
-				}
+				westPoint = min(west, polyline.boundingMapRect.minX)
+				northPoint = min(north, polyline.boundingMapRect.minY)
+				eastPoint = max(east, polyline.boundingMapRect.maxX)
+				southPoint = max(south, polyline.boundingMapRect.maxY)
 			}
 			else {
-				westPoint = polyline.boundingMapRect.origin.x
-				northPoint = polyline.boundingMapRect.origin.y
-				eastPoint = polyline.boundingMapRect.origin.x + polyline.boundingMapRect.size.width
-				southPoint = polyline.boundingMapRect.origin.y + polyline.boundingMapRect.size.height
+				westPoint = polyline.boundingMapRect.minX
+				northPoint = polyline.boundingMapRect.minY
+				eastPoint = polyline.boundingMapRect.maxX
+				southPoint = polyline.boundingMapRect.maxY
 			}
 		}
 		
-		return MKMapRect(origin: MKMapPoint(x: westPoint!, y: northPoint!),
-						 size: MKMapSize(width: eastPoint! - westPoint!, height: southPoint! - northPoint!))
+		return MKMapRect(origin: MKMapPoint(x: westPoint ?? 0, y: northPoint ?? 0),
+						 size: MKMapSize(width: (eastPoint ?? 0) - (westPoint ?? 0), height: (southPoint ?? 0) - (northPoint ?? 0)))
 	}
 }
 
@@ -143,4 +132,28 @@ extension MapMananger {
 			return DataManager.shared.defaultMapCenter()
 		}
 	}
+}
+
+// MARK: - HYCPlacemark
+extension MapMananger {
+	
+	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
+		
+		let request = MKDirections.Request()
+		request.source = source.toMapItem
+		request.destination = destination.toMapItem
+		request.transportType = .automobile
+		
+		let directions = MKDirections(request: request)
+		directions.calculate { (response, error) in
+			if let response = response {
+				completion(.success(response))
+			}
+			
+			if let error = error {
+				completion(.failure(error))
+			}
+		}
+	}
+
 }

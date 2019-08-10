@@ -31,3 +31,4 @@
 "Where do you want to go?"="你想要去哪裡？";
 "Can't calculate route with %@"="因%@無法計算路徑";
 "Can't reverse coordinate with %@"="因%@無法反轉座標";
+"There is no calculated tour can be saved."="目前尚無計算完成的旅途可儲存";

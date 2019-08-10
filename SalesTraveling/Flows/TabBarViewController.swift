@@ -12,18 +12,19 @@ class TabBarViewController: UITabBarController {
 	
 	lazy var searchTab = createNavigationControllerOfSearchTab()
 	lazy var favoritesTab = createNavigationControllerOfFavoritesTab()
-
+	lazy var mapTab = createNavigationControllerOfMapTab()
+		
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		setViewControllers([searchTab, favoritesTab], animated: false)
+		setViewControllers([mapTab, favoritesTab], animated: false)
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
 		let savedTours = DataManager.shared.savedTours()
-		favoritesViewController.tourModels = savedTours
+		favoritesViewController.tourModels = savedTours.sorted()
 		favoritesViewController.isInTabBar = true
 	}
 }
@@ -39,6 +40,13 @@ private extension TabBarViewController {
 		return nvc
 	}
 	
+	func createNavigationControllerOfMapTab() -> UINavigationController {
+		let nvc = UIStoryboard(name: "Map", bundle: nil).instantiateInitialViewController() as! UINavigationController
+		return nvc
+	}
+}
+
+private extension TabBarViewController {
 	var favoritesViewController: TourListViewController	{
 		let vc = favoritesTab.viewControllers.first as! TourListViewController
 		return vc
