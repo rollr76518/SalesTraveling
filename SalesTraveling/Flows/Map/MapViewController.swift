@@ -103,9 +103,15 @@ class MapViewController: UIViewController {
 	
 	@objc
 	func layoutLeftBarButtonItem() {
+		func frameOfSegmentedControl(frame: CGRect, superframe: CGRect) -> CGRect {
+			var newframe = frame
+			newframe.size.width = superframe.width/2
+			return newframe
+		}
+		segmentedControl.frame = frameOfSegmentedControl(frame: segmentedControl.frame, superframe: toolbar.frame)
+		let container = UIBarButtonItem(customView: segmentedControl)
 		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		let userTrackingBarButtonItem = MKUserTrackingBarButtonItem(mapView: self.mapView)
-		let container = UIBarButtonItem(customView: segmentedControl)
 		toolbar.setItems([leftBarButtonItem(), flexibleSpace, container, flexibleSpace, userTrackingBarButtonItem], animated: false)
 	}
 	
@@ -200,6 +206,12 @@ fileprivate extension MapViewController {
 
 // MARK: - MKMapViewDelegate
 extension MapViewController: MKMapViewDelegate {
+	
+	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+		if let deviceLocation = userLocation.location {
+			viewModel.update(device: deviceLocation)
+		}
+	}
 	
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		if annotation is MKUserLocation {
@@ -379,7 +391,6 @@ extension MapViewController: UIScrollViewDelegate {
 extension MapViewController: MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?) {
-		mapView.setUserTrackingMode(.follow, animated: false)
 		tableView.reloadSections([SectionType.source.rawValue], with: .automatic)
 	}
 	
@@ -464,10 +475,7 @@ extension MapViewController: CLLocationManagerDelegate {
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		if let deviceLocation = locations.first {
-			viewModel.update(device: deviceLocation)
-		}
-		manager.stopUpdatingLocation()
+		mapView.setUserTrackingMode(.follow, animated: true)
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

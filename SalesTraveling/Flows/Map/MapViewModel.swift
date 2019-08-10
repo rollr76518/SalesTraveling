@@ -114,9 +114,6 @@ class MapViewModel {
 					guard let first = placemarks.first else { return }
 					let placemark = HYCPlacemark(mkPlacemark: first)
 					self.userPlacemark = placemark
-					if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
-						self.addMockPlacemarks()
-					}
 				}
 			}
 		}
@@ -126,13 +123,32 @@ class MapViewModel {
 		didSet {
 			guard let placemark = userPlacemark else { return }
 			delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
+			
+			guard placemark != oldValue else { return }
+			if self.placemarks.count == 0 {
+				if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
+					self.addMockPlacemarks()
+				}
+			} else {
+				let tempPlacemarks = placemarks
+				placemarks = []
+				add(placemarks: tempPlacemarks) { [weak self] (result) in
+					guard let self = self else { return }
+					switch result {
+					case .failure(let error):
+						self.error = error
+					case .success:
+						self.delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
+					}
+				}
+			}
 		}
 	}
 }
 
 extension MapViewModel {
 	
-	func add(placemark: HYCPlacemark, completion: (() -> Void)?) {
+	func add(placemark: HYCPlacemark, completion: ((Result<Void, Error>) -> Void)?) {
 
 		delegate?.viewModel(self, isFetching: true)
 
@@ -143,8 +159,7 @@ extension MapViewModel {
 			
 			switch status {
 			case .failure(let error):
-				self.error = error
-				completion?()
+				completion?(.failure(error))
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
 				
@@ -152,7 +167,7 @@ extension MapViewModel {
 				placemarks.append(placemark)
 				self.placemarks = placemarks
 				self.tourModels = self.showResultOfCaculate(startAt: self.userPlacemark, placemarks: placemarks)
-				completion?()
+				completion?(.success(Void()))
 			}
 		}
 	}
@@ -250,24 +265,42 @@ private extension MapViewModel {
 extension MapViewModel {
 	
 	func addMockPlacemarks() {
+		let placemarks = [
+			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
+			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)), //木柵動物園
+			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736)) //內湖好市多
+			]
+			.map{ HYCPlacemark(mkPlacemark: $0) }
+		
+		add(placemarks: placemarks) { [weak self] (result) in
+			switch result {
+			case .failure(let error):
+				self?.error = error
+			case .success:
+				break
+			}
+		}
+	}
+	
+	func add(placemarks: [HYCPlacemark], completion: ((Result<Void, Error>) -> Void)?) {
 		DispatchQueue.global().async {
 			let queue = OperationQueue()
 			queue.maxConcurrentOperationCount = 1
-			
-			let placemarks = [
-				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
-				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)), //木柵動物園
-				MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736)) //內湖好市多
-				]
-				.map{ HYCPlacemark(mkPlacemark: $0) }
 			
 			placemarks.forEach({ (placemark) in
 				let blockOperation = BlockOperation(block: { [weak self] in
 					guard let self = self else { return }
 					let semaphore = DispatchSemaphore(value: 0)
 					DispatchQueue.main.async { [weak self] in
-						self?.add(placemark: placemark, completion: {
-							semaphore.signal()
+						self?.add(placemark: placemark, completion: { (result) in
+							switch result {
+							case .failure(let error):
+								completion?(.failure(error))
+								semaphore.signal()
+								queue.cancelAllOperations()
+							case .success:
+								semaphore.signal()
+							}
 						})
 					}
 					semaphore.wait()
@@ -276,6 +309,9 @@ extension MapViewModel {
 			})
 			
 			queue.waitUntilAllOperationsAreFinished()
+			DispatchQueue.main.async {
+				completion?(.success(Void()))
+			}
 		}
 	}
 }
