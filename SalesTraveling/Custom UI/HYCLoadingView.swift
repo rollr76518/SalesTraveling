@@ -25,8 +25,8 @@ private extension HYCLoadingView {
 	
 	func createTranslucentView() -> UIView {
 		let view = UIView(frame: .zero)
-		view.backgroundColor = .gray
-		view.alpha = 0.7
+		view.backgroundColor = .black
+		view.alpha = 0.65
 		addActivityIndicatorView(to: view)
 		return view
 	}
