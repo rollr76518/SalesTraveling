@@ -49,6 +49,15 @@ class HYCPlacemark: NSObject, Codable {
 		subAdministrativeArea = mkPlacemark.postalAddress?.subAdministrativeArea
 		subLocality = mkPlacemark.postalAddress?.subLocality
 	}
+	
+	// NSObject 的 == 要 override 這個 method
+	override func isEqual(_ object: Any?) -> Bool {
+		if let other = object as? HYCPlacemark {
+			return self.latitude == other.latitude && self.longitude == other.longitude
+		} else {
+			return false
+		}
+	}
 }
 
 extension HYCPlacemark: MKAnnotation {

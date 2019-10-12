@@ -46,7 +46,8 @@ class MapViewController: UIViewController {
 	private lazy var addressResultTableViewController = makeAddressResultTableViewController()
 	private lazy var searchController: UISearchController = makeSearchController()
 	private let locationManager = CLLocationManager()
-
+	private var shouldUpdateLocation = true
+	
 	private var toppestY: CGFloat {
 		return -(mapView.bounds.height - 44.0)
 	}
@@ -208,7 +209,10 @@ fileprivate extension MapViewController {
 extension MapViewController: MKMapViewDelegate {
 	
 	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-		if let deviceLocation = userLocation.location {
+		if shouldUpdateLocation, let deviceLocation = userLocation.location {
+			
+			shouldUpdateLocation = false
+			
 			viewModel.update(device: deviceLocation)
 		}
 	}
@@ -391,6 +395,9 @@ extension MapViewController: UIScrollViewDelegate {
 extension MapViewController: MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?) {
+		guard oldValue != placemark else {
+			return
+		}
 		tableView.reloadSections([SectionType.source.rawValue], with: .automatic)
 	}
 	
