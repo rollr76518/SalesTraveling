@@ -356,8 +356,10 @@ extension MapViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
+			tableView.beginUpdates()
 			viewModel.deletePlacemark(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .automatic)
+			tableView.endUpdates()
 			//刪除完之後還要往上拉一格，因為文字排序要重設
 			//TODO: 目前使用1秒是 workaround，應該要抓到正確的時機後 reload
 			//這招沒用 https://stackoverflow.com/questions/3832474/uitableview-row-animation-duration-and-completion-callback
