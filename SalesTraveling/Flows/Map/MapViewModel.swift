@@ -12,7 +12,9 @@ import MapKit.MKPlacemark
 protocol MapViewModelDelegate {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
-	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark], oldValue: [HYCPlacemark])
+	func viewModel(_ viewModel: MapViewModel, addPlacemarksAt indexes: [Int])
+	func viewModel(_ viewModel: MapViewModel, removePlacemarksAt indexes: [Int])
+	func viewModel(_ viewModel: MapViewModel, reload placemarks: [HYCPlacemark])
 	func viewModel(_ viewModel: MapViewModel, didUpdateTourModel tourModel: TourModel?)
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
@@ -79,7 +81,15 @@ class MapViewModel {
 	
 	private(set) var placemarks: [HYCPlacemark] = [] {
 		didSet {
-			delegate?.viewModel(self, didUpdatePlacemarks: placemarks, oldValue: oldValue)
+			let behavior = MapViewModel.diff(original: oldValue, now: placemarks)
+			switch behavior {
+			case .add(let indexes):
+				self.delegate?.viewModel(self, addPlacemarksAt: indexes)
+			case .remove(let indexes):
+				self.delegate?.viewModel(self, removePlacemarksAt: indexes)
+			case .reload:
+				self.delegate?.viewModel(self, reload: self.placemarks)
+			}
 		}
 	}
 	
@@ -346,5 +356,33 @@ extension MapViewModel {
 				let distanceOfrhs = distance(source: rhs.coordinate, destination: userCoordinate)
 				return distanceOflhs > distanceOfrhs
 			})
+	}
+}
+
+//MARK: - Placemarks diff
+extension MapViewModel {
+	
+	private enum PlacemarkChangeBehavior {
+		case add([Int])
+		case remove([Int])
+		case reload //基本上不發生
+	}
+
+	private static func diff(original: [HYCPlacemark], now: [HYCPlacemark]) -> PlacemarkChangeBehavior {
+		
+		let originalSet = Set(original)
+		let nowSet = Set(now)
+		
+		if originalSet.isSubset(of: nowSet) { // Appended
+			let added = nowSet.subtracting(originalSet)
+			let indexes = added.compactMap { now.firstIndex(of: $0) }
+			return .add(indexes)
+		} else if (nowSet.isSubset(of: originalSet)) { // Removed
+			let removed = originalSet.subtracting(nowSet)
+			let indexes = removed.compactMap { original.firstIndex(of: $0) }
+			return .remove(indexes)
+		} else { // Both appended and removed
+			return .reload
+		}
 	}
 }
