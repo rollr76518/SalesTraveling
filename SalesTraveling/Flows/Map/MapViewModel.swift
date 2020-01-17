@@ -9,13 +9,12 @@
 import Foundation
 import MapKit.MKPlacemark
 
-protocol MapViewModelDelegate {
+protocol MapViewModelDelegate: class {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
 	func viewModel(_ viewModel: MapViewModel, addPlacemarksAt indexes: [Int])
 	func viewModel(_ viewModel: MapViewModel, removePlacemarksAt indexes: [Int])
 	func viewModel(_ viewModel: MapViewModel, reload placemarks: [HYCPlacemark])
-	func viewModel(_ viewModel: MapViewModel, didUpdateTourModel tourModel: TourModel?)
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error)
@@ -41,7 +40,7 @@ class MapViewModel {
 		case time = 1
 	}
 	
-	var delegate: MapViewModelDelegate?
+	weak var delegate: MapViewModelDelegate?
 	
 	private(set) var preferResult: PreferResult = .distance {
 		didSet {
@@ -57,7 +56,6 @@ class MapViewModel {
 	
 	private(set) var tourModel: TourModel? {
 		didSet {
-			delegate?.viewModel(self, didUpdateTourModel: tourModel)
 			guard let tourModel = tourModel else { return }
 			delegate?.viewModel(self, didUpdatePolylines: tourModel.polylines)
 			

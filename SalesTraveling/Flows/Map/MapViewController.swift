@@ -426,10 +426,6 @@ extension MapViewController: MapViewModelDelegate {
 		tableView.reloadData()
 	}
 	
-	func viewModel(_ viewModel: MapViewModel, didUpdateTourModel tourModel: TourModel?) {
-
-	}
-	
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool) {
 		if isFetching {
 			HYCLoadingView.shared.show()
