@@ -48,7 +48,7 @@
 		7E63348E207200BB007A2A85 /* UIAlertController+Init.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Init.swift"; sourceTree = "<group>"; };
 		7E63349020720270007A2A85 /* NotificationName+Name.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Name.swift"; sourceTree = "<group>"; };
 		7EB0D6091F9E341B00268E3B /* TourModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourModel.swift; sourceTree = "<group>"; };
-		7EFBA25E1F9C4B480011007E /* SalesTraveling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalesTraveling.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EFBA25E1F9C4B480011007E /* Shōto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Shōto.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EFBA2611F9C4B480011007E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7EFBA2681F9C4B480011007E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7EFBA26B1F9C4B480011007E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -117,7 +117,7 @@
 		7EFBA25F1F9C4B480011007E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7EFBA25E1F9C4B480011007E /* SalesTraveling.app */,
+				7EFBA25E1F9C4B480011007E /* Shōto.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -227,7 +227,7 @@
 			);
 			name = SalesTraveling;
 			productName = SalesTraveling;
-			productReference = 7EFBA25E1F9C4B480011007E /* SalesTraveling.app */;
+			productReference = 7EFBA25E1F9C4B480011007E /* Shōto.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -465,7 +465,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.shodo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Shōto";
 				PROVISIONING_PROFILE = "bd40195c-5ef6-4e44-9244-5b8308f9b92f";
 				PROVISIONING_PROFILE_SPECIFIER = Shodo_development;
 				SWIFT_VERSION = 5.0;
@@ -485,7 +485,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.shodo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Shōto";
 				PROVISIONING_PROFILE = "b9e3d4fe-d4e6-43d5-93b4-44e03b8ace37";
 				PROVISIONING_PROFILE_SPECIFIER = Shodo_distribution;
 				SWIFT_VERSION = 5.0;
