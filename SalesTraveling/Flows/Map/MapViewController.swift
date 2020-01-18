@@ -148,6 +148,11 @@ private extension MapViewController {
 		let searchBar = searchController.searchBar
 		searchBar.sizeToFit()
 		searchBar.placeholder = "Search".localized
+		if #available(iOS 13.0, *) {
+			searchBar.searchTextField.backgroundColor = .white
+		} else {
+			// Fallback on earlier versions
+		}
 		navigationItem.titleView = searchController.searchBar
 		
 		searchController.hidesNavigationBarDuringPresentation = false

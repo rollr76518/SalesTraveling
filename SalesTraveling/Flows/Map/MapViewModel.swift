@@ -9,7 +9,7 @@
 import Foundation
 import MapKit.MKPlacemark
 
-protocol MapViewModelDelegate: class {
+protocol MapViewModelDelegate: AnyObject {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
 	func viewModel(_ viewModel: MapViewModel, addPlacemarksAt indexes: [Int])
