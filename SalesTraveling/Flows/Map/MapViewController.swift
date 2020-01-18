@@ -148,6 +148,11 @@ private extension MapViewController {
 		let searchBar = searchController.searchBar
 		searchBar.sizeToFit()
 		searchBar.placeholder = "Search".localized
+		if #available(iOS 13.0, *) {
+			searchBar.searchTextField.backgroundColor = .white
+		} else {
+			// Fallback on earlier versions
+		}
 		navigationItem.titleView = searchController.searchBar
 		
 		searchController.hidesNavigationBarDuringPresentation = false
@@ -356,16 +361,7 @@ extension MapViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-			tableView.beginUpdates()
 			viewModel.deletePlacemark(at: indexPath.row)
-			tableView.deleteRows(at: [indexPath], with: .automatic)
-			tableView.endUpdates()
-			//刪除完之後還要往上拉一格，因為文字排序要重設
-			//TODO: 目前使用1秒是 workaround，應該要抓到正確的時機後 reload
-			//這招沒用 https://stackoverflow.com/questions/3832474/uitableview-row-animation-duration-and-completion-callback
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-				tableView.reloadSections([SectionType.destination.rawValue], with: .automatic)
-			}
 		}
 	}
 }
@@ -403,28 +399,37 @@ extension MapViewController: MapViewModelDelegate {
 		tableView.reloadSections([SectionType.source.rawValue], with: .automatic)
 	}
 	
-	func viewModel(_ viewModel: MapViewModel, didUpdatePlacemarks placemarks: [HYCPlacemark], oldValue: [HYCPlacemark]) {
+	func viewModel(_ viewModel: MapViewModel, addPlacemarksAt indexes: [Int]) {
+		let indexPathes = indexes.map { IndexPath(row: $0, section: SectionType.destination.rawValue) }
+		tableView.insertRows(at: indexPathes, with: .automatic)
+		
+		let annotations = indexes.map { viewModel.placemarks[$0].pointAnnotation }
+		mapView.addAnnotations(annotations)
+	}
+	
+	func viewModel(_ viewModel: MapViewModel, removePlacemarksAt indexes: [Int]) {
+		let indexPathes = indexes.map { IndexPath(row: $0, section: SectionType.destination.rawValue) }
+		tableView.deleteRows(at: indexPathes, with: .automatic)
+		//為了讓動畫跑完再 reload title 的排序而延遲1秒
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+			self.tableView.reloadSections([SectionType.destination.rawValue], with: .automatic)
+		}
+		
+		//TODO: 想辦法直接刪除指定的 annotations 而非全刪掉後再新增。
 		//清除現有資料，避免重覆
-		let anntationsBesideUser = mapView.annotations.filter { (annotation) -> Bool in
+		let anntationsWithoutUser = mapView.annotations.filter { (annotation) -> Bool in
 			return (annotation.coordinate.latitude != viewModel.userPlacemark?.coordinate.latitude &&
 				annotation.coordinate.longitude != viewModel.userPlacemark?.coordinate.longitude)
 		}
-		mapView.removeAnnotations(anntationsBesideUser)
+		mapView.removeAnnotations(anntationsWithoutUser)
 		//載入最新的資料
-		mapView.addAnnotations(placemarks.map({ (placemark) -> MKAnnotation in
-			return placemark.pointAnnotation
-		}))
-		
-		//刪除的話不進行更新
-		if placemarks.count >= oldValue.count {
-			tableView.reloadSections([SectionType.destination.rawValue], with: .automatic)
-		}
+		let annotations = viewModel.placemarks.map { $0.pointAnnotation }
+		mapView.addAnnotations(annotations)
 	}
 	
-	func viewModel(_ viewModel: MapViewModel, didUpdateTourModel tourModel: TourModel?) {
-
+	func viewModel(_ viewModel: MapViewModel, reload placemarks: [HYCPlacemark]) {
+		tableView.reloadData()
 	}
-
 	
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool) {
 		if isFetching {
