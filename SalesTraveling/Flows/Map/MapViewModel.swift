@@ -273,14 +273,17 @@ private extension MapViewModel {
 extension MapViewModel {
 	
 	func addMockPlacemarks() {
-		let placemarks = [
-			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)), //西門町
-			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)), //木柵動物園
-			MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0209217, 121.5750736)) //內湖好市多
-			]
-			.map{ HYCPlacemark(mkPlacemark: $0) }
+		let a = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)))
+		a.name = "西門町"
+		a.title = "臺北市萬華區中華路一段"
+		let b = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)))
+		b.name = "木柵動物園"
+		b.title = "臺北市文山區新光路二段30號"
+		let c = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.063985, 121.575923)))
+		c.name = "內湖好市多"
+		c.title = "114台北市內湖區舊宗路一段268號"
 		
-		add(placemarks: placemarks) { [weak self] (result) in
+		add(placemarks: [a, b, c]) { [weak self] (result) in
 			switch result {
 			case .failure(let error):
 				self?.error = error
