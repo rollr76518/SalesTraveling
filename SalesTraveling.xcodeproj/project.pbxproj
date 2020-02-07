@@ -15,9 +15,8 @@
 		7EFBA26C1F9C4B480011007E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */; };
 		7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2731F9C4D670011007E /* MapMananger.swift */; };
 		7EFBA2771F9C53080011007E /* taipei 101.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA2761F9C53080011007E /* taipei 101.gpx */; };
-		7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2781F9C54140011007E /* LocateViewController.swift */; };
 		7EFBA27D1F9C55490011007E /* AddressResultTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA27C1F9C55490011007E /* AddressResultTableViewController.swift */; };
-		7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA27E1F9C82B10011007E /* Locate.storyboard */; };
+		7EFBA27F1F9C82B10011007E /* AddressResult.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EFBA27E1F9C82B10011007E /* AddressResult.storyboard */; };
 		9445682C1FC45E9A00D4C7FD /* DirectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445682B1FC45E9A00D4C7FD /* DirectionModel.swift */; };
 		9448EB4B1FCA9F370010CF42 /* CountdownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */; };
 		94598E1F22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94598E1E22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift */; };
@@ -55,9 +54,8 @@
 		7EFBA26D1F9C4B480011007E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7EFBA2731F9C4D670011007E /* MapMananger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMananger.swift; sourceTree = "<group>"; };
 		7EFBA2761F9C53080011007E /* taipei 101.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "taipei 101.gpx"; sourceTree = "<group>"; };
-		7EFBA2781F9C54140011007E /* LocateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocateViewController.swift; sourceTree = "<group>"; };
 		7EFBA27C1F9C55490011007E /* AddressResultTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressResultTableViewController.swift; sourceTree = "<group>"; };
-		7EFBA27E1F9C82B10011007E /* Locate.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Locate.storyboard; sourceTree = "<group>"; };
+		7EFBA27E1F9C82B10011007E /* AddressResult.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddressResult.storyboard; sourceTree = "<group>"; };
 		9445682B1FC45E9A00D4C7FD /* DirectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModel.swift; sourceTree = "<group>"; };
 		9448EB4A1FCA9F370010CF42 /* CountdownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownManager.swift; sourceTree = "<group>"; };
 		94598E1E22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HYCPlacemark+PostalAddress.swift"; sourceTree = "<group>"; };
@@ -155,9 +153,8 @@
 		7EFBA2821F9C8D730011007E /* Locate */ = {
 			isa = PBXGroup;
 			children = (
+				7EFBA27E1F9C82B10011007E /* AddressResult.storyboard */,
 				7EFBA27C1F9C55490011007E /* AddressResultTableViewController.swift */,
-				7EFBA27E1F9C82B10011007E /* Locate.storyboard */,
-				7EFBA2781F9C54140011007E /* LocateViewController.swift */,
 			);
 			path = Locate;
 			sourceTree = "<group>";
@@ -271,10 +268,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EFBA27F1F9C82B10011007E /* AddressResult.storyboard in Resources */,
 				7EFBA2691F9C4B480011007E /* Assets.xcassets in Resources */,
 				7EFBA26C1F9C4B480011007E /* LaunchScreen.storyboard in Resources */,
 				94E2D1051FC6F4A400F1FD36 /* Localizable.strings in Resources */,
-				7EFBA27F1F9C82B10011007E /* Locate.storyboard in Resources */,
 				94798C1221E3A863004627BC /* Map.storyboard in Resources */,
 				7EFBA2771F9C53080011007E /* taipei 101.gpx in Resources */,
 			);
@@ -298,7 +295,6 @@
 				9481FCE020A7241200F8E842 /* HYCLoadingView.swift in Sources */,
 				94598E1F22BA834C003DD991 /* HYCPlacemark+PostalAddress.swift in Sources */,
 				94822C8622B5402700DB4E88 /* HYCPlacemark.swift in Sources */,
-				7EFBA2791F9C54140011007E /* LocateViewController.swift in Sources */,
 				7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */,
 				94798C1521E3AB9C004627BC /* MapViewController.swift in Sources */,
 				94598E2722BA8E41003DD991 /* MapViewModel.swift in Sources */,
