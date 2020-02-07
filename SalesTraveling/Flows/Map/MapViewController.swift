@@ -223,22 +223,25 @@ extension MapViewController: MKMapViewDelegate {
 	}
 	
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-		if annotation is MKUserLocation {
-			return nil
+		guard let annotation = annotation as? HYCAnntation else { return nil }
+		
+		let annotationViewID = "annotationView"
+		var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationViewID) as? MKMarkerAnnotationView
+		if annotationView == nil {
+			annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: annotationViewID)
+			annotationView?.canShowCallout = true
+			annotationView?.rightCalloutAccessoryView = UIButton(type: .infoLight)
+			annotationView?.titleVisibility = .adaptive
+			annotationView?.markerTintColor = .brand
+			annotationView?.glyphTintColor = .white
 		}
-		let reuseId = "pin"
-		var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-		pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-		pinView?.pinTintColor = .orange
-		pinView?.canShowCallout = true
-		pinView?.leftCalloutAccessoryView = UIButton(type: .contactAdd)
-		pinView?.rightCalloutAccessoryView = UIButton(type: .infoLight)
-		return pinView
+		annotationView?.glyphText = "\(annotation.sorted)"
+		return annotationView
 	}
 	
 	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
 		let renderer = MKPolylineRenderer(overlay: overlay)
-		renderer.strokeColor = UIColor.blue.withAlphaComponent(0.35)
+		renderer.strokeColor = UIColor.brand.withAlphaComponent(0.65)
 		renderer.lineWidth = 4.0
 		return renderer
 	}
@@ -253,7 +256,7 @@ extension MapViewController: MKMapViewDelegate {
 		}
 		switch control {
 		case let left where left == view.leftCalloutAccessoryView:
-			viewModel.addToFavorite(placemark)
+			break
 		case let right where right == view.rightCalloutAccessoryView:
 			let mapItems = [placemark.toMapItem]
 			let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
@@ -403,27 +406,37 @@ extension MapViewController: MapViewModelDelegate {
 		let indexPathes = indexes.map { IndexPath(row: $0, section: SectionType.destination.rawValue) }
 		tableView.insertRows(at: indexPathes, with: .automatic)
 		
-		let annotations = indexes.map { viewModel.placemarks[$0].pointAnnotation }
+		//TODO: 想辦法直接刪除指定的 annotations 而非全刪掉後再新增。
+		//清除現有資料，避免重覆
+		let annotationsWithoutUser = mapView.annotations.filter { (annotation) -> Bool in
+			return (annotation.coordinate.latitude != viewModel.userPlacemark?.coordinate.latitude &&
+				annotation.coordinate.longitude != viewModel.userPlacemark?.coordinate.longitude)
+		}
+		mapView.removeAnnotations(annotationsWithoutUser)
+		//載入最新的資料
+		let annotations = viewModel.placemarks.enumerated().map { (arg0) -> HYCAnntation in
+			let (offset, element) = arg0
+			return HYCAnntation(placemark: element, sorted: offset + 1)
+		}
 		mapView.addAnnotations(annotations)
 	}
 	
 	func viewModel(_ viewModel: MapViewModel, removePlacemarksAt indexes: [Int]) {
 		let indexPathes = indexes.map { IndexPath(row: $0, section: SectionType.destination.rawValue) }
 		tableView.deleteRows(at: indexPathes, with: .automatic)
-		//為了讓動畫跑完再 reload title 的排序而延遲1秒
-		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-			self.tableView.reloadSections([SectionType.destination.rawValue], with: .automatic)
-		}
 		
 		//TODO: 想辦法直接刪除指定的 annotations 而非全刪掉後再新增。
 		//清除現有資料，避免重覆
-		let anntationsWithoutUser = mapView.annotations.filter { (annotation) -> Bool in
+		let annotationsWithoutUser = mapView.annotations.filter { (annotation) -> Bool in
 			return (annotation.coordinate.latitude != viewModel.userPlacemark?.coordinate.latitude &&
 				annotation.coordinate.longitude != viewModel.userPlacemark?.coordinate.longitude)
 		}
-		mapView.removeAnnotations(anntationsWithoutUser)
+		mapView.removeAnnotations(annotationsWithoutUser)
 		//載入最新的資料
-		let annotations = viewModel.placemarks.map { $0.pointAnnotation }
+		let annotations = viewModel.placemarks.enumerated().map { (arg0) -> HYCAnntation in
+			let (offset, element) = arg0
+			return HYCAnntation(placemark: element, sorted: offset + 1)
+		}
 		mapView.addAnnotations(annotations)
 	}
 	
@@ -443,7 +456,7 @@ extension MapViewController: MapViewModelDelegate {
 		mapView.removeOverlays(mapView.overlays)
 		mapView.addOverlays(polylines, level: .aboveRoads)
 		let rect = MapMananger.boundingMapRect(polylines: polylines)
-		let verticalInset = mapView.frame.height / 10
+		let verticalInset = (mapView.frame.height - 88) / 10 // TODO: 88 為 lowestY, 應該綁在一起
 		let horizatonInset = mapView.frame.width / 10
 		mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: verticalInset, left: horizatonInset, bottom: verticalInset, right: horizatonInset), animated: false)
 	}
