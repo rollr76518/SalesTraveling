@@ -60,12 +60,11 @@ class HYCPlacemark: NSObject, Codable {
 	}
 }
 
-extension HYCPlacemark: MKAnnotation {
+extension HYCPlacemark {
 	
 	var coordinate: CLLocationCoordinate2D {
 		return CLLocationCoordinate2DMake(latitude, longitude)
 	}
-	
 }
 
 extension HYCPlacemark {
@@ -93,15 +92,6 @@ extension HYCPlacemark {
 		item.name = name
 		return item
 	}
-	
-	var pointAnnotation: MKPointAnnotation {
-		let annotation = MKPointAnnotation()
-		annotation.coordinate = coordinate
-		annotation.title = name
-		annotation.subtitle = title
-		return annotation
-	}
-	
 }
 
 extension HYCPlacemark {
@@ -117,5 +107,4 @@ extension HYCPlacemark {
 		
 		"""
 	}
-
 }
