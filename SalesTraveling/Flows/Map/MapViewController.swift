@@ -126,7 +126,7 @@ class MapViewController: UIViewController {
 private extension MapViewController {
 	
 	func makeAddressResultTableViewController() -> AddressResultTableViewController {
-		guard let vc = UIStoryboard(name: "AddressResult", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController else {
+		guard let vc = UIStoryboard(name: "AddressResult", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.ClassName) as? AddressResultTableViewController else {
 			fatalError("AddressResultTableViewController doesn't exist")
 		}
 		

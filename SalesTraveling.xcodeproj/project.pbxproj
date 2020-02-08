@@ -34,7 +34,7 @@
 		94D010041FC9D5490003E979 /* UserDefaults+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D010031FC9D5490003E979 /* UserDefaults+Keys.swift */; };
 		94E2D1051FC6F4A400F1FD36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 94E2D1071FC6F4A400F1FD36 /* Localizable.strings */; };
 		94E2D10A1FC6F83700F1FD36 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D1091FC6F83700F1FD36 /* String+Localized.swift */; };
-		94E2D10C1FC7019900F1FD36 /* UIViewController+Identifer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10B1FC7019900F1FD36 /* UIViewController+Identifer.swift */; };
+		94E2D10C1FC7019900F1FD36 /* NSObject+ClassName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2D10B1FC7019900F1FD36 /* NSObject+ClassName.swift */; };
 		94FB42891FB6E663005039B7 /* Array+Algorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB42881FB6E663005039B7 /* Array+Algorithm.swift */; };
 		94FB428C1FB6E6A8005039B7 /* AlgorithmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB428B1FB6E6A8005039B7 /* AlgorithmManager.swift */; };
 /* End PBXBuildFile section */
@@ -71,7 +71,7 @@
 		94E2D1061FC6F4A400F1FD36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		94E2D1081FC6F4AE00F1FD36 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		94E2D1091FC6F83700F1FD36 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
-		94E2D10B1FC7019900F1FD36 /* UIViewController+Identifer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Identifer.swift"; sourceTree = "<group>"; };
+		94E2D10B1FC7019900F1FD36 /* NSObject+ClassName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ClassName.swift"; sourceTree = "<group>"; };
 		94FB42881FB6E663005039B7 /* Array+Algorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Algorithm.swift"; sourceTree = "<group>"; };
 		94FB428B1FB6E6A8005039B7 /* AlgorithmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -193,6 +193,7 @@
 			children = (
 				94FB42881FB6E663005039B7 /* Array+Algorithm.swift */,
 				9474E21420FF857B00A13F65 /* CLLocationCoordinate2D+Codable.swift */,
+				94E2D10B1FC7019900F1FD36 /* NSObject+ClassName.swift */,
 				94E2D1091FC6F83700F1FD36 /* String+Localized.swift */,
 				7E63348E207200BB007A2A85 /* UIAlertController+Init.swift */,
 				94D00FFD1FC9B60A0003E979 /* UIColor+Bookmark.swift */,
@@ -200,7 +201,6 @@
 				945D12451FBC95CF009E0A88 /* UIImage+Crop.swift */,
 				94D00FFB1FC9B5850003E979 /* UIView+UIImage.swift */,
 				94598E2422BA8930003DD991 /* UIViewController+Alert.swift */,
-				94E2D10B1FC7019900F1FD36 /* UIViewController+Identifer.swift */,
 				94D010031FC9D5490003E979 /* UserDefaults+Keys.swift */,
 			);
 			path = Extensions;
@@ -297,6 +297,7 @@
 				7EFBA2741F9C4D670011007E /* MapMananger.swift in Sources */,
 				94798C1521E3AB9C004627BC /* MapViewController.swift in Sources */,
 				94598E2722BA8E41003DD991 /* MapViewModel.swift in Sources */,
+				94E2D10C1FC7019900F1FD36 /* NSObject+ClassName.swift in Sources */,
 				94E2D10A1FC6F83700F1FD36 /* String+Localized.swift in Sources */,
 				7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */,
 				7E63348F207200BB007A2A85 /* UIAlertController+Init.swift in Sources */,
@@ -305,7 +306,6 @@
 				945D12461FBC95CF009E0A88 /* UIImage+Crop.swift in Sources */,
 				94D00FFC1FC9B5850003E979 /* UIView+UIImage.swift in Sources */,
 				94598E2522BA8930003DD991 /* UIViewController+Alert.swift in Sources */,
-				94E2D10C1FC7019900F1FD36 /* UIViewController+Identifer.swift in Sources */,
 				94D010041FC9D5490003E979 /* UserDefaults+Keys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
