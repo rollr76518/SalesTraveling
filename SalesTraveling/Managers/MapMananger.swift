@@ -10,6 +10,7 @@ import MapKit
 
 class MapMananger { }
 extension MapMananger {
+	
 	enum LocalSearchStatus {
 		case success(MKLocalSearch.Response)
 		case failure(Error)
@@ -34,32 +35,7 @@ extension MapMananger {
 }
 
 extension MapMananger {
-	enum DirectResponseStatus {
-		case success(MKDirections.Response)
-		case failure(Error)
-	}
 	
-	class func calculateDirection(from source: MKPlacemark, to destination: MKPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
-		
-		let request = MKDirections.Request()
-		request.source = source.toMapItem
-		request.destination = destination.toMapItem
-		request.transportType = .automobile
-		
-		let directions = MKDirections(request: request)
-		directions.calculate { (response, error) in
-			if let response = response {
-				completion(.success(response))
-			}
-			
-			if let error = error {
-				completion(.failure(error))
-			}
-		}
-	}
-}
-
-extension MapMananger {
 	enum ReverseGeocodeLocationStatus {
 		case success([MKPlacemark])
 		case failure(Error)
@@ -84,17 +60,6 @@ extension MapMananger {
 }
 
 extension MapMananger {
-	class func addPolyline(_ mapView: MKMapView, route: MKRoute) {
-		mapView.addOverlay(route.polyline, level: .aboveRoads)
-		let rect = route.polyline.boundingMapRect
-		mapView.setRegion(MKCoordinateRegion(rect), animated: true)
-	}
-	
-	class func showRegion(_ mapView: MKMapView, spanDegrees: Double,  coordinate: CLLocationCoordinate2D) {
-		let span = MKCoordinateSpan(latitudeDelta: spanDegrees, longitudeDelta: spanDegrees)
-		let region = MKCoordinateRegion(center: coordinate, span: span)
-		mapView.setRegion(region, animated: true)
-	}
 	
 	class func boundingMapRect(polylines: [MKPolyline]) -> MKMapRect {
 		var westPoint: Double?
@@ -124,6 +89,11 @@ extension MapMananger {
 
 // MARK: - HYCPlacemark
 extension MapMananger {
+	
+	enum DirectResponseStatus {
+		case success(MKDirections.Response)
+		case failure(Error)
+	}
 	
 	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
 		
