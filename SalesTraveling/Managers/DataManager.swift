@@ -47,12 +47,7 @@ extension DataManager {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
 	
-	enum FetchDirectionStatus {
-		case success([DirectionModel])
-		case failure(Error)
-	}
-	
-	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (FetchDirectionStatus)->()) {
+	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
 		DispatchQueue.global().async {
 			
 			let queue = OperationQueue()
@@ -115,7 +110,7 @@ extension DataManager {
 	}
 }
 
-//Favorite placemark
+// MARK: - Favorite placemark
 extension DataManager {
 	
 	func addToFavorites(placemark: HYCPlacemark) throws {
