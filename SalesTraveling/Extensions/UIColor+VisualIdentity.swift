@@ -6,7 +6,7 @@
 //  Copyright © 2017年 Hanyu. All rights reserved.
 //
 
-import UIKit
+import UIKit.UIColor
 
 extension UIColor {
 	

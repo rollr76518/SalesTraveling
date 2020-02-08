@@ -29,7 +29,7 @@
 		94822C8622B5402700DB4E88 /* HYCPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94822C8522B5402700DB4E88 /* HYCPlacemark.swift */; };
 		94C476FD23EDB82F00A7B595 /* HYCAnntation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C476FC23EDB82F00A7B595 /* HYCAnntation.swift */; };
 		94D00FFC1FC9B5850003E979 /* UIView+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFB1FC9B5850003E979 /* UIView+UIImage.swift */; };
-		94D00FFE1FC9B60A0003E979 /* UIColor+Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+Bookmark.swift */; };
+		94D00FFE1FC9B60A0003E979 /* UIColor+VisualIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+VisualIdentity.swift */; };
 		94D010021FC9D14D0003E979 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D010011FC9D14D0003E979 /* DataManager.swift */; };
 		94D010041FC9D5490003E979 /* UserDefaults+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D010031FC9D5490003E979 /* UserDefaults+Keys.swift */; };
 		94E2D1051FC6F4A400F1FD36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 94E2D1071FC6F4A400F1FD36 /* Localizable.strings */; };
@@ -65,7 +65,7 @@
 		94822C8522B5402700DB4E88 /* HYCPlacemark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HYCPlacemark.swift; sourceTree = "<group>"; };
 		94C476FC23EDB82F00A7B595 /* HYCAnntation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HYCAnntation.swift; sourceTree = "<group>"; };
 		94D00FFB1FC9B5850003E979 /* UIView+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+UIImage.swift"; sourceTree = "<group>"; };
-		94D00FFD1FC9B60A0003E979 /* UIColor+Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Bookmark.swift"; sourceTree = "<group>"; };
+		94D00FFD1FC9B60A0003E979 /* UIColor+VisualIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+VisualIdentity.swift"; sourceTree = "<group>"; };
 		94D010011FC9D14D0003E979 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		94D010031FC9D5490003E979 /* UserDefaults+Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Keys.swift"; sourceTree = "<group>"; };
 		94E2D1061FC6F4A400F1FD36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -196,8 +196,8 @@
 				94E2D10B1FC7019900F1FD36 /* NSObject+ClassName.swift */,
 				94E2D1091FC6F83700F1FD36 /* String+Localized.swift */,
 				7E63348E207200BB007A2A85 /* UIAlertController+Init.swift */,
-				94D00FFD1FC9B60A0003E979 /* UIColor+Bookmark.swift */,
 				94598E2222BA8896003DD991 /* UIColor+UIImage.swift */,
+				94D00FFD1FC9B60A0003E979 /* UIColor+VisualIdentity.swift */,
 				945D12451FBC95CF009E0A88 /* UIImage+Crop.swift */,
 				94D00FFB1FC9B5850003E979 /* UIView+UIImage.swift */,
 				94598E2422BA8930003DD991 /* UIViewController+Alert.swift */,
@@ -301,8 +301,8 @@
 				94E2D10A1FC6F83700F1FD36 /* String+Localized.swift in Sources */,
 				7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */,
 				7E63348F207200BB007A2A85 /* UIAlertController+Init.swift in Sources */,
-				94D00FFE1FC9B60A0003E979 /* UIColor+Bookmark.swift in Sources */,
 				94598E2322BA8896003DD991 /* UIColor+UIImage.swift in Sources */,
+				94D00FFE1FC9B60A0003E979 /* UIColor+VisualIdentity.swift in Sources */,
 				945D12461FBC95CF009E0A88 /* UIImage+Crop.swift in Sources */,
 				94D00FFC1FC9B5850003E979 /* UIView+UIImage.swift in Sources */,
 				94598E2522BA8930003DD991 /* UIViewController+Alert.swift in Sources */,
