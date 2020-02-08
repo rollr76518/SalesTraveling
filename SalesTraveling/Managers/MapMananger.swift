@@ -62,28 +62,14 @@ extension MapMananger {
 extension MapMananger {
 	
 	class func boundingMapRect(polylines: [MKPolyline]) -> MKMapRect {
-		var westPoint: Double?
-		var northPoint: Double?
-		var eastPoint: Double?
-		var southPoint: Double?
+		let westPoint = polylines.lazy.map{ $0.boundingMapRect.minX }.min() ?? 0
+		let northPoint = polylines.lazy.map{ $0.boundingMapRect.minY }.min() ?? 0
+		let eastPoint = polylines.lazy.map{ $0.boundingMapRect.maxX }.max() ?? 0
+		let southPoint = polylines.lazy.map{ $0.boundingMapRect.maxY }.max() ?? 0
 		
-		for polyline in polylines {
-			if let west = westPoint, let north = northPoint, let east = eastPoint, let south = southPoint {
-				westPoint = min(west, polyline.boundingMapRect.minX)
-				northPoint = min(north, polyline.boundingMapRect.minY)
-				eastPoint = max(east, polyline.boundingMapRect.maxX)
-				southPoint = max(south, polyline.boundingMapRect.maxY)
-			}
-			else {
-				westPoint = polyline.boundingMapRect.minX
-				northPoint = polyline.boundingMapRect.minY
-				eastPoint = polyline.boundingMapRect.maxX
-				southPoint = polyline.boundingMapRect.maxY
-			}
-		}
-		
-		return MKMapRect(origin: MKMapPoint(x: westPoint ?? 0, y: northPoint ?? 0),
-						 size: MKMapSize(width: (eastPoint ?? 0) - (westPoint ?? 0), height: (southPoint ?? 0) - (northPoint ?? 0)))
+		let origin = MKMapPoint(x: westPoint, y: northPoint)
+		let size = MKMapSize(width: eastPoint - westPoint, height: southPoint - northPoint)
+		return MKMapRect(origin: origin, size: size)
 	}
 }
 
