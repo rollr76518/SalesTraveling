@@ -185,7 +185,7 @@ private extension MapViewModel {
 		//只有一個點的時候不需要做排列組合的計算
 		if placemarks.count == 1 {
 			if let source = userPlacemark, let destination = placemarks.first {
-				if let directions = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+				if let directions = DataManager.shared.findDirection(source: source, destination: destination) {
 					var tourModel = TourModel()
 					tourModel.directions.append(directions)
 					tourModels.append(tourModel)
@@ -208,13 +208,13 @@ private extension MapViewModel {
 					//先弄起點
 					if nestedIndex == 0, let userPlacemark = userPlacemark {
 						let source = userPlacemark, destination = tuple.0
-						if let directions = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+						if let directions = DataManager.shared.findDirection(source: source, destination: destination) {
 							tourModels[index].directions.append(directions)
 						}
 					}
 					//再弄中間點
 					let source = tuple.0, destination = tuple.1
-					if let direction = DataManager.shared.findDirection(source: source.toMKPlacemark, destination: destination.toMKPlacemark) {
+					if let direction = DataManager.shared.findDirection(source: source, destination: destination) {
 						tourModels[index].directions.append(direction)
 					}
 				}
