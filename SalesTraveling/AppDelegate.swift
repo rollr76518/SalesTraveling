@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		MKPinAnnotationView.appearance().tintColor = .brand
 		MKPinAnnotationView.appearance().pinTintColor = .brand
 		UITextField.appearance().tintColor = .brand
+		UIButton.appearance().tintColor = .brand
 		
 		return true
 	}

@@ -230,6 +230,7 @@ extension MapViewController: MKMapViewDelegate {
 		if annotationView == nil {
 			annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: annotationViewID)
 			annotationView?.canShowCallout = true
+			annotationView?.leftCalloutAccessoryView = UIButton(type: .contactAdd)
 			annotationView?.rightCalloutAccessoryView = UIButton(type: .infoLight)
 			annotationView?.titleVisibility = .adaptive
 			annotationView?.markerTintColor = .brand
@@ -256,7 +257,8 @@ extension MapViewController: MKMapViewDelegate {
 		}
 		switch control {
 		case let left where left == view.leftCalloutAccessoryView:
-			break
+			viewModel.addToFavorite(placemark)
+			// TODO: 提示使用者已加到搜尋紀錄，以便快速搜尋。
 		case let right where right == view.rightCalloutAccessoryView:
 			let mapItems = [placemark.toMapItem]
 			let options = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
@@ -402,45 +404,16 @@ extension MapViewController: MapViewModelDelegate {
 		tableView.reloadSections([SectionType.source.rawValue], with: .automatic)
 	}
 	
-	func viewModel(_ viewModel: MapViewModel, addPlacemarksAt indexes: [Int]) {
-		let indexPathes = indexes.map { IndexPath(row: $0, section: SectionType.destination.rawValue) }
-		tableView.insertRows(at: indexPathes, with: .automatic)
-		
-		//TODO: 想辦法直接刪除指定的 annotations 而非全刪掉後再新增。
-		//清除現有資料，避免重覆
-		let annotationsWithoutUser = mapView.annotations.filter { (annotation) -> Bool in
-			return (annotation.coordinate.latitude != viewModel.userPlacemark?.coordinate.latitude &&
-				annotation.coordinate.longitude != viewModel.userPlacemark?.coordinate.longitude)
-		}
-		mapView.removeAnnotations(annotationsWithoutUser)
-		//載入最新的資料
-		let annotations = viewModel.placemarks.enumerated().map { (arg0) -> HYCAnntation in
-			let (offset, element) = arg0
-			return HYCAnntation(placemark: element, sorted: offset + 1)
-		}
-		mapView.addAnnotations(annotations)
-	}
-	
-	func viewModel(_ viewModel: MapViewModel, removePlacemarksAt indexes: [Int]) {
-		let indexPathes = indexes.map { IndexPath(row: $0, section: SectionType.destination.rawValue) }
-		tableView.deleteRows(at: indexPathes, with: .automatic)
-		
-		//TODO: 想辦法直接刪除指定的 annotations 而非全刪掉後再新增。
-		//清除現有資料，避免重覆
-		let annotationsWithoutUser = mapView.annotations.filter { (annotation) -> Bool in
-			return (annotation.coordinate.latitude != viewModel.userPlacemark?.coordinate.latitude &&
-				annotation.coordinate.longitude != viewModel.userPlacemark?.coordinate.longitude)
-		}
-		mapView.removeAnnotations(annotationsWithoutUser)
-		//載入最新的資料
-		let annotations = viewModel.placemarks.enumerated().map { (arg0) -> HYCAnntation in
-			let (offset, element) = arg0
-			return HYCAnntation(placemark: element, sorted: offset + 1)
-		}
-		mapView.addAnnotations(annotations)
-	}
-	
 	func viewModel(_ viewModel: MapViewModel, reload placemarks: [HYCPlacemark]) {
+	
+		mapView.removeAnnotations(mapView.annotations)
+		let annotations = viewModel.placemarks.enumerated().map { (arg0) -> HYCAnntation in
+			let (offset, element) = arg0
+			return HYCAnntation(placemark: element, sorted: offset + 1)
+		}
+		mapView.addAnnotations(annotations)
+		
+		
 		tableView.reloadData()
 	}
 	
@@ -455,10 +428,15 @@ extension MapViewController: MapViewModelDelegate {
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline]) {
 		mapView.removeOverlays(mapView.overlays)
 		mapView.addOverlays(polylines, level: .aboveRoads)
-		let rect = MapMananger.boundingMapRect(polylines: polylines)
-		let verticalInset = (mapView.frame.height - 88) / 10 // TODO: 88 為 lowestY, 應該綁在一起
-		let horizatonInset = mapView.frame.width / 10
-		mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: verticalInset, left: horizatonInset, bottom: verticalInset, right: horizatonInset), animated: false)
+		if polylines.count > 0 {
+			let rect = MapMananger.boundingMapRect(polylines: polylines)
+			let verticalInset = mapView.frame.height / 10
+			let horizatonInset = mapView.frame.width / 10
+			let edgeInsets = UIEdgeInsets(top: verticalInset, left: horizatonInset, bottom: verticalInset + 88, right: horizatonInset) // TODO: 88 為 lowestY, 應該綁在一起
+			mapView.setVisibleMapRect(rect, edgePadding: edgeInsets, animated: false)
+		} else {
+			mapView.showAnnotations([mapView.userLocation], animated: true)
+		}
 	}
 
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error) {
@@ -485,10 +463,6 @@ extension MapViewController: MapViewModelDelegate {
 		} else {
 			closeMovableView()
 		}
-	}
-	
-	func viewModel(_ viewModel: MapViewModel, didUpdateResult result: String?) {
-		tableView.reloadSections([SectionType.result.rawValue], with: .automatic)
 	}
 }
 
