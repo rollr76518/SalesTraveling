@@ -41,29 +41,6 @@ extension DataManager {
 	}
 }
 
-extension DataManager {
-	
-	func saveDefaultMapCenter(point: CLLocationCoordinate2D) {
-		do {
-			let data = try JSONEncoder().encode(point)
-			let key = UserDefaults.Keys.DefaultMapCenter
-			UserDefaults.standard.set(data, forKey: key)
-		} catch {
-			print("Cant save default map center with \(error)")
-		}
-	}
-	
-	func defaultMapCenter() -> CLLocationCoordinate2D {
-		let key = UserDefaults.Keys.DefaultMapCenter
-		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
-			let point = try? JSONDecoder().decode(CLLocationCoordinate2D.self, from: data) else {
-				let locationOfTaipei101 = CLLocationCoordinate2D(latitude: 25.034175, longitude: 121.564488)
-				return locationOfTaipei101
-		}
-		return point
-	}
-}
-
 // MARK: - Fetch Diretcions with Queue
 extension DataManager {
 	

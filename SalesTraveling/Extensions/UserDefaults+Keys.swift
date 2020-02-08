@@ -11,7 +11,6 @@ import Foundation
 extension UserDefaults {
 	
 	enum Keys {
-		static let DefaultMapCenter = "DefaultMapCenter"
 		static let favoritePlacemarks = "favoritePlacemarks"
 	}
 }

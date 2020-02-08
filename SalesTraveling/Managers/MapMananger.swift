@@ -122,18 +122,6 @@ extension MapMananger {
 	}
 }
 
-extension MapMananger {
-	var defaultMapCenter: CLLocationCoordinate2D {
-		set {
-			DataManager.shared.saveDefaultMapCenter(point: newValue)
-		}
-		
-		get {
-			return DataManager.shared.defaultMapCenter()
-		}
-	}
-}
-
 // MARK: - HYCPlacemark
 extension MapMananger {
 	
