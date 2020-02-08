@@ -133,7 +133,7 @@ extension DataManager {
 		}
 		do {
 			let data = try JSONEncoder().encode(favorites)
-			let key = UserDefaults.Keys.favoritePlacemarks
+			let key = UserDefaults.Keys.FavoritePlacemarks
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
 			throw error
@@ -141,7 +141,7 @@ extension DataManager {
 	}
 	
 	func favoritePlacemarks() -> Set<HYCPlacemark> {
-		let key = UserDefaults.Keys.favoritePlacemarks
+		let key = UserDefaults.Keys.FavoritePlacemarks
 		guard
 			let data = UserDefaults.standard.object(forKey: key) as? Data,
 			let placemarks = try? JSONDecoder().decode(Set<HYCPlacemark>.self, from: data)
