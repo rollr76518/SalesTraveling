@@ -130,8 +130,8 @@ private extension MapViewController {
 			fatalError("AddressResultTableViewController doesn't exist")
 		}
 		
+		vc.dataSource = self
 		vc.delegate = self
-		vc.mapView = mapView
 		return vc
 	}
 	
@@ -157,18 +157,30 @@ private extension MapViewController {
 	}
 }
 
-//MARK: - AddressResultTableViewControllerProtocol
-extension MapViewController: AddressResultTableViewControllerProtocol {
+//MARK: - AddressResultTableViewControllerDataSource
+extension MapViewController: AddressResultTableViewControllerDataSource {
 	
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark) {
+	func mapView(for vc: AddressResultTableViewController) -> MKMapView {
+		return mapView
+	}
+
+	func favoritePlacemarks(for vc: AddressResultTableViewController) -> [HYCPlacemark] {
+		return viewModel.favoritePlacemarks()
+	}
+}
+
+//MARK: - AddressResultTableViewControllerDelegate
+extension MapViewController: AddressResultTableViewControllerDelegate {
+
+	func viewController(_ vc: AddressResultTableViewController, didSelectAt placemark: HYCPlacemark) {
 		searchController.searchBar.text = nil
 		searchController.searchBar.resignFirstResponder()
 		
 		viewModel.add(placemark: placemark, completion: nil)
 	}
 	
-	func favoritePlacemarksAtVC(_ vc: AddressResultTableViewController) -> [HYCPlacemark] {
-		return viewModel.favoritePlacemarks()
+	func viewController(_ vc: AddressResultTableViewController, didRecevice error: Error) {
+		print(error.localizedDescription)
 	}
 }
 

@@ -9,23 +9,34 @@
 import UIKit
 import MapKit
 
-protocol AddressResultTableViewControllerProtocol {
+protocol AddressResultTableViewControllerDataSource: AnyObject {
 	
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark)
+	func mapView(for vc: AddressResultTableViewController) -> MKMapView
+	func favoritePlacemarks(for vc: AddressResultTableViewController) -> [HYCPlacemark]
+}
+
+protocol AddressResultTableViewControllerDelegate: AnyObject {
 	
-	func favoritePlacemarksAtVC(_ vc: AddressResultTableViewController) -> [HYCPlacemark]
+	func viewController(_ vc: AddressResultTableViewController, didSelectAt placemark: HYCPlacemark)
+	func viewController(_ vc: AddressResultTableViewController, didRecevice error: Error)
 }
 
 class AddressResultTableViewController: UITableViewController {
 	
-	var matchingPlacemarks = [HYCPlacemark]()
-	var mapView: MKMapView?
-	var delegate: AddressResultTableViewControllerProtocol?
+	private var matchingPlacemarks = [HYCPlacemark]()
+	private var mapView: MKMapView {
+		guard let dataSource = dataSource else {
+			fatalError("Must have dataSource")
+		}
+		return dataSource.mapView(for: self)
+	}
+	weak var dataSource: AddressResultTableViewControllerDataSource?
+	weak var delegate: AddressResultTableViewControllerDelegate?
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		matchingPlacemarks = self.delegate?.favoritePlacemarksAtVC(self) ?? []
+		matchingPlacemarks = dataSource?.favoritePlacemarks(for: self) ?? []
     }
 }
 
@@ -50,7 +61,7 @@ extension AddressResultTableViewController {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let placemark = matchingPlacemarks[indexPath.row]
-		delegate?.addressResultTableViewController(self, placemark: placemark)
+		delegate?.viewController(self, didSelectAt: placemark)
 		dismiss(animated: true, completion: nil)
 	}
 }
@@ -63,21 +74,15 @@ extension AddressResultTableViewController: UISearchResultsUpdating {
 		//為了讓 Favorites 顯示出來
 		view.isHidden = false
 		
-		guard
-			let keywords = searchController.searchBar.text,
-			let mapView = mapView
-			else {
-				return
-		}
+		guard let keywords = searchController.searchBar.text else { return }
 		
-		MapMananger.fetchLocalSearch(with: keywords, region: mapView.region) { [weak self] (status) in
-			guard let self = self else { return }
+		MapMananger.fetchLocalSearch(with: keywords, region: mapView.region) { (status) in
 			switch status {
 			case .success(let response):
 				self.matchingPlacemarks = response.mapItems.map{ HYCPlacemark(mkPlacemark: $0.placemark) }
 			case .failure(let error):
-				print("fetch local search \(error.localizedDescription)")
-				self.matchingPlacemarks = self.delegate?.favoritePlacemarksAtVC(self) ?? []
+				self.delegate?.viewController(self, didRecevice: error)
+				self.matchingPlacemarks = self.dataSource?.favoritePlacemarks(for: self) ?? []
 			}
 			self.tableView.reloadData()
 		}
