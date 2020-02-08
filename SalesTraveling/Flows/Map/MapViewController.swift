@@ -226,7 +226,10 @@ extension MapViewController: MKMapViewDelegate {
 			annotationView?.titleVisibility = .adaptive
 			annotationView?.markerTintColor = .brand
 			annotationView?.glyphTintColor = .white
+		} else {
+			annotationView?.annotation  = annotation
 		}
+		annotationView?.displayPriority = .required
 		annotationView?.glyphText = "\(annotation.sorted)"
 		return annotationView
 	}
