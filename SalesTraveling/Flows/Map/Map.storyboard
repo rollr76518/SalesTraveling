@@ -138,11 +138,10 @@
                         <outlet property="constriantOfMovableViewHeight" destination="VwS-Gv-REg" id="WX1-eN-3g7"/>
                         <outlet property="mapView" destination="20s-Vq-Z6W" id="hqY-yI-dhP"/>
                         <outlet property="movableView" destination="YBi-l3-ajR" id="Zgb-Lw-KCB"/>
+                        <outlet property="movableViewTopToMapViewBottom" destination="aFm-JF-7cU" id="iKV-uo-kib"/>
                         <outlet property="segmentedControl" destination="yC1-J6-IMV" id="EJ1-OX-HMy"/>
                         <outlet property="tableView" destination="xnY-mM-7yX" id="PcP-a0-7CH"/>
-                        <outlet property="titleOfPlacemarks" destination="F09-Fz-ndH" id="mkv-FN-mxA"/>
                         <outlet property="toolbar" destination="jVO-Zo-0h8" id="MH9-RI-1x3"/>
-                        <outlet property="topOfMovableView" destination="aFm-JF-7cU" id="iKV-uo-kib"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V6Z-6h-dck" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -151,7 +150,6 @@
                         <action selector="leftBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="cU9-40-Dob"/>
                     </connections>
                 </barButtonItem>
-                <barButtonItem enabled="NO" title="Item" id="F09-Fz-ndH"/>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="bHQ-lV-Ihk">
                     <connections>
                         <action selector="panGestureRecognizerDidPressed:" destination="4Np-yJ-KqG" id="Jo7-J9-d2l"/>
