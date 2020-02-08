@@ -31,7 +31,6 @@ class MapViewController: UIViewController {
 			titleOfPlacemarks.setTitleTextAttributes(attributed, for: .disabled)
 		}
 	}
-	@IBOutlet var barButtonItemSave: UIBarButtonItem!
 	@IBOutlet var barButtonItemDone: UIBarButtonItem!
 	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
 	@IBOutlet weak var toolbar: UIToolbar!
@@ -91,10 +90,6 @@ class MapViewController: UIViewController {
 		default:
 			break
 		}
-	}
-	
-	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		viewModel.saveCurrentTourToFavorite()
 	}
 	
 	@IBAction func leftBarButtonItemDidPressed(_ sender: Any) {

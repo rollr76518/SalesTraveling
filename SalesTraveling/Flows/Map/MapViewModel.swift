@@ -170,17 +170,6 @@ extension MapViewModel {
 		tourModels = showResultOfCaculate(startAt: userPlacemark, placemarks: _placemarks)
 	}
 	
-	func saveCurrentTourToFavorite() {
-		do {
-			guard let tourModel = tourModel else {
-				throw ViewModelError.tourModelIsNil
-			}
-			try DataManager.shared.save(tourModel: tourModel)
-		} catch {
-			self.error = error
-		}
-	}
-	
 	func set(preferResult: PreferResult) {
 		self.preferResult = preferResult
 	}

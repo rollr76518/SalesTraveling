@@ -31,7 +31,7 @@
         <!--Map View Controller-->
         <scene sceneID="WiO-Dd-WOO">
             <objects>
-                <viewController id="4Np-yJ-KqG" customClass="MapViewController" customModule="SalesTraveling" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="4Np-yJ-KqG" customClass="MapViewController" customModule="Shōto" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bJo-Iw-A2w">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -135,7 +135,6 @@
                     <connections>
                         <outlet property="barButtonItemDone" destination="aty-bD-WXG" id="yQ5-Gn-8ot"/>
                         <outlet property="barButtonItemEdit" destination="ECX-8J-GGq" id="Jhh-EO-E9A"/>
-                        <outlet property="barButtonItemSave" destination="Kw1-c4-eiG" id="4bo-Pu-nac"/>
                         <outlet property="constriantOfMovableViewHeight" destination="VwS-Gv-REg" id="WX1-eN-3g7"/>
                         <outlet property="mapView" destination="20s-Vq-Z6W" id="hqY-yI-dhP"/>
                         <outlet property="movableView" destination="YBi-l3-ajR" id="Zgb-Lw-KCB"/>
@@ -150,11 +149,6 @@
                 <barButtonItem style="plain" systemItem="edit" id="ECX-8J-GGq">
                     <connections>
                         <action selector="leftBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="cU9-40-Dob"/>
-                    </connections>
-                </barButtonItem>
-                <barButtonItem systemItem="save" id="Kw1-c4-eiG">
-                    <connections>
-                        <action selector="rightBarButtonItemDidPressed:" destination="4Np-yJ-KqG" id="XTd-Kj-LAJ"/>
                     </connections>
                 </barButtonItem>
                 <barButtonItem enabled="NO" title="Item" id="F09-Fz-ndH"/>

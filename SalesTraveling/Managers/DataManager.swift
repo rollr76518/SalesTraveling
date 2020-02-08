@@ -41,55 +41,6 @@ extension DataManager {
 	}
 }
 
-// MARK: - TourModel
-extension DataManager {
-	
-	func save(tourModel: TourModel) throws {
-		var tourModels = self.savedTours()
-		tourModels.insert(tourModel)
-		do {
-			let data = try JSONEncoder().encode(tourModels)
-			let key = UserDefaults.Keys.SavedTours
-			UserDefaults.standard.set(data, forKey: key)
-		} catch {
-			throw error
-		}
-	}
-	
-	func save(tourModels: [TourModel]) throws {
-		do {
-			for tourModel in tourModels {
-				try save(tourModel: tourModel)
-			}
-		} catch {
-			throw error
-		}
-	}
-	
-	func delete(tourModel: TourModel) {
-		var tourModels = self.savedTours()
-		tourModels.remove(tourModel)
-		do {
-			let data = try JSONEncoder().encode(tourModels)
-			let key = UserDefaults.Keys.SavedTours
-			UserDefaults.standard.set(data, forKey: key)
-		} catch {
-			print("Cant delete tourModel with \(error)")
-		}
-	}
-	
-	func savedTours() -> Set<TourModel> {
-		let key = UserDefaults.Keys.SavedTours
-		guard
-			let data = UserDefaults.standard.object(forKey: key) as? Data,
-			let tourModels = try? JSONDecoder().decode(Set<TourModel>.self, from: data)
-			else {
-				return Set<TourModel>()
-		}
-		return tourModels
-	}
-}
-
 extension DataManager {
 	
 	func saveDefaultMapCenter(point: CLLocationCoordinate2D) {
