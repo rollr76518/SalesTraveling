@@ -107,7 +107,7 @@ class MapViewModel {
 			delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
 			guard placemark != oldValue else { return }
 			if self._placemarks.count == 0 {
-				if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
+				if ProcessInfo.processInfo.environment["will_add_mock_placemarks"] == "true" {
 					self.addMockPlacemarks()
 				}
 			} else {
