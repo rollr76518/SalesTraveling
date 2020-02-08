@@ -9,14 +9,10 @@
 import MapKit
 
 class MapMananger { }
+
 extension MapMananger {
 	
-	enum LocalSearchStatus {
-		case success(MKLocalSearch.Response)
-		case failure(Error)
-	}
-	
-	class func fetchLocalSearch(with keywords: String, region: MKCoordinateRegion,  completion: @escaping (_ status: LocalSearchStatus) -> ()) {
+	class func fetchLocalSearch(with keywords: String, region: MKCoordinateRegion,  completion: @escaping (_ result: Result<MKLocalSearch.Response, Error>) -> ()) {
 		let request = MKLocalSearch.Request()
 		request.naturalLanguageQuery = keywords
 		request.region = region
@@ -36,12 +32,7 @@ extension MapMananger {
 
 extension MapMananger {
 	
-	enum ReverseGeocodeLocationStatus {
-		case success([MKPlacemark])
-		case failure(Error)
-	}
-	
-	class func reverseCoordinate(_ coordinate: CLLocationCoordinate2D, completion: @escaping (_ status: ReverseGeocodeLocationStatus) -> ())  {
+	class func reverseCoordinate(_ coordinate: CLLocationCoordinate2D, completion: @escaping (_ result: Result<[MKPlacemark], Error>) -> ())  {
 		let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
 		let geocoder = CLGeocoder()
 		geocoder.reverseGeocodeLocation(location) { (clPlacemarks, error) in
@@ -76,13 +67,7 @@ extension MapMananger {
 // MARK: - HYCPlacemark
 extension MapMananger {
 	
-	enum DirectResponseStatus {
-		case success(MKDirections.Response)
-		case failure(Error)
-	}
-	
-	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ status: DirectResponseStatus) -> ()) {
-		
+	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ result: Result<MKDirections.Response, Error>) -> ()) {
 		let request = MKDirections.Request()
 		request.source = source.toMapItem
 		request.destination = destination.toMapItem
