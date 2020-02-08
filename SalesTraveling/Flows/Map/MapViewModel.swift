@@ -85,9 +85,7 @@ class MapViewModel {
 	private var deviceLocation: CLLocation? {
 		didSet {
 			guard let deviceLocation = deviceLocation else { return }
-			
 			delegate?.viewModel(self, isFetching: true)
-			
 			MapMananger.reverseCoordinate(deviceLocation.coordinate) { (status) in
 				self.delegate?.viewModel(self, isFetching: false)
 
@@ -107,7 +105,6 @@ class MapViewModel {
 		didSet {
 			guard let placemark = userPlacemark else { return }
 			delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
-			
 			guard placemark != oldValue else { return }
 			if self._placemarks.count == 0 {
 				if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
@@ -130,12 +127,11 @@ class MapViewModel {
 	}
 }
 
+// MARK: - Placemark
 extension MapViewModel {
 	
 	func add(placemark: HYCPlacemark, completion: ((Result<Void, Error>) -> Void)?) {
-
 		delegate?.viewModel(self, isFetching: true)
-
 		DataManager.shared.fetchDirections(ofNew: placemark, toOld: _placemarks, current: userPlacemark) { (status) in
 			self.delegate?.viewModel(self, isFetching: false)
 			
@@ -154,14 +150,6 @@ extension MapViewModel {
 		}
 	}
 	
-	func showTableView(show: Bool) {
-		shouldShowTableView = show
-	}
-	
-	func update(device location: CLLocation) {
-		deviceLocation = location
-	}
-	
 	func deletePlacemark(at index: Int) {
 		let placemark = placemarks[index]
 		_placemarks.removeAll { (_placemark) -> Bool in
@@ -169,6 +157,60 @@ extension MapViewModel {
 		}
 		tourModels = showResultOfCaculate(startAt: userPlacemark, placemarks: _placemarks)
 	}
+	
+	func placemark(at coordinate: CLLocationCoordinate2D) -> HYCPlacemark? {
+		return _placemarks.first { (placemark) -> Bool in
+			return placemark.coordinate.latitude == coordinate.latitude &&
+				placemark.coordinate.longitude == coordinate.longitude
+		}
+	}
+}
+
+// MARK: - Favorites
+extension MapViewModel {
+	
+	func addToFavorite(_ placemark: HYCPlacemark) {
+		do {
+			try DataManager.shared.addToFavorites(placemark: placemark)
+		} catch {
+			self.error = error
+		}
+	}
+	
+	func favoritePlacemarks() -> [HYCPlacemark] {
+		let userCoordinate = self.userPlacemark?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+		let set = DataManager.shared.favoritePlacemarks()
+		return set
+			//用與目前使用者的距離來排序
+			.sorted(by: { (lhs, rhs) -> Bool in
+				func distance(source: CLLocationCoordinate2D, destination: CLLocationCoordinate2D) -> Double {
+					return sqrt(pow((source.latitude - destination.latitude), 2) + pow((source.longitude - destination.longitude), 2))
+				}
+				let distanceOflhs = distance(source: lhs.coordinate, destination: userCoordinate)
+				let distanceOfrhs = distance(source: rhs.coordinate, destination: userCoordinate)
+				return distanceOflhs > distanceOfrhs
+			})
+	}
+}
+
+// MARK: - TableView
+extension MapViewModel {
+	
+	func showTableView(show: Bool) {
+		shouldShowTableView = show
+	}
+}
+
+// MARK: - Location
+extension MapViewModel {
+	
+	func update(device location: CLLocation) {
+		deviceLocation = location
+	}
+}
+
+// MARK: - PerferResult
+extension MapViewModel {
 	
 	func set(preferResult: PreferResult) {
 		self.preferResult = preferResult
@@ -236,18 +278,30 @@ private extension MapViewModel {
 	}
 }
 
+// MARK: - Mock placemarks
 extension MapViewModel {
 	
 	func addMockPlacemarks() {
-		let a = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)))
-		a.name = "西門町"
-		a.title = "臺北市萬華區中華路一段"
-		let b = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)))
-		b.name = "木柵動物園"
-		b.title = "臺北市文山區新光路二段30號"
-		let c = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.063985, 121.575923)))
-		c.name = "內湖好市多"
-		c.title = "114台北市內湖區舊宗路一段268號"
+		let a: HYCPlacemark = {
+			let placemark = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0416801, 121.508074)))
+			placemark.name = "西門町"
+			placemark.title = "臺北市萬華區中華路一段"
+			return placemark
+		}()
+		
+		let b: HYCPlacemark = {
+			let placemark = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.0157677, 121.5555731)))
+			placemark.name = "木柵動物園"
+			placemark.title = "臺北市文山區新光路二段30號"
+			return placemark
+		}()
+		
+		let c: HYCPlacemark = {
+			let placemark = HYCPlacemark(mkPlacemark: MKPlacemark(coordinate: CLLocationCoordinate2DMake(25.063985, 121.575923)))
+			placemark.name = "內湖好市多"
+			placemark.title = "114台北市內湖區舊宗路一段268號"
+			return placemark
+		}()
 		
 		add(placemarks: [a, b, c]) { [weak self] (result) in
 			switch result {
@@ -289,38 +343,5 @@ extension MapViewModel {
 				completion?(.success(Void()))
 			}
 		}
-	}
-}
-
-extension MapViewModel {
-	
-	func placemark(at coordinate: CLLocationCoordinate2D) -> HYCPlacemark? {
-		return _placemarks.first { (placemark) -> Bool in
-			return placemark.coordinate.latitude == coordinate.latitude &&
-				placemark.coordinate.longitude == coordinate.longitude
-		}
-	}
-	
-	func addToFavorite(_ placemark: HYCPlacemark) {
-		do {
-			try DataManager.shared.addToFavorites(placemark: placemark)
-		} catch {
-			self.error = error
-		}
-	}
-	
-	func favoritePlacemarks() -> [HYCPlacemark] {
-		let userCoordinate = self.userPlacemark?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
-		let set = DataManager.shared.favoritePlacemarks()
-		return set
-			//用與目前使用者的距離來排序
-			.sorted(by: { (lhs, rhs) -> Bool in
-				func distance(source: CLLocationCoordinate2D, destination: CLLocationCoordinate2D) -> Double {
-					return sqrt(pow((source.latitude - destination.latitude), 2) + pow((source.longitude - destination.longitude), 2))
-				}
-				let distanceOflhs = distance(source: lhs.coordinate, destination: userCoordinate)
-				let distanceOfrhs = distance(source: rhs.coordinate, destination: userCoordinate)
-				return distanceOflhs > distanceOfrhs
-			})
 	}
 }
