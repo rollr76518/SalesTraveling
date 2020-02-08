@@ -9,15 +9,17 @@
 import MapKit.MKPlacemark
 
 class HYCPlacemark: NSObject, Codable {
+	
 	var title: String?
 	var subtitle: String?
-	var latitude: Double
-	var longitude: Double
+	var coordinate: CLLocationCoordinate2D
 	
+	// PostalAddress properties
 	var street: String?
 	var city: String?
 	var state: String?
 	
+	// address dictionary properties
 	var name: String?
 	var thoroughfare: String?
 	var subThoroughfare: String?
@@ -38,8 +40,7 @@ class HYCPlacemark: NSObject, Codable {
 		if mkPlacemark.responds(to: #selector(getter: MKAnnotation.subtitle)) {
 			subtitle = mkPlacemark.subtitle
 		}
-		latitude = mkPlacemark.coordinate.latitude
-		longitude = mkPlacemark.coordinate.longitude
+		coordinate = mkPlacemark.coordinate
 		street = mkPlacemark.postalAddress?.street
 		city = mkPlacemark.postalAddress?.city
 		state = mkPlacemark.postalAddress?.state
@@ -53,17 +54,10 @@ class HYCPlacemark: NSObject, Codable {
 	// NSObject 的 == 要 override 這個 method
 	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? HYCPlacemark {
-			return self.latitude == other.latitude && self.longitude == other.longitude
+			return coordinate.latitude == other.coordinate.latitude && coordinate.longitude == other.coordinate.longitude
 		} else {
 			return false
 		}
-	}
-}
-
-extension HYCPlacemark {
-	
-	var coordinate: CLLocationCoordinate2D {
-		return CLLocationCoordinate2DMake(latitude, longitude)
 	}
 }
 
@@ -83,12 +77,11 @@ extension HYCPlacemark {
 		addressDictionary["inlandWater"] = inlandWater
 		addressDictionary["ocean"] = ocean
 		addressDictionary["areasOfInterest"] = areasOfInterest
-		
-		return MKPlacemark(coordinate: CLLocationCoordinate2DMake(latitude, longitude), addressDictionary: addressDictionary)
+		return MKPlacemark(coordinate: coordinate, addressDictionary: addressDictionary)
 	}
 	
 	var toMapItem: MKMapItem {
-		let item = MKMapItem(placemark: self.toMKPlacemark)
+		let item = MKMapItem(placemark: toMKPlacemark)
 		item.name = name
 		return item
 	}
@@ -102,8 +95,8 @@ extension HYCPlacemark {
 		name: \(String(describing: name))
 		title: \(String(describing: title))
 		subtitle: \(String(describing: subtitle))
-		latitude: \(latitude)
-		longitude: \(longitude)
+		latitude: \(coordinate.latitude)
+		longitude: \(coordinate.longitude)
 		
 		"""
 	}

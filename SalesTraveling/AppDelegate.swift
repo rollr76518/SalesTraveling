@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MapKit.MKPinAnnotationView
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,13 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		UINavigationBar.appearance().tintColor = .white
 		UINavigationBar.appearance().barTintColor = .brand
-		UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
-		UINavigationBar.appearance().isTranslucent = true
 		UIToolbar.appearance().tintColor = .brand
-		UITabBar.appearance().tintColor = .brand
-		MKPinAnnotationView.appearance().tintColor = .brand
-		MKPinAnnotationView.appearance().pinTintColor = .brand
-		UITextField.appearance().tintColor = .brand
 		UIButton.appearance().tintColor = .brand
 		
 		return true

@@ -17,25 +17,15 @@ class MapViewController: UIViewController {
 		case destination = 2
 	}
 
-	@IBOutlet var tableView: UITableView!
+	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var mapView: MKMapView!
-	@IBOutlet var movableView: UIVisualEffectView!
-	@IBOutlet var constriantOfMovableViewHeight: NSLayoutConstraint!
-	@IBOutlet weak var topOfMovableView: NSLayoutConstraint!
-	@IBOutlet weak var titleOfPlacemarks: UIBarButtonItem! {
-		didSet {
-			let attributed = [
-				NSAttributedString.Key.foregroundColor: UIColor.black,
-				NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17.0, weight: UIFont.Weight.bold)]
-			titleOfPlacemarks.title = "Placemarks".localized
-			titleOfPlacemarks.setTitleTextAttributes(attributed, for: .disabled)
-		}
-	}
-	@IBOutlet var barButtonItemSave: UIBarButtonItem!
-	@IBOutlet var barButtonItemDone: UIBarButtonItem!
-	@IBOutlet var barButtonItemEdit: UIBarButtonItem!
+	@IBOutlet weak var movableView: UIVisualEffectView!
+	@IBOutlet weak var constriantOfMovableViewHeight: NSLayoutConstraint!
+	@IBOutlet weak var movableViewTopToMapViewBottom: NSLayoutConstraint!
+	@IBOutlet weak var barButtonItemDone: UIBarButtonItem!
+	@IBOutlet weak var barButtonItemEdit: UIBarButtonItem!
 	@IBOutlet weak var toolbar: UIToolbar!
-	@IBOutlet var segmentedControl: UISegmentedControl! {
+	@IBOutlet weak var segmentedControl: UISegmentedControl! {
 		didSet {
 			segmentedControl.setTitle("Distance".localized, forSegmentAt: 0)
 			segmentedControl.setTitle("Time".localized, forSegmentAt: 1)
@@ -44,33 +34,29 @@ class MapViewController: UIViewController {
 	
 	private var viewModel = MapViewModel()
 	private lazy var addressResultTableViewController = makeAddressResultTableViewController()
-	private lazy var searchController: UISearchController = makeSearchController()
+	private lazy var searchController = makeSearchController()
 	private let locationManager = CLLocationManager()
 	private var shouldUpdateLocation = true
 	
-	private var toppestY: CGFloat {
-		return -(mapView.bounds.height - 44.0)
+	private let heightOfUnit: CGFloat = 44.0
+	private var switchOnConstantOfMovableView: CGFloat {
+		return -(mapView.bounds.height - heightOfUnit)
 	}
 	
-	private var lowestY: CGFloat {
-		return -88.0
+	private var switchOffConstantOfMovableView: CGFloat {
+		return -heightOfUnit * 2
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-	
 		let _ = searchController
-		
 		viewModel.delegate = self
-		
 		setupLocationManager()
-		
 		layoutLeftBarButtonItem()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		
 		layoutMovableView()
 	}
 	
@@ -85,16 +71,12 @@ class MapViewController: UIViewController {
 		case .began:
 			break
 		case .changed:
-			topOfMovableView.constant = -(mapView.bounds.height - touchPoint.y)
+			movableViewTopToMapViewBottom.constant = -(mapView.bounds.height - touchPoint.y)
 		case .ended, .failed, .cancelled:
 			magnetTableView()
 		default:
 			break
 		}
-	}
-	
-	@IBAction func rightBarButtonItemDidPressed(_ sender: Any) {
-		viewModel.saveCurrentTourToFavorite()
 	}
 	
 	@IBAction func leftBarButtonItemDidPressed(_ sender: Any) {
@@ -131,12 +113,11 @@ class MapViewController: UIViewController {
 private extension MapViewController {
 	
 	func makeAddressResultTableViewController() -> AddressResultTableViewController {
-		guard let vc = UIStoryboard(name: "AddressResult", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.identifier) as? AddressResultTableViewController else {
+		guard let vc = UIStoryboard(name: "AddressResult", bundle: nil).instantiateViewController(withIdentifier: AddressResultTableViewController.ClassName) as? AddressResultTableViewController else {
 			fatalError("AddressResultTableViewController doesn't exist")
 		}
-		
+		vc.dataSource = self
 		vc.delegate = self
-		vc.mapView = mapView
 		return vc
 	}
 	
@@ -162,18 +143,30 @@ private extension MapViewController {
 	}
 }
 
-//MARK: - AddressResultTableViewControllerProtocol
-extension MapViewController: AddressResultTableViewControllerProtocol {
+//MARK: - AddressResultTableViewControllerDataSource
+extension MapViewController: AddressResultTableViewControllerDataSource {
 	
-	func addressResultTableViewController(_ vc: AddressResultTableViewController, placemark: HYCPlacemark) {
+	func mapView(for vc: AddressResultTableViewController) -> MKMapView {
+		return mapView
+	}
+
+	func favoritePlacemarks(for vc: AddressResultTableViewController) -> [HYCPlacemark] {
+		return viewModel.favoritePlacemarks()
+	}
+}
+
+//MARK: - AddressResultTableViewControllerDelegate
+extension MapViewController: AddressResultTableViewControllerDelegate {
+
+	func viewController(_ vc: AddressResultTableViewController, didSelectAt placemark: HYCPlacemark) {
 		searchController.searchBar.text = nil
 		searchController.searchBar.resignFirstResponder()
 		
 		viewModel.add(placemark: placemark, completion: nil)
 	}
 	
-	func favoritePlacemarksAtVC(_ vc: AddressResultTableViewController) -> [HYCPlacemark] {
-		return viewModel.favoritePlacemarks()
+	func viewController(_ vc: AddressResultTableViewController, didRecevice error: Error) {
+		print(error.localizedDescription)
 	}
 }
 
@@ -201,10 +194,10 @@ fileprivate extension MapViewController {
 	func  magnetTableView() {
 		let buffer = self.toolbar.bounds.height //覺得 44.0 是一個不錯的數值(一個 cell 高)
 		if viewModel.shouldShowTableView {
-			let shouldHide = (topOfMovableView.constant > (toppestY + buffer))
+			let shouldHide = (movableViewTopToMapViewBottom.constant > (switchOnConstantOfMovableView + buffer))
 			viewModel.showTableView(show: !shouldHide)
 		} else {
-			let shouldShow = (topOfMovableView.constant < (lowestY - buffer))
+			let shouldShow = (movableViewTopToMapViewBottom.constant < (switchOffConstantOfMovableView - buffer))
 			viewModel.showTableView(show: shouldShow)
 		}
 	}
@@ -215,9 +208,7 @@ extension MapViewController: MKMapViewDelegate {
 	
 	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
 		if shouldUpdateLocation, let deviceLocation = userLocation.location {
-			
 			shouldUpdateLocation = false
-			
 			viewModel.update(device: deviceLocation)
 		}
 	}
@@ -235,7 +226,10 @@ extension MapViewController: MKMapViewDelegate {
 			annotationView?.titleVisibility = .adaptive
 			annotationView?.markerTintColor = .brand
 			annotationView?.glyphTintColor = .white
+		} else {
+			annotationView?.annotation  = annotation
 		}
+		annotationView?.displayPriority = .required
 		annotationView?.glyphText = "\(annotation.sorted)"
 		return annotationView
 	}
@@ -384,7 +378,7 @@ extension MapViewController: UIScrollViewDelegate {
 	
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		if (scrollView.contentOffset.y < 0) || (scrollView.contentSize.height <= scrollView.frame.size.height) {
-			topOfMovableView.constant -= scrollView.contentOffset.y
+			movableViewTopToMapViewBottom.constant -= scrollView.contentOffset.y
 			scrollView.contentOffset = CGPoint.zero
 		}
 	}
@@ -432,7 +426,7 @@ extension MapViewController: MapViewModelDelegate {
 			let rect = MapMananger.boundingMapRect(polylines: polylines)
 			let verticalInset = mapView.frame.height / 10
 			let horizatonInset = mapView.frame.width / 10
-			let edgeInsets = UIEdgeInsets(top: verticalInset, left: horizatonInset, bottom: verticalInset + 88, right: horizatonInset) // TODO: 88 為 lowestY, 應該綁在一起
+			let edgeInsets = UIEdgeInsets(top: verticalInset, left: horizatonInset, bottom: verticalInset + (heightOfUnit * 2), right: horizatonInset) // TODO: 88 為 lowestY, 應該綁在一起
 			mapView.setVisibleMapRect(rect, edgePadding: edgeInsets, animated: false)
 		} else {
 			mapView.showAnnotations([mapView.userLocation], animated: true)
@@ -446,14 +440,14 @@ extension MapViewController: MapViewModelDelegate {
 	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool) {
 		func openMovableView() {
 			UIView.animate(withDuration: 0.25) {
-				self.topOfMovableView.constant = self.toppestY
+				self.movableViewTopToMapViewBottom.constant = self.switchOnConstantOfMovableView
 				self.view.layoutIfNeeded()
 			}
 		}
 		
 		func closeMovableView() {
 			UIView.animate(withDuration: 0.25) {
-				self.topOfMovableView.constant = self.lowestY
+				self.movableViewTopToMapViewBottom.constant = self.switchOffConstantOfMovableView
 				self.view.layoutIfNeeded()
 			}
 		}

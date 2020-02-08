@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import MapKit.MKPlacemark
 
 class DataManager {
 	
@@ -33,252 +32,11 @@ extension DataManager {
 		}
 	}
 	
-	func findDirection(source: MKPlacemark, destination: MKPlacemark) -> DirectionModel? {
+	func findDirection(source: HYCPlacemark, destination: HYCPlacemark) -> DirectionModel? {
 		let key = createKeyBy(source: source, destination: destination)
 		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
 			let direction = try? JSONDecoder().decode(DirectionModel.self, from: data) else { return nil }
 		return direction
-	}
-}
-
-// MARK: - TourModel
-extension DataManager {
-	
-	func save(tourModel: TourModel) throws {
-		var tourModels = self.savedTours()
-		tourModels.insert(tourModel)
-		do {
-			let data = try JSONEncoder().encode(tourModels)
-			let key = UserDefaults.Keys.SavedTours
-			UserDefaults.standard.set(data, forKey: key)
-		} catch {
-			throw error
-		}
-	}
-	
-	func save(tourModels: [TourModel]) throws {
-		do {
-			for tourModel in tourModels {
-				try save(tourModel: tourModel)
-			}
-		} catch {
-			throw error
-		}
-	}
-	
-	func delete(tourModel: TourModel) {
-		var tourModels = self.savedTours()
-		tourModels.remove(tourModel)
-		do {
-			let data = try JSONEncoder().encode(tourModels)
-			let key = UserDefaults.Keys.SavedTours
-			UserDefaults.standard.set(data, forKey: key)
-		} catch {
-			print("Cant delete tourModel with \(error)")
-		}
-	}
-	
-	func savedTours() -> Set<TourModel> {
-		let key = UserDefaults.Keys.SavedTours
-		guard
-			let data = UserDefaults.standard.object(forKey: key) as? Data,
-			let tourModels = try? JSONDecoder().decode(Set<TourModel>.self, from: data)
-			else {
-				return Set<TourModel>()
-		}
-		return tourModels
-	}
-}
-
-extension DataManager {
-	
-	func saveDefaultMapCenter(point: CLLocationCoordinate2D) {
-		do {
-			let data = try JSONEncoder().encode(point)
-			let key = UserDefaults.Keys.DefaultMapCenter
-			UserDefaults.standard.set(data, forKey: key)
-		} catch {
-			print("Cant save default map center with \(error)")
-		}
-	}
-	
-	func defaultMapCenter() -> CLLocationCoordinate2D {
-		let key = UserDefaults.Keys.DefaultMapCenter
-		guard let data = UserDefaults.standard.object(forKey: key) as? Data,
-			let point = try? JSONDecoder().decode(CLLocationCoordinate2D.self, from: data) else {
-				let locationOfTaipei101 = CLLocationCoordinate2D(latitude: 25.034175, longitude: 121.564488)
-				return locationOfTaipei101
-		}
-		return point
-	}
-}
-
-// MARK: - Fetch Diretcions with Queue
-extension DataManager {
-	
-	enum FetchDirectionStatus {
-		case success([DirectionModel])
-		case failure(Error)
-	}
-	
-	func fetchDirection(ofNew placemark: MKPlacemark, toOld placemarks: [MKPlacemark], completeBlock: @escaping (FetchDirectionStatus)->()) {
-		DispatchQueue.global().async {
-		
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-			
-			var directionModels = [DirectionModel]()
-
-			let callbackFinishOperation = BlockOperation {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionModels))
-				}
-			}
-			
-			for oldPlacemark in placemarks {
-				let source = placemark
-				let destination = oldPlacemark
-				
-				let blockOperation = BlockOperation(block: {
-					let semaphore = DispatchSemaphore(value: 0)
-					MapMananger.calculateDirection(from: source, to: destination, completion: { (state) in
-						switch state {
-						case .failure(let error):
-							completeBlock(.failure(error))
-						case .success(let response):
-							let directions = DirectionModel(source: source, destination: destination, routes: response.routes)
-							directionModels.append(directions)
-						}
-						semaphore.signal()
-					})
-					semaphore.wait()
-				})
-				
-				callbackFinishOperation.addDependency(blockOperation)
-				queue.addOperation(blockOperation)
-			}
-			
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
-		}
-	}
-	
-	
-	func fetchDirections(ofNew placemark: MKPlacemark, toOld placemarks: [MKPlacemark], current userPlacemark: MKPlacemark?, completeBlock: @escaping (FetchDirectionStatus)->()) {
-		DispatchQueue.global().async {
-			
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-			
-			var directionModels = [DirectionModel]()
-			let callbackFinishOperation = BlockOperation {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionModels))
-				}
-			}
-			
-			if let userPlacemark = userPlacemark {
-				let blockOperation = BlockOperation(block: {
-					let semaphore = DispatchSemaphore(value: 0)
-					let source = userPlacemark
-					let destination = placemark
-					MapMananger.calculateDirection(from: userPlacemark, to: placemark, completion: { (status) in
-						switch status {
-						case .success(let response):
-							let directions = DirectionModel(source: source, destination: destination, routes: response.routes)
-							directionModels.append(directions)
-						case .failure(let error):
-							completeBlock(.failure(error))
-						}
-						semaphore.signal()
-					})
-					semaphore.wait()
-				})
-				callbackFinishOperation.addDependency(blockOperation)
-				queue.addOperation(blockOperation)
-			}
-			
-			for oldPlacemark in placemarks {
-				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-					let source = tuple.0
-					let destination = tuple.1
-					
-					let blockOperation = BlockOperation(block: {
-						let semaphore = DispatchSemaphore(value: 0)
-						MapMananger.calculateDirection(from: source, to: destination, completion: { (state) in
-							switch state {
-							case .failure(let error):
-								completeBlock(.failure(error))
-							case .success(let response):
-								let direction = DirectionModel(source: source, destination: destination, routes: response.routes)
-								directionModels.append(direction)
-							}
-							semaphore.signal()
-						})
-						semaphore.wait()
-					})
-					
-					callbackFinishOperation.addDependency(blockOperation)
-					queue.addOperation(blockOperation)
-				}
-			}
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
-		}
-	}
-	
-	enum FetchRouteStatus {
-		case success([MKRoute])
-		case failure(Error)
-	}
-	
-	func fetchRoutes(placemarks: [MKPlacemark], completeBlock: @escaping (FetchRouteStatus)->()) {
-		DispatchQueue.global().async {
-			
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-			
-			var routes = [MKRoute]()
-			let callbackFinishOperation = BlockOperation {
-				DispatchQueue.main.async {
-					completeBlock(.success(routes))
-				}
-			}
-			
-			let tuples = placemarks.toTuple()
-			
-			for tuple in tuples {
-				let source = tuple.0
-				let destination = tuple.1
-				let blockOperation = BlockOperation(block: {
-					let semaphore = DispatchSemaphore(value: 0)
-					MapMananger.calculateDirection(from: source, to: destination, completion: { (status) in
-						switch status {
-						case .failure(let error):
-							completeBlock(.failure(error))
-						case .success(let response):
-							if let route = response.routes.first {
-								routes.append(route)
-							}
-						}
-						semaphore.signal()
-					})
-					semaphore.wait()
-				})
-				callbackFinishOperation.addDependency(blockOperation)
-				queue.addOperation(blockOperation)
-			}
-
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
-		}
-	}
-}
-
-private extension DataManager {
-	
-	func createKeyBy(source: MKPlacemark, destination: MKPlacemark) -> String {
-		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
 }
 
@@ -289,7 +47,7 @@ extension DataManager {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
 	
-	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (FetchDirectionStatus)->()) {
+	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
 		DispatchQueue.global().async {
 			
 			let queue = OperationQueue()
@@ -352,7 +110,7 @@ extension DataManager {
 	}
 }
 
-//Favorite placemark
+// MARK: - Favorite placemark
 extension DataManager {
 	
 	func addToFavorites(placemark: HYCPlacemark) throws {
@@ -370,7 +128,7 @@ extension DataManager {
 		}
 		do {
 			let data = try JSONEncoder().encode(favorites)
-			let key = UserDefaults.Keys.favoritePlacemarks
+			let key = UserDefaults.Keys.FavoritePlacemarks
 			UserDefaults.standard.set(data, forKey: key)
 		} catch {
 			throw error
@@ -378,7 +136,7 @@ extension DataManager {
 	}
 	
 	func favoritePlacemarks() -> Set<HYCPlacemark> {
-		let key = UserDefaults.Keys.favoritePlacemarks
+		let key = UserDefaults.Keys.FavoritePlacemarks
 		guard
 			let data = UserDefaults.standard.object(forKey: key) as? Data,
 			let placemarks = try? JSONDecoder().decode(Set<HYCPlacemark>.self, from: data)

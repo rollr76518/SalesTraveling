@@ -9,46 +9,18 @@
 import UIKit
 
 class HYCLoadingView {
+	
 	static let shared = HYCLoadingView()
 	
-	private lazy var backgroundView = createTranslucentView()
-	private var activityIndicatorView: UIActivityIndicatorView? = nil
-}
-
-private extension HYCLoadingView {
-	func createVisualEffectView() -> UIVisualEffectView {
-		let view = UIVisualEffectView(frame: .zero)
-		view.effect = UIBlurEffect(style: .dark)
-		addActivityIndicatorView(to: view.contentView)
-		return view
-	}
-	
-	func createTranslucentView() -> UIView {
-		let view = UIView(frame: .zero)
-		view.backgroundColor = .black
-		view.alpha = 0.65
-		addActivityIndicatorView(to: view)
-		return view
-	}
-	
-	func addActivityIndicatorView(to superView: UIView) {
-		let view = UIActivityIndicatorView(style: .whiteLarge)
-		view.startAnimating()
-		superView.addSubview(view)
-		view.translatesAutoresizingMaskIntoConstraints = false
-		NSLayoutConstraint.activate([
-			view.centerXAnchor.constraint(equalTo: superView.centerXAnchor),
-			view.centerYAnchor.constraint(equalTo: superView.centerYAnchor)
-			])
-	}
-	
+	private lazy var backgroundView = makeTranslucentView()
+	private lazy var activityIndicatorView = makeActivityIndicatorView()
 }
 
 extension HYCLoadingView {
+	
 	func show() {
 		guard let mainWindow = UIApplication.shared.windows.first else { return }
 		mainWindow.insertSubview(backgroundView, at: mainWindow.subviews.count)
-		backgroundView.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
 			backgroundView.topAnchor.constraint(equalTo: mainWindow.topAnchor),
 			backgroundView.bottomAnchor.constraint(equalTo: mainWindow.bottomAnchor),
@@ -58,14 +30,37 @@ extension HYCLoadingView {
 	}
 	
 	func startIndicatorAnimation() {
-		activityIndicatorView?.startAnimating()
+		activityIndicatorView.startAnimating()
 	}
 	
 	func stopIndicatorAnimation() {
-		activityIndicatorView?.stopAnimating()
+		activityIndicatorView.stopAnimating()
 	}
 	
 	func dismiss() {
 		backgroundView.removeFromSuperview()
+	}
+}
+
+extension HYCLoadingView {
+	
+	private func makeTranslucentView() -> UIView {
+		let view = UIView(frame: .zero)
+		view.backgroundColor = .black
+		view.alpha = 0.65
+		view.translatesAutoresizingMaskIntoConstraints = false
+		view.addSubview(activityIndicatorView)
+		NSLayoutConstraint.activate([
+			activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+			activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+			])
+		return view
+	}
+	
+	private func makeActivityIndicatorView() -> UIActivityIndicatorView {
+		let view = UIActivityIndicatorView(style: .whiteLarge)
+		view.startAnimating()
+		view.translatesAutoresizingMaskIntoConstraints = false
+		return view
 	}
 }

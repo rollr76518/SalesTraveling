@@ -6,11 +6,11 @@
 //  Copyright © 2017年 Hanyu. All rights reserved.
 //
 
-import UIKit.UIViewController
+import Foundation
 
-extension UIViewController {
+extension NSObject {
 	
-	class var identifier: String {
+	class var ClassName: String {
 		return String(describing: self)
 	}
 }
