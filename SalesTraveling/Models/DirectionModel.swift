@@ -9,6 +9,7 @@
 import MapKit
 
 struct DirectionModel: Codable {
+	
 	let source: HYCPlacemark
 	let destination: HYCPlacemark
 	let distance: CLLocationDistance
@@ -23,14 +24,14 @@ struct DirectionModel: Codable {
 	var sourcePlacemark: MKPlacemark {
 		get {
 			let postalAddress = source.toPostalAddress
-			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(source.latitude, source.longitude), postalAddress: postalAddress)
+			return MKPlacemark(coordinate: source.coordinate, postalAddress: postalAddress)
 		}
 	}
 	
 	var destinationPlacemark: MKPlacemark {
 		get {
 			let postalAddress = destination.toPostalAddress
-			return MKPlacemark(coordinate: CLLocationCoordinate2DMake(destination.latitude, destination.longitude), postalAddress: postalAddress)
+			return MKPlacemark(coordinate: destination.coordinate, postalAddress: postalAddress)
 		}
 	}
 	
