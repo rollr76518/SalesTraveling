@@ -12,14 +12,11 @@ import MapKit.MKPlacemark
 protocol MapViewModelDelegate: AnyObject {
 	
 	func viewModel(_ viewModel: MapViewModel, didUpdateUserPlacemark placemark: HYCPlacemark, from oldValue: HYCPlacemark?)
-	func viewModel(_ viewModel: MapViewModel, addPlacemarksAt indexes: [Int])
-	func viewModel(_ viewModel: MapViewModel, removePlacemarksAt indexes: [Int])
 	func viewModel(_ viewModel: MapViewModel, reload placemarks: [HYCPlacemark])
 	func viewModel(_ viewModel: MapViewModel, isFetching: Bool)
 	func viewModel(_ viewModel: MapViewModel, didUpdatePolylines polylines: [MKPolyline])
 	func viewModel(_ viewModel: MapViewModel, didRecevice error: Error)
 	func viewModel(_ viewModel: MapViewModel, shouldShowTableView show: Bool)
-	func viewModel(_ viewModel: MapViewModel, didUpdateResult result: String?)
 }
 
 class MapViewModel {
@@ -42,6 +39,8 @@ class MapViewModel {
 	
 	weak var delegate: MapViewModelDelegate?
 	
+	private var _placemarks: [HYCPlacemark] = []
+	
 	private(set) var preferResult: PreferResult = .distance {
 		didSet {
 			tourModel = tourModel(preferResult: preferResult, in: tourModels)
@@ -58,37 +57,16 @@ class MapViewModel {
 		didSet {
 			guard let tourModel = tourModel else { return }
 			delegate?.viewModel(self, didUpdatePolylines: tourModel.polylines)
-			
-			let formatter = NumberFormatter()
-			formatter.maximumFractionDigits = 2
-			let km = formatter.string(from: NSNumber(value: tourModel.distances/1000)) ?? "0"
-			let min = formatter.string(from: NSNumber(value: tourModel.sumOfExpectedTravelTime/60)) ?? "0"
-			result = [["Distance".localized, "\(km) \("km".localized)"], ["Time".localized, "\(min) \("min".localized)"]]
-				.map { (strings) -> String in
-					return strings.joined(separator: ": ")
-				}
-				.joined(separator: ", ")
+			delegate?.viewModel(self, reload: tourModel.destinations)
 		}
 	}
 	
-	private(set) var result: String? {
-		didSet {
-			delegate?.viewModel(self, didUpdateResult: result)
-		}
+	var result: String? {
+		return tourModel?.routeInformation
 	}
 	
-	private(set) var placemarks: [HYCPlacemark] = [] {
-		didSet {
-			let behavior = MapViewModel.diff(original: oldValue, now: placemarks)
-			switch behavior {
-			case .add(let indexes):
-				self.delegate?.viewModel(self, addPlacemarksAt: indexes)
-			case .remove(let indexes):
-				self.delegate?.viewModel(self, removePlacemarksAt: indexes)
-			case .reload:
-				self.delegate?.viewModel(self, reload: self.placemarks)
-			}
-		}
+	var placemarks: [HYCPlacemark] {
+		return tourModel?.destinations ?? []
 	}
 	
 	private(set) var shouldShowTableView: Bool = false {
@@ -110,9 +88,7 @@ class MapViewModel {
 			
 			delegate?.viewModel(self, isFetching: true)
 			
-			MapMananger.reverseCoordinate(deviceLocation.coordinate) { [weak self] (status) in
-				guard let self = self else { return }
-
+			MapMananger.reverseCoordinate(deviceLocation.coordinate) { (status) in
 				self.delegate?.viewModel(self, isFetching: false)
 
 				switch status {
@@ -133,13 +109,13 @@ class MapViewModel {
 			delegate?.viewModel(self, didUpdateUserPlacemark: placemark, from: oldValue)
 			
 			guard placemark != oldValue else { return }
-			if self.placemarks.count == 0 {
+			if self._placemarks.count == 0 {
 				if ProcessInfo.processInfo.environment["is_mock_bulid_with_locations"] == "true" {
 					self.addMockPlacemarks()
 				}
 			} else {
-				let tempPlacemarks = placemarks
-				placemarks = []
+				let tempPlacemarks = _placemarks
+				_placemarks = []
 				add(placemarks: tempPlacemarks) { [weak self] (result) in
 					guard let self = self else { return }
 					switch result {
@@ -160,9 +136,7 @@ extension MapViewModel {
 
 		delegate?.viewModel(self, isFetching: true)
 
-		DataManager.shared.fetchDirections(ofNew: placemark, toOld: placemarks, current: userPlacemark) { [weak self] (status) in
-			guard let self = self else { return }
-			
+		DataManager.shared.fetchDirections(ofNew: placemark, toOld: _placemarks, current: userPlacemark) { (status) in
 			self.delegate?.viewModel(self, isFetching: false)
 			
 			switch status {
@@ -171,9 +145,9 @@ extension MapViewModel {
 			case .success(let directionModels):
 				DataManager.shared.save(directions: directionModels)
 				
-				var placemarks = self.placemarks
+				var placemarks = self._placemarks
 				placemarks.append(placemark)
-				self.placemarks = placemarks
+				self._placemarks = placemarks
 				self.tourModels = self.showResultOfCaculate(startAt: self.userPlacemark, placemarks: placemarks)
 				completion?(.success(Void()))
 			}
@@ -189,8 +163,11 @@ extension MapViewModel {
 	}
 	
 	func deletePlacemark(at index: Int) {
-		placemarks.remove(at: index)
-		tourModels = showResultOfCaculate(startAt: userPlacemark, placemarks: placemarks)
+		let placemark = placemarks[index]
+		_placemarks.removeAll { (_placemark) -> Bool in
+			return _placemark == placemark
+		}
+		tourModels = showResultOfCaculate(startAt: userPlacemark, placemarks: _placemarks)
 	}
 	
 	func saveCurrentTourToFavorite() {
@@ -299,11 +276,10 @@ extension MapViewModel {
 			queue.maxConcurrentOperationCount = 1
 			
 			placemarks.forEach({ (placemark) in
-				let blockOperation = BlockOperation(block: { [weak self] in
-					guard let self = self else { return }
+				let blockOperation = BlockOperation(block: {
 					let semaphore = DispatchSemaphore(value: 0)
-					DispatchQueue.main.async { [weak self] in
-						self?.add(placemark: placemark, completion: { (result) in
+					DispatchQueue.main.async {
+						self.add(placemark: placemark, completion: { (result) in
 							switch result {
 							case .failure(let error):
 								completion?(.failure(error))
@@ -330,7 +306,7 @@ extension MapViewModel {
 extension MapViewModel {
 	
 	func placemark(at coordinate: CLLocationCoordinate2D) -> HYCPlacemark? {
-		return placemarks.first { (placemark) -> Bool in
+		return _placemarks.first { (placemark) -> Bool in
 			return placemark.coordinate.latitude == coordinate.latitude &&
 				placemark.coordinate.longitude == coordinate.longitude
 		}
@@ -357,33 +333,5 @@ extension MapViewModel {
 				let distanceOfrhs = distance(source: rhs.coordinate, destination: userCoordinate)
 				return distanceOflhs > distanceOfrhs
 			})
-	}
-}
-
-//MARK: - Placemarks diff
-extension MapViewModel {
-	
-	private enum PlacemarkChangeBehavior {
-		case add([Int])
-		case remove([Int])
-		case reload //基本上不發生
-	}
-
-	private static func diff(original: [HYCPlacemark], now: [HYCPlacemark]) -> PlacemarkChangeBehavior {
-		
-		let originalSet = Set(original)
-		let nowSet = Set(now)
-		
-		if originalSet.isSubset(of: nowSet) { // Appended
-			let added = nowSet.subtracting(originalSet)
-			let indexes = added.compactMap { now.firstIndex(of: $0) }
-			return .add(indexes)
-		} else if (nowSet.isSubset(of: originalSet)) { // Removed
-			let removed = originalSet.subtracting(nowSet)
-			let indexes = removed.compactMap { original.firstIndex(of: $0) }
-			return .remove(indexes)
-		} else { // Both appended and removed
-			return .reload
-		}
 	}
 }
