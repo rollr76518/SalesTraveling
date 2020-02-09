@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UINavigationBar.appearance().tintColor = .white
 		UINavigationBar.appearance().barTintColor = .brand
 		UIToolbar.appearance().tintColor = .brand
+		UITextField.appearance().tintColor = .brand
 		UIButton.appearance().tintColor = .brand
 		
 		return true
