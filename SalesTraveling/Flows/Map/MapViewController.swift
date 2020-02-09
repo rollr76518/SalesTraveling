@@ -18,7 +18,11 @@ class MapViewController: UIViewController {
 	}
 
 	@IBOutlet weak var tableView: UITableView!
-	@IBOutlet weak var mapView: MKMapView!
+	@IBOutlet weak var mapView: MKMapView! {
+		didSet {
+			mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMarkerAnnotationView.ClassName)
+		}
+	}
 	@IBOutlet weak var movableView: UIVisualEffectView!
 	@IBOutlet weak var constriantOfMovableViewHeight: NSLayoutConstraint!
 	@IBOutlet weak var movableViewTopToMapViewBottom: NSLayoutConstraint!
@@ -215,20 +219,13 @@ extension MapViewController: MKMapViewDelegate {
 	
 	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 		guard let annotation = annotation as? HYCAnntation else { return nil }
-		
-		let annotationViewID = "annotationView"
-		var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationViewID) as? MKMarkerAnnotationView
-		if annotationView == nil {
-			annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: annotationViewID)
-			annotationView?.canShowCallout = true
-			annotationView?.leftCalloutAccessoryView = UIButton(type: .contactAdd)
-			annotationView?.rightCalloutAccessoryView = UIButton(type: .infoLight)
-			annotationView?.titleVisibility = .adaptive
-			annotationView?.markerTintColor = .brand
-			annotationView?.glyphTintColor = .white
-		} else {
-			annotationView?.annotation  = annotation
-		}
+		let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.ClassName, for: annotation) as? MKMarkerAnnotationView
+		annotationView?.canShowCallout = true
+		annotationView?.leftCalloutAccessoryView = UIButton(type: .contactAdd)
+		annotationView?.rightCalloutAccessoryView = UIButton(type: .infoLight)
+		annotationView?.titleVisibility = .adaptive
+		annotationView?.markerTintColor = .brand
+		annotationView?.glyphTintColor = .white
 		annotationView?.displayPriority = .required
 		annotationView?.glyphText = "\(annotation.sorted)"
 		return annotationView
