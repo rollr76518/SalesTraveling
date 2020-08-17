@@ -26,6 +26,7 @@
 		9481FCE020A7241200F8E842 /* HYCLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9481FCDF20A7241200F8E842 /* HYCLoadingView.swift */; };
 		94822C8622B5402700DB4E88 /* HYCPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94822C8522B5402700DB4E88 /* HYCPlacemark.swift */; };
 		94C476FD23EDB82F00A7B595 /* HYCAnntation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C476FC23EDB82F00A7B595 /* HYCAnntation.swift */; };
+		94CAB3B924EAB340002AEC94 /* MapViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CAB3B824EAB340002AEC94 /* MapViewModelTests.swift */; };
 		94D00FFE1FC9B60A0003E979 /* UIColor+VisualIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D00FFD1FC9B60A0003E979 /* UIColor+VisualIdentity.swift */; };
 		94D010021FC9D14D0003E979 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D010011FC9D14D0003E979 /* DataManager.swift */; };
 		94D010041FC9D5490003E979 /* UserDefaults+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D010031FC9D5490003E979 /* UserDefaults+Keys.swift */; };
@@ -71,6 +72,7 @@
 		94C476FC23EDB82F00A7B595 /* HYCAnntation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HYCAnntation.swift; sourceTree = "<group>"; };
 		94CAB3AE24EAB2FD002AEC94 /* SalesTravelingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SalesTravelingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		94CAB3B224EAB2FD002AEC94 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		94CAB3B824EAB340002AEC94 /* MapViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModelTests.swift; sourceTree = "<group>"; };
 		94D00FFD1FC9B60A0003E979 /* UIColor+VisualIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+VisualIdentity.swift"; sourceTree = "<group>"; };
 		94D010011FC9D14D0003E979 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		94D010031FC9D5490003E979 /* UserDefaults+Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Keys.swift"; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				94CAB3B224EAB2FD002AEC94 /* Info.plist */,
+				94CAB3B824EAB340002AEC94 /* MapViewModelTests.swift */,
 			);
 			path = SalesTravelingTests;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 					};
 					94CAB3AD24EAB2FD002AEC94 = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1160;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 7EFBA25D1F9C4B480011007E;
 					};
@@ -362,6 +366,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94CAB3B924EAB340002AEC94 /* MapViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +557,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LB9NKBAM6;
@@ -562,6 +568,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ryanrange.SalesTravelingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SalesTraveling.app/SalesTraveling";
@@ -572,6 +579,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LB9NKBAM6;
