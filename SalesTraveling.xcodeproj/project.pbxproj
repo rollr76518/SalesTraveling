@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		080B855A24EE76D300C1833F /* DataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080B855924EE76D300C1833F /* DataManagerTests.swift */; };
 		7E63348F207200BB007A2A85 /* UIAlertController+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E63348E207200BB007A2A85 /* UIAlertController+Init.swift */; };
 		7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB0D6091F9E341B00268E3B /* TourModel.swift */; };
 		7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2611F9C4B480011007E /* AppDelegate.swift */; };
@@ -36,7 +37,20 @@
 		94FB428C1FB6E6A8005039B7 /* AlgorithmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB428B1FB6E6A8005039B7 /* AlgorithmManager.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		084CED7924ED9FE0003B551C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7EFBA2561F9C4B480011007E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7EFBA25D1F9C4B480011007E;
+			remoteInfo = SalesTraveling;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		080B855924EE76D300C1833F /* DataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerTests.swift; sourceTree = "<group>"; };
+		084CED7424ED9FE0003B551C /* SalesTravelingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SalesTravelingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		084CED7824ED9FE0003B551C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7E06DA2C20514DAA0020A192 /* Cardino Blue.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Cardino Blue.gpx"; sourceTree = "<group>"; };
 		7E63348E207200BB007A2A85 /* UIAlertController+Init.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Init.swift"; sourceTree = "<group>"; };
 		7EB0D6091F9E341B00268E3B /* TourModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourModel.swift; sourceTree = "<group>"; };
@@ -63,7 +77,6 @@
 		94D010011FC9D14D0003E979 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		94D010031FC9D5490003E979 /* UserDefaults+Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Keys.swift"; sourceTree = "<group>"; };
 		94E2D1061FC6F4A400F1FD36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		94E2D1081FC6F4AE00F1FD36 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		94E2D1091FC6F83700F1FD36 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		94E2D10B1FC7019900F1FD36 /* NSObject+ClassName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ClassName.swift"; sourceTree = "<group>"; };
 		94FB42881FB6E663005039B7 /* Array+Algorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Algorithm.swift"; sourceTree = "<group>"; };
@@ -71,6 +84,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		084CED7124ED9FE0003B551C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7EFBA25B1F9C4B480011007E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -81,6 +101,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		084CED7524ED9FE0003B551C /* SalesTravelingTests */ = {
+			isa = PBXGroup;
+			children = (
+				084CED7824ED9FE0003B551C /* Info.plist */,
+				080B855924EE76D300C1833F /* DataManagerTests.swift */,
+			);
+			path = SalesTravelingTests;
+			sourceTree = "<group>";
+		};
 		7EB0D60B1F9E342100268E3B /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +127,7 @@
 			children = (
 				7EFBA25F1F9C4B480011007E /* Products */,
 				7EFBA2601F9C4B480011007E /* SalesTraveling */,
+				084CED7524ED9FE0003B551C /* SalesTravelingTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				7EFBA25E1F9C4B480011007E /* SalesTraveling.app */,
+				084CED7424ED9FE0003B551C /* SalesTravelingTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,6 +231,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		084CED7324ED9FE0003B551C /* SalesTravelingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 084CED7D24ED9FE0003B551C /* Build configuration list for PBXNativeTarget "SalesTravelingTests" */;
+			buildPhases = (
+				084CED7024ED9FE0003B551C /* Sources */,
+				084CED7124ED9FE0003B551C /* Frameworks */,
+				084CED7224ED9FE0003B551C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				084CED7A24ED9FE0003B551C /* PBXTargetDependency */,
+			);
+			name = SalesTravelingTests;
+			productName = SalesTravelingTests;
+			productReference = 084CED7424ED9FE0003B551C /* SalesTravelingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		7EFBA25D1F9C4B480011007E /* SalesTraveling */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7EFBA2701F9C4B480011007E /* Build configuration list for PBXNativeTarget "SalesTraveling" */;
@@ -223,10 +272,16 @@
 		7EFBA2561F9C4B480011007E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0900;
+				LastSwiftUpdateCheck = 1160;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Hanyu;
 				TargetAttributes = {
+					084CED7324ED9FE0003B551C = {
+						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1160;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 7EFBA25D1F9C4B480011007E;
+					};
 					7EFBA25D1F9C4B480011007E = {
 						CreatedOnToolsVersion = 9.0.1;
 						LastSwiftMigration = 1020;
@@ -241,7 +296,6 @@
 			knownRegions = (
 				en,
 				Base,
-				"zh-Hant",
 			);
 			mainGroup = 7EFBA2551F9C4B480011007E;
 			productRefGroup = 7EFBA25F1F9C4B480011007E /* Products */;
@@ -249,11 +303,19 @@
 			projectRoot = "";
 			targets = (
 				7EFBA25D1F9C4B480011007E /* SalesTraveling */,
+				084CED7324ED9FE0003B551C /* SalesTravelingTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		084CED7224ED9FE0003B551C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7EFBA25C1F9C4B480011007E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -270,6 +332,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		084CED7024ED9FE0003B551C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				080B855A24EE76D300C1833F /* DataManagerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7EFBA25A1F9C4B480011007E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -300,6 +370,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		084CED7A24ED9FE0003B551C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7EFBA25D1F9C4B480011007E /* SalesTraveling */;
+			targetProxy = 084CED7924ED9FE0003B551C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		7EFBA26A1F9C4B480011007E /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -313,7 +391,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				94E2D1061FC6F4A400F1FD36 /* en */,
-				94E2D1081FC6F4AE00F1FD36 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -321,6 +398,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		084CED7B24ED9FE0003B551C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = SalesTravelingTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = tw.com.shodo.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SalesTraveling.app/SalesTraveling";
+			};
+			name = Debug;
+		};
+		084CED7C24ED9FE0003B551C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = SalesTravelingTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = tw.com.shodo.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SalesTraveling.app/SalesTraveling";
+			};
+			name = Release;
+		};
 		7EFBA26E1F9C4B480011007E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -373,6 +492,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 2.1.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -427,6 +547,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 2.1.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -443,7 +564,6 @@
 				INFOPLIST_FILE = SalesTraveling/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.shodo;
 				PRODUCT_NAME = SalesTraveling;
 				PROVISIONING_PROFILE = "bd40195c-5ef6-4e44-9244-5b8308f9b92f";
@@ -463,7 +583,6 @@
 				INFOPLIST_FILE = SalesTraveling/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.shodo;
 				PRODUCT_NAME = SalesTraveling;
 				PROVISIONING_PROFILE = "b9e3d4fe-d4e6-43d5-93b4-44e03b8ace37";
@@ -476,6 +595,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		084CED7D24ED9FE0003B551C /* Build configuration list for PBXNativeTarget "SalesTravelingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				084CED7B24ED9FE0003B551C /* Debug */,
+				084CED7C24ED9FE0003B551C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		7EFBA2591F9C4B480011007E /* Build configuration list for PBXProject "SalesTraveling" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

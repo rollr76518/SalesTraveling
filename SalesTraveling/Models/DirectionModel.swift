@@ -8,7 +8,7 @@
 
 import MapKit
 
-struct DirectionModel: Codable {
+struct DirectionModel: Codable, Equatable {
 	
 	let source: HYCPlacemark
 	let destination: HYCPlacemark
@@ -53,4 +53,13 @@ struct DirectionModel: Codable {
 		self.polylineData = Data(buffer: UnsafeBufferPointer(start: polyline.points(), count: polyline.pointCount))
 	}
 	
+}
+
+extension DirectionModel: CustomStringConvertible {
+    var description: String {
+        return """
+        source: \(source)
+        destination: \(destination)
+        """
+    }
 }

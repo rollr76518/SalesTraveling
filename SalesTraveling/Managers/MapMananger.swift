@@ -67,7 +67,7 @@ extension MapMananger {
 // MARK: - HYCPlacemark
 extension MapMananger {
 	
-	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ result: Result<MKDirections.Response, Error>) -> ()) {
+	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ result: Result<[MKRoute], Error>) -> ()) {
 		let request = MKDirections.Request()
 		request.source = source.toMapItem
 		request.destination = destination.toMapItem
@@ -76,7 +76,7 @@ extension MapMananger {
 		let directions = MKDirections(request: request)
 		directions.calculate { (response, error) in
 			if let response = response {
-				completion(.success(response))
+                completion(.success(response.routes))
 			}
 			
 			if let error = error {
