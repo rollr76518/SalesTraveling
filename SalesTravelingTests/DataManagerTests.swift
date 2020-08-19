@@ -14,7 +14,9 @@ class DataManagerTests: XCTestCase {
 
     func test_fetchDirections_succeedsWhenAllRequestsSucceeds() {
         let sut = DataManager(directionsFetcher: { source, destination, completion in
-            completion(.success([MKRoute()]))
+            DispatchQueue.main.async {
+                completion(.success([MKRoute()]))
+            }
         })
 
         let newPlacemark = HYCPlacemark(name: "new placemark")

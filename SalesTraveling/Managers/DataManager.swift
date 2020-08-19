@@ -49,48 +49,47 @@ extension DataManager {
 }
 
 // MARK: - HYCPlacemark
+
+private typealias Journey = (source: HYCPlacemark, destination: HYCPlacemark)
+
 extension DataManager {
 
 	private func createKeyBy(source: HYCPlacemark, destination: HYCPlacemark) -> String {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
-	
+    
 	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
-		DispatchQueue.global().async {
-			var directionsModels = [DirectionModel]()
-			
-            var journeys = [(source: HYCPlacemark, destination: HYCPlacemark)]()
-            
-            if let userPlacemark = userPlacemark {
-                journeys.append((userPlacemark, placemark))
-            }
-            
-            for oldPlacemark in placemarks {
-                journeys.append((oldPlacemark, placemark))
-                journeys.append((placemark, oldPlacemark))
-            }
-			
-            let group = DispatchGroup()
-			for (source, destination) in journeys {
-                group.enter()
-                self.directionsFetcher(source, destination, { (state) in
-                    switch state {
-                    case .failure(let error):
-                        completeBlock(.failure(error))
-                    case .success(let routes):
-                        let directions = DirectionModel(source: source, destination: destination, routes: routes)
-                        directionsModels.append(directions)
-                    }
-                    group.leave()
-                })
-                group.wait()
-			}
-            
-            DispatchQueue.main.async {
-                completeBlock(.success(directionsModels))
-            }
-		}
+        var journeys = [Journey]()
+        
+        if let userPlacemark = userPlacemark {
+            journeys.append((userPlacemark, placemark))
+        }
+        
+        for oldPlacemark in placemarks {
+            journeys.append((oldPlacemark, placemark))
+            journeys.append((placemark, oldPlacemark))
+        }
+        
+        directions(for: journeys, using: directionsFetcher, completeBlock: completeBlock)
 	}
+}
+
+private func directions(for journeys: [Journey], using fetchDirections: @escaping DataManager.DirectionsFetcher, acc: [DirectionModel] = [], completeBlock: @escaping (Result<[DirectionModel], Error>) -> Void) {
+    guard let (source, destination) = journeys.first else {
+        return completeBlock(.success(acc))
+    }
+    
+    fetchDirections(source, destination) { result in
+        switch result {
+        case let .failure(error):
+            completeBlock(.failure(error))
+            
+        case let .success(routes):
+            let direction = DirectionModel(source: source, destination: destination, routes: routes)
+            
+            directions(for: Array(journeys.dropFirst()), using: fetchDirections, acc: acc + [direction], completeBlock: completeBlock)
+        }
+    }
 }
 
 // MARK: - Favorite placemark
