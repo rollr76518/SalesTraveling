@@ -57,4 +57,30 @@ class DataManagerTests: XCTestCase {
         waitForExpectations(timeout: 0.1)
     }
     
+    func test_fetchDirections_failsWhenOneRequestFails() {
+        let sut = DataManager(directionsFetcher: { source, destination, completion in
+            completion(.failure(NSError(domain: "any", code: 0)))
+        })
+        
+        let exp = expectation(description: "Wait for fetch completion")
+
+        sut.fetchDirections(
+            ofNew: HYCPlacemark(),
+            toOld: [HYCPlacemark(), HYCPlacemark()],
+            current: HYCPlacemark()
+        ) { result in
+            
+            switch result {
+            case .success:
+                XCTFail("Should have failed, but succeeded")
+                
+            case .failure: break
+            }
+            
+            exp.fulfill()
+        }
+        
+        waitForExpectations(timeout: 0.1)
+    }
+    
 }
