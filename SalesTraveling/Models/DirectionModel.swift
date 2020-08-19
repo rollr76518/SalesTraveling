@@ -54,3 +54,12 @@ struct DirectionModel: Codable, Equatable {
 	}
 	
 }
+
+extension DirectionModel: CustomStringConvertible {
+    var description: String {
+        return """
+        source: \(source)
+        destination: \(destination)
+        """
+    }
+}
