@@ -8,7 +8,7 @@
 
 import MapKit
 
-struct DirectionModel: Codable {
+struct DirectionModel: Codable, Equatable {
 	
 	let source: HYCPlacemark
 	let destination: HYCPlacemark
