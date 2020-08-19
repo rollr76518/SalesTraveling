@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 class DataManager {
 	
@@ -67,8 +68,8 @@ extension DataManager {
 					let destination = placemark
 					MapMananger.calculateDirections(from: userPlacemark, to: placemark, completion: { (status) in
 						switch status {
-						case .success(let response):
-							let directions = DirectionModel(source: source, destination: destination, routes: response.routes)
+						case .success(let routes):
+							let directions = DirectionModel(source: source, destination: destination, routes: routes)
 							directionsModels.append(directions)
 						case .failure(let error):
 							completeBlock(.failure(error))
@@ -91,8 +92,8 @@ extension DataManager {
 							switch state {
 							case .failure(let error):
 								completeBlock(.failure(error))
-							case .success(let response):
-								let directions = DirectionModel(source: source, destination: destination, routes: response.routes)
+							case .success(let routes):
+								let directions = DirectionModel(source: source, destination: destination, routes: routes)
 								directionsModels.append(directions)
 							}
 							semaphore.signal()
