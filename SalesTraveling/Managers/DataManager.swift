@@ -57,16 +57,7 @@ extension DataManager {
 	
 	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
 		DispatchQueue.global().async {
-			
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-			
 			var directionsModels = [DirectionModel]()
-			let callbackFinishOperation = BlockOperation {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionsModels))
-				}
-			}
 			
             var journeys = [(source: HYCPlacemark, destination: HYCPlacemark)]()
             
@@ -79,27 +70,25 @@ extension DataManager {
                 journeys.append((placemark, oldPlacemark))
             }
 			
+            let group = DispatchGroup()
 			for (source, destination) in journeys {
-                let blockOperation = BlockOperation(block: {
-                    let semaphore = DispatchSemaphore(value: 0)
-                    self.directionsFetcher(source, destination, { (state) in
-                        switch state {
-                        case .failure(let error):
-                            completeBlock(.failure(error))
-                        case .success(let routes):
-                            let directions = DirectionModel(source: source, destination: destination, routes: routes)
-                            directionsModels.append(directions)
-                        }
-                        semaphore.signal()
-                    })
-                    semaphore.wait()
+                group.enter()
+                self.directionsFetcher(source, destination, { (state) in
+                    switch state {
+                    case .failure(let error):
+                        completeBlock(.failure(error))
+                    case .success(let routes):
+                        let directions = DirectionModel(source: source, destination: destination, routes: routes)
+                        directionsModels.append(directions)
+                    }
+                    group.leave()
                 })
-                
-                callbackFinishOperation.addDependency(blockOperation)
-                queue.addOperation(blockOperation)
+                group.wait()
 			}
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
+            
+            DispatchQueue.main.async {
+                completeBlock(.success(directionsModels))
+            }
 		}
 	}
 }
