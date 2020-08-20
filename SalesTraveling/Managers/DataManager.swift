@@ -62,12 +62,17 @@ extension DataManager {
 			let queue = OperationQueue()
 			queue.name = "Fetch diretcions of placemarks"
             
-            let directionsModelsQueue = DispatchQueue(label: "directionsModelsQueue")
+            let syncQueue = DispatchQueue(label: "Queue to sync mutation")
 			
+            var error: Error?
 			var directionsModels = [DirectionModel]()
 			let callbackFinishOperation = BlockOperation {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionsModels))
+                DispatchQueue.main.async {
+                    if let error = error {
+                        completeBlock(.failure(error))
+                    } else {
+                        completeBlock(.success(directionsModels))
+                    }
 				}
 			}
 			
@@ -87,11 +92,14 @@ extension DataManager {
                     let semaphore = DispatchSemaphore(value: 0)
                     self.directionsFetcher(source, destination, { (state) in
                         switch state {
-                        case .failure(let error):
-                            completeBlock(.failure(error))
+                        case .failure(let destinationError):
+                            syncQueue.sync {
+                                error = destinationError
+                            }
+                            
                         case .success(let routes):
                             let directions = DirectionModel(source: source, destination: destination, routes: routes)
-                            directionsModelsQueue.sync {
+                            syncQueue.sync {
                                 directionsModels.append(directions)
                             }
                         }
