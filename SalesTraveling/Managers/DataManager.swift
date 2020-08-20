@@ -12,6 +12,14 @@ import MapKit
 class DataManager {
 	
 	static let shared = DataManager()
+    
+    typealias DirectionsFetcher = (HYCPlacemark, HYCPlacemark, @escaping (Result<[MKRoute], Error>) -> ()) -> Void
+
+    private let directionsFetcher: DirectionsFetcher
+    
+    init(directionsFetcher: @escaping DirectionsFetcher = MapMananger.calculateDirections) {
+        self.directionsFetcher = directionsFetcher
+    }
 }
 
 // MARK: - Direction
@@ -61,12 +69,14 @@ extension DataManager {
 				}
 			}
 			
+            
+            
 			if let userPlacemark = userPlacemark {
 				let blockOperation = BlockOperation(block: {
 					let semaphore = DispatchSemaphore(value: 0)
 					let source = userPlacemark
 					let destination = placemark
-					MapMananger.calculateDirections(from: userPlacemark, to: placemark, completion: { (status) in
+                    self.directionsFetcher(userPlacemark, placemark, { (status) in
 						switch status {
 						case .success(let routes):
 							let directions = DirectionModel(source: source, destination: destination, routes: routes)
@@ -81,14 +91,14 @@ extension DataManager {
 				callbackFinishOperation.addDependency(blockOperation)
 				queue.addOperation(blockOperation)
 			}
-			
+			            
 			for oldPlacemark in placemarks {
 				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
 					let source = tuple.0
 					let destination = tuple.1
 					let blockOperation = BlockOperation(block: {
 						let semaphore = DispatchSemaphore(value: 0)
-						MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
+                        self.directionsFetcher(source, destination, { (state) in
 							switch state {
 							case .failure(let error):
 								completeBlock(.failure(error))
