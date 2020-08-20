@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		080B855A24EE76D300C1833F /* DataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080B855924EE76D300C1833F /* DataManagerTests.swift */; };
 		7E63348F207200BB007A2A85 /* UIAlertController+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E63348E207200BB007A2A85 /* UIAlertController+Init.swift */; };
 		7EB0D60A1F9E341B00268E3B /* TourModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB0D6091F9E341B00268E3B /* TourModel.swift */; };
 		7EFBA2621F9C4B480011007E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EFBA2611F9C4B480011007E /* AppDelegate.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		080B855924EE76D300C1833F /* DataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerTests.swift; sourceTree = "<group>"; };
 		084CED7424ED9FE0003B551C /* SalesTravelingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SalesTravelingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		084CED7824ED9FE0003B551C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7E06DA2C20514DAA0020A192 /* Cardino Blue.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Cardino Blue.gpx"; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				084CED7824ED9FE0003B551C /* Info.plist */,
+				080B855924EE76D300C1833F /* DataManagerTests.swift */,
 			);
 			path = SalesTravelingTests;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				080B855A24EE76D300C1833F /* DataManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
