@@ -57,55 +57,51 @@ extension DataManager {
 	}
 	
 	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
-		DispatchQueue.global().async {
-            let syncQueue = DispatchQueue(label: "Queue to sync mutation")
-			
-            var error: Error?
-			var directionsModels = [DirectionModel]()
-			
-            var journeys = [(source: HYCPlacemark, destination: HYCPlacemark)]()
-            
-            if let userPlacemark = userPlacemark {
-                journeys.append((userPlacemark, placemark))
-            }
-            
-            for oldPlacemark in placemarks {
-                journeys.append((oldPlacemark, placemark))
-                journeys.append((placemark, oldPlacemark))
-            }
-			            
-            let group = DispatchGroup()
-            
-			for (source, destination) in journeys {
-                group.enter()
-                self.directionsFetcher(source, destination, { (state) in
-                    switch state {
-                    case .failure(let destinationError):
-                        syncQueue.sync {
-                            error = destinationError
-                        }
-                        
-                    case .success(let routes):
-                        let directions = DirectionModel(source: source, destination: destination, routes: routes)
-                        syncQueue.sync {
-                            directionsModels.append(directions)
-                        }
+        let syncQueue = DispatchQueue(label: "Queue to sync mutation")
+        
+        var error: Error?
+        var directionsModels = [DirectionModel]()
+        
+        var journeys = [(source: HYCPlacemark, destination: HYCPlacemark)]()
+        
+        if let userPlacemark = userPlacemark {
+            journeys.append((userPlacemark, placemark))
+        }
+        
+        for oldPlacemark in placemarks {
+            journeys.append((oldPlacemark, placemark))
+            journeys.append((placemark, oldPlacemark))
+        }
+                    
+        let group = DispatchGroup()
+        
+        for (source, destination) in journeys {
+            group.enter()
+            self.directionsFetcher(source, destination, { (state) in
+                switch state {
+                case .failure(let destinationError):
+                    syncQueue.sync {
+                        error = destinationError
                     }
-                    group.leave()
-                })
-			}
-            
-            group.wait()
-            
-            DispatchQueue.main.async {
-                if let error = error {
-                    completeBlock(.failure(error))
-                } else {
-                    completeBlock(.success(directionsModels))
+                    
+                case .success(let routes):
+                    let directions = DirectionModel(source: source, destination: destination, routes: routes)
+                    syncQueue.sync {
+                        directionsModels.append(directions)
+                    }
                 }
+                group.leave()
+            })
+        }
+        
+        group.notify(queue: .main) {
+            if let error = error {
+                completeBlock(.failure(error))
+            } else {
+                completeBlock(.success(directionsModels))
             }
-		}
-	}
+        }
+    }
 }
 
 // MARK: - Favorite placemark

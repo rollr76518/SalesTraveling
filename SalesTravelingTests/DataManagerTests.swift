@@ -71,5 +71,29 @@ class DataManagerTests: XCTestCase {
 
         waitForExpectations(timeout: 0.1)
     }
+    
+    func test_fetchDirections_doesntDeadlockWhenFetcherDispatchesToTheMainQueue() {
+        let sut = DataManager(directionsFetcher: { source, destination, completion in
+            DispatchQueue.main.async {
+                completion(.success([MKRoute()]))
+            }
+        })
+        
+        let exp = expectation(description: "Wait for fetch completion")
+        
+        sut.fetchDirections(ofNew: HYCPlacemark(), toOld: [HYCPlacemark()], current: nil) { result in
+            switch result {
+            case .success: break
+                
+                
+            case let .failure(error):
+                XCTFail("Failed with error: \(error)")
+            }
+            
+            exp.fulfill()
+        }
+
+        waitForExpectations(timeout: 0.1)
+    }
 
 }
