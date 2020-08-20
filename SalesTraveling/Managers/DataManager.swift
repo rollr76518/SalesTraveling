@@ -58,23 +58,10 @@ extension DataManager {
 	
 	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
 		DispatchQueue.global().async {
-			
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-            
             let syncQueue = DispatchQueue(label: "Queue to sync mutation")
 			
             var error: Error?
 			var directionsModels = [DirectionModel]()
-			let callbackFinishOperation = BlockOperation {
-                DispatchQueue.main.async {
-                    if let error = error {
-                        completeBlock(.failure(error))
-                    } else {
-                        completeBlock(.success(directionsModels))
-                    }
-				}
-			}
 			
             var journeys = [(source: HYCPlacemark, destination: HYCPlacemark)]()
             
@@ -87,33 +74,36 @@ extension DataManager {
                 journeys.append((placemark, oldPlacemark))
             }
 			            
+            let group = DispatchGroup()
+            
 			for (source, destination) in journeys {
-                let blockOperation = BlockOperation(block: {
-                    let semaphore = DispatchSemaphore(value: 0)
-                    self.directionsFetcher(source, destination, { (state) in
-                        switch state {
-                        case .failure(let destinationError):
-                            syncQueue.sync {
-                                error = destinationError
-                            }
-                            
-                        case .success(let routes):
-                            let directions = DirectionModel(source: source, destination: destination, routes: routes)
-                            syncQueue.sync {
-                                directionsModels.append(directions)
-                            }
+                group.enter()
+                self.directionsFetcher(source, destination, { (state) in
+                    switch state {
+                    case .failure(let destinationError):
+                        syncQueue.sync {
+                            error = destinationError
                         }
-                        semaphore.signal()
-                    })
-                    semaphore.wait()
+                        
+                    case .success(let routes):
+                        let directions = DirectionModel(source: source, destination: destination, routes: routes)
+                        syncQueue.sync {
+                            directionsModels.append(directions)
+                        }
+                    }
+                    group.leave()
                 })
-                
-                callbackFinishOperation.addDependency(blockOperation)
-                queue.addOperation(blockOperation)
 			}
             
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
+            group.wait()
+            
+            DispatchQueue.main.async {
+                if let error = error {
+                    completeBlock(.failure(error))
+                } else {
+                    completeBlock(.success(directionsModels))
+                }
+            }
 		}
 	}
 }
