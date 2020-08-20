@@ -61,6 +61,8 @@ extension DataManager {
 			
 			let queue = OperationQueue()
 			queue.name = "Fetch diretcions of placemarks"
+            
+            let directionsModelsQueue = DispatchQueue(label: "directionsModelsQueue")
 			
 			var directionsModels = [DirectionModel]()
 			let callbackFinishOperation = BlockOperation {
@@ -69,52 +71,39 @@ extension DataManager {
 				}
 			}
 			
+            var journeys = [(source: HYCPlacemark, destination: HYCPlacemark)]()
             
+            if let userPlacemark = userPlacemark {
+                journeys.append((userPlacemark, placemark))
+            }
             
-			if let userPlacemark = userPlacemark {
-				let blockOperation = BlockOperation(block: {
-					let semaphore = DispatchSemaphore(value: 0)
-					let source = userPlacemark
-					let destination = placemark
-                    self.directionsFetcher(userPlacemark, placemark, { (status) in
-						switch status {
-						case .success(let routes):
-							let directions = DirectionModel(source: source, destination: destination, routes: routes)
-							directionsModels.append(directions)
-						case .failure(let error):
-							completeBlock(.failure(error))
-						}
-						semaphore.signal()
-					})
-					semaphore.wait()
-				})
-				callbackFinishOperation.addDependency(blockOperation)
-				queue.addOperation(blockOperation)
-			}
+            for oldPlacemark in placemarks {
+                journeys.append((oldPlacemark, placemark))
+                journeys.append((placemark, oldPlacemark))
+            }
 			            
-			for oldPlacemark in placemarks {
-				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-					let source = tuple.0
-					let destination = tuple.1
-					let blockOperation = BlockOperation(block: {
-						let semaphore = DispatchSemaphore(value: 0)
-                        self.directionsFetcher(source, destination, { (state) in
-							switch state {
-							case .failure(let error):
-								completeBlock(.failure(error))
-							case .success(let routes):
-								let directions = DirectionModel(source: source, destination: destination, routes: routes)
-								directionsModels.append(directions)
-							}
-							semaphore.signal()
-						})
-						semaphore.wait()
-					})
-					
-					callbackFinishOperation.addDependency(blockOperation)
-					queue.addOperation(blockOperation)
-				}
+			for (source, destination) in journeys {
+                let blockOperation = BlockOperation(block: {
+                    let semaphore = DispatchSemaphore(value: 0)
+                    self.directionsFetcher(source, destination, { (state) in
+                        switch state {
+                        case .failure(let error):
+                            completeBlock(.failure(error))
+                        case .success(let routes):
+                            let directions = DirectionModel(source: source, destination: destination, routes: routes)
+                            directionsModelsQueue.sync {
+                                directionsModels.append(directions)
+                            }
+                        }
+                        semaphore.signal()
+                    })
+                    semaphore.wait()
+                })
+                
+                callbackFinishOperation.addDependency(blockOperation)
+                queue.addOperation(blockOperation)
 			}
+            
 			queue.addOperation(callbackFinishOperation)
 			queue.waitUntilAllOperationsAreFinished()
 		}
