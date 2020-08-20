@@ -56,13 +56,10 @@ extension DataManager {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
 	
+    private typealias Journey = (source: HYCPlacemark, destination: HYCPlacemark)
+    
 	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
-        let syncQueue = DispatchQueue(label: "Queue to sync mutation")
-        
-        var error: Error?
-        var directionsModels = [DirectionModel]()
-        
-        var journeys = [(source: HYCPlacemark, destination: HYCPlacemark)]()
+        var journeys = [Journey]()
         
         if let userPlacemark = userPlacemark {
             journeys.append((userPlacemark, placemark))
@@ -72,33 +69,27 @@ extension DataManager {
             journeys.append((oldPlacemark, placemark))
             journeys.append((placemark, oldPlacemark))
         }
-                    
-        let group = DispatchGroup()
         
-        for (source, destination) in journeys {
-            group.enter()
-            self.directionsFetcher(source, destination, { (state) in
-                switch state {
-                case .failure(let destinationError):
-                    syncQueue.sync {
-                        error = destinationError
-                    }
-                    
-                case .success(let routes):
-                    let directions = DirectionModel(source: source, destination: destination, routes: routes)
-                    syncQueue.sync {
-                        directionsModels.append(directions)
-                    }
-                }
-                group.leave()
-            })
+        directions(for: journeys, completeBlock: { result in
+            DispatchQueue.main.async {
+                completeBlock(result)
+            }
+        })
+    }
+    
+    private func directions(for journeys: [Journey], acc: [DirectionModel] = [], completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
+        guard let (source, destination) = journeys.first else {
+            return completeBlock(.success(acc))
         }
         
-        group.notify(queue: .main) {
-            if let error = error {
+        directionsFetcher(source, destination) { result in
+            switch result {
+            case .failure(let error):
                 completeBlock(.failure(error))
-            } else {
-                completeBlock(.success(directionsModels))
+                
+            case .success(let routes):
+                let direction = DirectionModel(source: source, destination: destination, routes: routes)
+                self.directions(for: Array(journeys.dropFirst()), acc: acc + [direction], completeBlock: completeBlock)
             }
         }
     }
