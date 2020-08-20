@@ -32,8 +32,6 @@ class DataManagerTests: XCTestCase {
         let exp = expectation(description: "Wait for fetch completion")
         
         sut.fetchDirections(ofNew: newPlacemark, toOld: [oldToNewPlacemarkDirection1.source, oldToNewPlacemarkDirection2.source], current: currentToNewPlacemarkDirection.source) { result in
-            exp.fulfill()
-            
             switch result {
             case let .success(directions):
                 XCTAssertEqual(directions.count, 5)
@@ -46,6 +44,8 @@ class DataManagerTests: XCTestCase {
             case let .failure(error):
                 XCTFail("Failed with error: \(error)")
             }
+            
+            exp.fulfill()
         }
 
         waitForExpectations(timeout: 0.1)
