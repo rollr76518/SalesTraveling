@@ -43,3 +43,9 @@ iOS develop: 郭佳甯, 陳穎璿、喵仔閒聊群
 Feature: 徐仲威, 傅勻垣
 
 Bug: 姜惟傑, 陳知言
+
+
+
+目前已在 App store 上架：
+
+https://apps.apple.com/tw/app/shodo/id1406118779
