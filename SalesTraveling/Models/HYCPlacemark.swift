@@ -51,6 +51,28 @@ class HYCPlacemark: NSObject, Codable {
 		subLocality = mkPlacemark.postalAddress?.subLocality
 	}
 	
+    internal init(title: String? = nil, subtitle: String? = nil, coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0), street: String? = nil, city: String? = nil, state: String? = nil, name: String? = nil, thoroughfare: String? = nil, subThoroughfare: String? = nil, locality: String? = nil, subLocality: String? = nil, administrativeArea: String? = nil, subAdministrativeArea: String? = nil, postalCode: String? = nil, isoCountryCode: String? = nil, country: String? = nil, inlandWater: String? = nil, ocean: String? = nil, areasOfInterest: [String]? = nil) {
+        self.title = title
+        self.subtitle = subtitle
+        self.coordinate = coordinate
+        self.street = street
+        self.city = city
+        self.state = state
+        self.name = name
+        self.thoroughfare = thoroughfare
+        self.subThoroughfare = subThoroughfare
+        self.locality = locality
+        self.subLocality = subLocality
+        self.administrativeArea = administrativeArea
+        self.subAdministrativeArea = subAdministrativeArea
+        self.postalCode = postalCode
+        self.isoCountryCode = isoCountryCode
+        self.country = country
+        self.inlandWater = inlandWater
+        self.ocean = ocean
+        self.areasOfInterest = areasOfInterest
+    }
+    
 	// NSObject 的 == 要 override 這個 method
 	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? HYCPlacemark {
@@ -88,16 +110,13 @@ extension HYCPlacemark {
 }
 
 extension HYCPlacemark {
-	
-	override var description: String {
-		return """
-		
-		name: \(String(describing: name))
-		title: \(String(describing: title))
-		subtitle: \(String(describing: subtitle))
-		latitude: \(coordinate.latitude)
-		longitude: \(coordinate.longitude)
-		
-		"""
-	}
+    
+    override var description: String {
+    
+        return """
+        name: \(String(describing: name))
+        """
+        
+    }
+    
 }

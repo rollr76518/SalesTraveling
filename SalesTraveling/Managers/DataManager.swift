@@ -7,10 +7,19 @@
 //
 
 import Foundation
+import MapKit
 
 class DataManager {
 	
 	static let shared = DataManager()
+    
+    typealias DirectionsFetcher = (HYCPlacemark, HYCPlacemark, @escaping (Result<[MKRoute], Error>) -> ()) -> Void
+
+    private let directionsFetcher: DirectionsFetcher
+    
+    init(directionsFetcher: @escaping DirectionsFetcher = MapMananger.calculateDirections) {
+        self.directionsFetcher = directionsFetcher
+    }
 }
 
 // MARK: - Direction
@@ -47,67 +56,43 @@ extension DataManager {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
 	
+    private typealias Journey = (source: HYCPlacemark, destination: HYCPlacemark)
+    
 	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
-		DispatchQueue.global().async {
-			
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-			
-			var directionsModels = [DirectionModel]()
-			let callbackFinishOperation = BlockOperation {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionsModels))
-				}
-			}
-			
-			if let userPlacemark = userPlacemark {
-				let blockOperation = BlockOperation(block: {
-					let semaphore = DispatchSemaphore(value: 0)
-					let source = userPlacemark
-					let destination = placemark
-					MapMananger.calculateDirections(from: userPlacemark, to: placemark, completion: { (status) in
-						switch status {
-						case .success(let response):
-							let directions = DirectionModel(source: source, destination: destination, routes: response.routes)
-							directionsModels.append(directions)
-						case .failure(let error):
-							completeBlock(.failure(error))
-						}
-						semaphore.signal()
-					})
-					semaphore.wait()
-				})
-				callbackFinishOperation.addDependency(blockOperation)
-				queue.addOperation(blockOperation)
-			}
-			
-			for oldPlacemark in placemarks {
-				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-					let source = tuple.0
-					let destination = tuple.1
-					let blockOperation = BlockOperation(block: {
-						let semaphore = DispatchSemaphore(value: 0)
-						MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
-							switch state {
-							case .failure(let error):
-								completeBlock(.failure(error))
-							case .success(let response):
-								let directions = DirectionModel(source: source, destination: destination, routes: response.routes)
-								directionsModels.append(directions)
-							}
-							semaphore.signal()
-						})
-						semaphore.wait()
-					})
-					
-					callbackFinishOperation.addDependency(blockOperation)
-					queue.addOperation(blockOperation)
-				}
-			}
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
-		}
-	}
+        var journeys = [Journey]()
+        
+        if let userPlacemark = userPlacemark {
+            journeys.append((userPlacemark, placemark))
+        }
+        
+        for oldPlacemark in placemarks {
+            journeys.append((oldPlacemark, placemark))
+            journeys.append((placemark, oldPlacemark))
+        }
+        
+        directions(for: journeys, completeBlock: { result in
+            DispatchQueue.main.async {
+                completeBlock(result)
+            }
+        })
+    }
+    
+    private func directions(for journeys: [Journey], acc: [DirectionModel] = [], completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
+        guard let (source, destination) = journeys.first else {
+            return completeBlock(.success(acc))
+        }
+        
+        directionsFetcher(source, destination) { result in
+            switch result {
+            case .failure(let error):
+                completeBlock(.failure(error))
+                
+            case .success(let routes):
+                let direction = DirectionModel(source: source, destination: destination, routes: routes)
+                self.directions(for: Array(journeys.dropFirst()), acc: acc + [direction], completeBlock: completeBlock)
+            }
+        }
+    }
 }
 
 // MARK: - Favorite placemark
