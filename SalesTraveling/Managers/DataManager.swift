@@ -81,43 +81,24 @@ extension DataManager {
 			tours.append((placemark, oldPlacemark))
 		}
 		
-		let group = DispatchGroup()
-		
-		for (source, destination) in tours {
-			group.enter()
-			self.fetcher(source, destination, { (state) in
-				switch state {
-				case .failure(let error):
-					resultsQueue.sync {
-						results.append(.failure(error))
-					}
-				case .success(let response):
-					let directions = DirectionModel(source: source, destination: destination, routes: response)
-					resultsQueue.sync {
-						results.append(.success(directions))
-					}
-				}
-				group.leave()
-			})
+		fetch(tours: tours, completeBlock: completeBlock)
+	}
+	
+	private func fetch(tours: [(source: HYCPlacemark, destination: HYCPlacemark)], acc: [DirectionModel] = [], completeBlock: @escaping (Result<[DirectionModel], Error>) -> Void) {
+		guard let (source, destination) = tours.first else {
+			return completeBlock(.success(acc))
 		}
 		
-		group.notify(queue: .main) {
-			var models = [DirectionModel]()
-			var errors = [Error]()
-			for result in results {
-				switch result {
-				case .success(let model):
-					models.append(model)
-				case .failure(let error):
-					errors.append(error)
-				}
-			}
-			if let error = errors.first {
+		fetcher(source, destination, { [weak self] (state) in
+			guard let self = self else { return }
+			switch state {
+			case .failure(let error):
 				completeBlock(.failure(error))
-			} else {
-				completeBlock(.success(models))
+			case .success(let response):
+				let directions = DirectionModel(source: source, destination: destination, routes: response)
+				self.fetch(tours: Array(tours.dropFirst()), acc: acc + [directions], completeBlock: completeBlock)
 			}
-		}
+		})
 	}
 }
 
