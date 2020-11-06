@@ -62,36 +62,10 @@ extension DataManager {
 		current userPlacemark: HYCPlacemark?,
 		completeBlock: @escaping (Result<[DirectionModel], Error>) -> Void) {
 		DispatchQueue.global().async {
-			
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-//			queue.maxConcurrentOperationCount = 1 //這樣變成　serial API call
-			
-			let resultsQueue = DispatchQueue(label: "directionsModelsQueue")
 
+			let resultsQueue = DispatchQueue(label: "directionsModelsQueue")
 			var results = [Result<DirectionModel, Error>]()
-			let callbackFinishOperation = BlockOperation {
-				var models = [DirectionModel]()
-				var errors = [Error]()
-				for result in results {
-					switch result {
-					case .success(let model):
-						models.append(model)
-					case .failure(let error):
-						errors.append(error)
-					}
-				}
-				if let error = errors.first {
-					DispatchQueue.main.async {
-						completeBlock(.failure(error))
-					}
-				} else {
-					DispatchQueue.main.async {
-						completeBlock(.success(models))
-					}
-				}
-			}
-			
+
 			//User -> New
 			//New -> Old1
 			//Old1 -> New
@@ -109,32 +83,46 @@ extension DataManager {
 				tours.append((placemark, oldPlacemark))
 			}
 
+			let group = DispatchGroup()
+			
 			for (source, destination) in tours {
-				let blockOperation = BlockOperation(block: {
-					let semaphore = DispatchSemaphore(value: 0)
-					self.fetcher(source, destination, { (state) in
-						switch state {
-						case .failure(let error):
-							resultsQueue.sync {
-								results.append(.failure(error))
-							}
-						case .success(let response):
-							let directions = DirectionModel(source: source, destination: destination, routes: response)
-							resultsQueue.sync {							
-								results.append(.success(directions))
-							}
+				group.enter()
+				self.fetcher(source, destination, { (state) in
+					switch state {
+					case .failure(let error):
+						resultsQueue.sync {
+							results.append(.failure(error))
 						}
-						semaphore.signal()
-					})
-					semaphore.wait()
+					case .success(let response):
+						let directions = DirectionModel(source: source, destination: destination, routes: response)
+						resultsQueue.sync {
+							results.append(.success(directions))
+						}
+					}
+					group.leave()
 				})
-				
-				callbackFinishOperation.addDependency(blockOperation)
-				queue.addOperation(blockOperation)
+				group.wait()
 			}
 			
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
+			var models = [DirectionModel]()
+			var errors = [Error]()
+			for result in results {
+				switch result {
+				case .success(let model):
+					models.append(model)
+				case .failure(let error):
+					errors.append(error)
+				}
+			}
+			if let error = errors.first {
+				DispatchQueue.main.async {
+					completeBlock(.failure(error))
+				}
+			} else {
+				DispatchQueue.main.async {
+					completeBlock(.success(models))
+				}
+			}
 		}
 	}
 }
