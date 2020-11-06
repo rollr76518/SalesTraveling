@@ -67,6 +67,8 @@ extension DataManager {
 			queue.name = "Fetch diretcions of placemarks"
 //			queue.maxConcurrentOperationCount = 1 //這樣變成　serial API call
 			
+			let directionsModelsQueue = DispatchQueue(label: "directionsModelsQueue")
+
 			var directionsModels = [DirectionModel]() //潛藏的 race condition
 			let callbackFinishOperation = BlockOperation {
 				DispatchQueue.main.async {
@@ -100,7 +102,9 @@ extension DataManager {
 							completeBlock(.failure(error))
 						case .success(let response):
 							let directions = DirectionModel(source: source, destination: destination, routes: response)
-							directionsModels.append(directions) //潛藏的 race condition
+							directionsModelsQueue.sync {							
+								directionsModels.append(directions) //潛藏的 race condition
+							}
 						}
 						semaphore.signal()
 					})
