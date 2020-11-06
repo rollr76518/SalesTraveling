@@ -102,4 +102,37 @@ class SalesTravelingTests: XCTestCase {
 
 		wait(for: [exp], timeout: 0.1)
 	}
+	
+	func testDataManager_fetchRoutes_doesNotDeadLockWhenFetcherDispatchToMainThread() {
+		let currentPlacemark = HYCPlacemark(title: "Current")
+		let newPlacemark = HYCPlacemark(title: "new")
+		let old1Placemark = HYCPlacemark(title: "old1")
+		let old2Placemark = HYCPlacemark(title: "old2")
+
+		let exp = expectation(description: "wait for async response.")
+
+		let sut = DataManager(fetcher: { source, destination, completion in
+			DispatchQueue.main.async {
+				completion(.success([MKRoute()]))
+			}
+		})
+
+		sut.fetchDirections(
+			ofNew: newPlacemark,
+			toOld: [old1Placemark, old2Placemark],
+			current: currentPlacemark) { (result) in
+			switch result {
+			case .success(let models):
+				XCTAssertEqual(models.count, 5)
+				break
+
+			case .failure(let error):
+				XCTFail("expect succes but get error instead \(error)")
+
+			}
+			exp.fulfill()
+		}
+
+		wait(for: [exp], timeout: 0.1)
+	}
 }

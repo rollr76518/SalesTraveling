@@ -61,49 +61,47 @@ extension DataManager {
 		toOld placemarks: [HYCPlacemark],
 		current userPlacemark: HYCPlacemark?,
 		completeBlock: @escaping (Result<[DirectionModel], Error>) -> Void) {
-		DispatchQueue.global().async {
-
-			let resultsQueue = DispatchQueue(label: "directionsModelsQueue")
-			var results = [Result<DirectionModel, Error>]()
-
-			//User -> New
-			//New -> Old1
-			//Old1 -> New
-			//New -> Old2
-			//Old2 -> New
-			
-			var tours = [(source: HYCPlacemark, destination: HYCPlacemark)]()
-			
-			if let userPlacemark = userPlacemark {
-				tours.append((userPlacemark, placemark))
-			}
-			
-			for oldPlacemark in placemarks {
-				tours.append((oldPlacemark, placemark))
-				tours.append((placemark, oldPlacemark))
-			}
-
-			let group = DispatchGroup()
-			
-			for (source, destination) in tours {
-				group.enter()
-				self.fetcher(source, destination, { (state) in
-					switch state {
-					case .failure(let error):
-						resultsQueue.sync {
-							results.append(.failure(error))
-						}
-					case .success(let response):
-						let directions = DirectionModel(source: source, destination: destination, routes: response)
-						resultsQueue.sync {
-							results.append(.success(directions))
-						}
+		let resultsQueue = DispatchQueue(label: "directionsModelsQueue")
+		var results = [Result<DirectionModel, Error>]()
+		
+		//User -> New
+		//New -> Old1
+		//Old1 -> New
+		//New -> Old2
+		//Old2 -> New
+		
+		var tours = [(source: HYCPlacemark, destination: HYCPlacemark)]()
+		
+		if let userPlacemark = userPlacemark {
+			tours.append((userPlacemark, placemark))
+		}
+		
+		for oldPlacemark in placemarks {
+			tours.append((oldPlacemark, placemark))
+			tours.append((placemark, oldPlacemark))
+		}
+		
+		let group = DispatchGroup()
+		
+		for (source, destination) in tours {
+			group.enter()
+			self.fetcher(source, destination, { (state) in
+				switch state {
+				case .failure(let error):
+					resultsQueue.sync {
+						results.append(.failure(error))
 					}
-					group.leave()
-				})
-				group.wait()
-			}
-			
+				case .success(let response):
+					let directions = DirectionModel(source: source, destination: destination, routes: response)
+					resultsQueue.sync {
+						results.append(.success(directions))
+					}
+				}
+				group.leave()
+			})
+		}
+		
+		group.notify(queue: .main) {
 			var models = [DirectionModel]()
 			var errors = [Error]()
 			for result in results {
@@ -115,13 +113,9 @@ extension DataManager {
 				}
 			}
 			if let error = errors.first {
-				DispatchQueue.main.async {
-					completeBlock(.failure(error))
-				}
+				completeBlock(.failure(error))
 			} else {
-				DispatchQueue.main.async {
-					completeBlock(.success(models))
-				}
+				completeBlock(.success(models))
 			}
 		}
 	}
