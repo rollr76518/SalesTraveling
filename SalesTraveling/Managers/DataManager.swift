@@ -73,50 +73,43 @@ extension DataManager {
 				}
 			}
 			
+			//User -> New
+			//New -> Old1
+			//Old1 -> New
+			//New -> Old2
+			//Old2 -> New
+			
+			var tours = [(source: HYCPlacemark, destination: HYCPlacemark)]()
+			
 			if let userPlacemark = userPlacemark {
+				tours.append((userPlacemark, placemark))
+			}
+			
+			for oldPlacemark in placemarks {
+				tours.append((oldPlacemark, placemark))
+				tours.append((placemark, oldPlacemark))
+			}
+
+			for (source, destination) in tours {
 				let blockOperation = BlockOperation(block: {
 					let semaphore = DispatchSemaphore(value: 0)
-					let source = userPlacemark
-					let destination = placemark
-					self.fetcher(userPlacemark, placemark, { (status) in
-						switch status {
+					self.fetcher(source, destination, { (state) in
+						switch state {
+						case .failure(let error):
+							completeBlock(.failure(error))
 						case .success(let response):
 							let directions = DirectionModel(source: source, destination: destination, routes: response)
 							directionsModels.append(directions)
-						case .failure(let error):
-							completeBlock(.failure(error))
 						}
 						semaphore.signal()
 					})
 					semaphore.wait()
 				})
+				
 				callbackFinishOperation.addDependency(blockOperation)
 				queue.addOperation(blockOperation)
 			}
 			
-			for oldPlacemark in placemarks {
-				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-					let source = tuple.0
-					let destination = tuple.1
-					let blockOperation = BlockOperation(block: {
-						let semaphore = DispatchSemaphore(value: 0)
-						self.fetcher(source, destination, { (state) in
-							switch state {
-							case .failure(let error):
-								completeBlock(.failure(error))
-							case .success(let response):
-								let directions = DirectionModel(source: source, destination: destination, routes: response)
-								directionsModels.append(directions)
-							}
-							semaphore.signal()
-						})
-						semaphore.wait()
-					})
-					
-					callbackFinishOperation.addDependency(blockOperation)
-					queue.addOperation(blockOperation)
-				}
-			}
 			queue.addOperation(callbackFinishOperation)
 			queue.waitUntilAllOperationsAreFinished()
 		}
