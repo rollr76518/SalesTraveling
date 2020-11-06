@@ -71,4 +71,35 @@ class SalesTravelingTests: XCTestCase {
 		
 		wait(for: [exp], timeout: 0.1)
 	}
+	
+	func testDataManager_fetchRoutes_failureWithError() {
+		let currentPlacemark = HYCPlacemark(title: "Current")
+		let newPlacemark = HYCPlacemark(title: "new")
+		let old1Placemark = HYCPlacemark(title: "old1")
+		let old2Placemark = HYCPlacemark(title: "old2")
+
+		let exp = expectation(description: "wait for async response.")
+
+		let sut = DataManager(fetcher: { source, destination, completion in
+			let error = NSError(domain: "any error", code: 0, userInfo: nil)
+			completion(.failure(error))
+		})
+
+		sut.fetchDirections(
+			ofNew: newPlacemark,
+			toOld: [old1Placemark, old2Placemark],
+			current: currentPlacemark) { (result) in
+			switch result {
+			case .success(let models):
+				XCTFail("expect failure but get models instead \(models)")
+
+			case .failure(let error):
+				XCTAssertNotNil(error)
+
+			}
+			exp.fulfill()
+		}
+
+		wait(for: [exp], timeout: 0.1)
+	}
 }
