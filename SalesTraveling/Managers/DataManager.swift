@@ -7,10 +7,20 @@
 //
 
 import Foundation
+import MapKit
 
 class DataManager {
 	
 	static let shared = DataManager()
+	
+//	class func calculateDirections(from source: HYCPlacemark, to destination: HYCPlacemark, completion: @escaping (_ result: Result<[MKRoute], Error>) -> Void) {
+	typealias Fetcher = (HYCPlacemark, HYCPlacemark, @escaping (_ result: Result<[MKRoute], Error>) -> Void) -> Void
+	
+	let fetcher: Fetcher
+	
+	init(fetcher: @escaping Fetcher = MapMananger.calculateDirections) {
+		self.fetcher = fetcher
+	}
 }
 
 // MARK: - Direction
@@ -52,65 +62,40 @@ extension DataManager {
 		toOld placemarks: [HYCPlacemark],
 		current userPlacemark: HYCPlacemark?,
 		completeBlock: @escaping (Result<[DirectionModel], Error>) -> Void) {
-		DispatchQueue.global().async {
-			
-			let queue = OperationQueue()
-			queue.name = "Fetch diretcions of placemarks"
-			
-			var directionsModels = [DirectionModel]()
-			let callbackFinishOperation = BlockOperation {
-				DispatchQueue.main.async {
-					completeBlock(.success(directionsModels))
-				}
-			}
-			
-			if let userPlacemark = userPlacemark {
-				let blockOperation = BlockOperation(block: {
-					let semaphore = DispatchSemaphore(value: 0)
-					let source = userPlacemark
-					let destination = placemark
-					MapMananger.calculateDirections(from: userPlacemark, to: placemark, completion: { (status) in
-						switch status {
-						case .success(let response):
-							let directions = DirectionModel(source: source, destination: destination, routes: response)
-							directionsModels.append(directions)
-						case .failure(let error):
-							completeBlock(.failure(error))
-						}
-						semaphore.signal()
-					})
-					semaphore.wait()
-				})
-				callbackFinishOperation.addDependency(blockOperation)
-				queue.addOperation(blockOperation)
-			}
-			
-			for oldPlacemark in placemarks {
-				for tuple in [(oldPlacemark, placemark), (placemark, oldPlacemark)] {
-					let source = tuple.0
-					let destination = tuple.1
-					let blockOperation = BlockOperation(block: {
-						let semaphore = DispatchSemaphore(value: 0)
-						MapMananger.calculateDirections(from: source, to: destination, completion: { (state) in
-							switch state {
-							case .failure(let error):
-								completeBlock(.failure(error))
-							case .success(let response):
-								let directions = DirectionModel(source: source, destination: destination, routes: response)
-								directionsModels.append(directions)
-							}
-							semaphore.signal()
-						})
-						semaphore.wait()
-					})
-					
-					callbackFinishOperation.addDependency(blockOperation)
-					queue.addOperation(blockOperation)
-				}
-			}
-			queue.addOperation(callbackFinishOperation)
-			queue.waitUntilAllOperationsAreFinished()
+		
+		var tours = [(source: HYCPlacemark, destination: HYCPlacemark)]()
+		
+		if let userPlacemark = userPlacemark {
+			tours.append((userPlacemark, placemark))
 		}
+		
+		for oldPlacemark in placemarks {
+			tours.append((oldPlacemark, placemark))
+			tours.append((placemark, oldPlacemark))
+		}
+
+		fetchTours(tours, completeBlock: completeBlock)
+	}
+	
+	private func fetchTours(
+		_ tours: [(source: HYCPlacemark,destination: HYCPlacemark)],
+		acc: [DirectionModel] = [],
+		completeBlock: @escaping (Result<[DirectionModel], Error>) -> Void) {
+		guard let tour = tours.first else {
+			return completeBlock(.success(acc))
+		}
+		
+		fetcher(tour.source, tour.destination, { [weak self] (state) in
+			switch state {
+			case .failure(let error):
+				completeBlock(.failure(error))
+			case .success(let response):
+				let direction = DirectionModel(source: tour.source, destination: tour.destination, routes: response)
+				self?.fetchTours(Array(tours.dropFirst()),
+								 acc: acc + [direction],
+								 completeBlock: completeBlock)
+			}
+		})
 	}
 }
 
