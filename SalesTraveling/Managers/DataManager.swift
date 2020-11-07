@@ -47,7 +47,11 @@ extension DataManager {
 		return "\(source.coordinate.latitude),\(source.coordinate.longitude) - \(destination.coordinate.latitude),\(destination.coordinate.longitude)"
 	}
 	
-	func fetchDirections(ofNew placemark: HYCPlacemark, toOld placemarks: [HYCPlacemark], current userPlacemark: HYCPlacemark?, completeBlock: @escaping (Result<[DirectionModel], Error>)->()) {
+	func fetchDirections(
+		ofNew placemark: HYCPlacemark,
+		toOld placemarks: [HYCPlacemark],
+		current userPlacemark: HYCPlacemark?,
+		completeBlock: @escaping (Result<[DirectionModel], Error>) -> Void) {
 		DispatchQueue.global().async {
 			
 			let queue = OperationQueue()
