@@ -16,12 +16,6 @@ extension Array {
     }
 	
 	func toTuple() -> [(Element, Element)] {
-		var tuples: [(Element, Element)] = []
-		
-		for (index, object) in enumerated() where index != count - 1 {
-			tuples.append((object, self[index + 1]))
-		}
-
-		return tuples
+        return zip(self, dropFirst()).map{ ($0, $1) }
 	}
 }
